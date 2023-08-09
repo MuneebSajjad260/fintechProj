@@ -1,0 +1,258 @@
+can you write like this documentation and please if the default prop and prop type is missing add it:
+/**
+ * Txt is a custom Text component that applies a theme-specific text color
+ * based on the user's device color scheme preference.
+ *
+ * @param {object} props - The component props.
+ * @param {object} [props.style] - The style object to apply to the text.
+ * @param {node} props.children - The content to render inside the Text component.
+ * @return {JSX.Element} - A Text component with the appropriate theme-specific text color.
+ */,
+for my this code:
+import React, {useRef, useCallback} from 'react';
+import PropTypes from 'prop-types';
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  SafeAreaView,
+} from 'react-native';
+import {useNavigation, useIsFocused, useRoute} from '@react-navigation/native';
+import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet';
+
+//* Icons
+import LogoWithName from '../../../assets/images/fintechHomeScreenLogo.svg';
+import Menu from '../../../assets/images/menuIcon.svg';
+import BackIcon from '../../../assets/images/BackButtonWithBg.svg';
+import NotificationLink from '../../../assets/images/HeaderNotificationIcon.svg';
+import Close from '../../../assets/images/HeaderCloseIcon.svg';
+import FintechBottomLogo from '../../../assets/images/FintechBottomLogoFrame.svg';
+import FintechBottomLogoDark from '../../../assets/images/FintechBottomLogoFrameDark.svg';
+
+//* Others
+import {SCROLL_VIEW, VIEW} from '../../constants/Strings';
+import {scale} from '../../../shared/utils/scale';
+import {AppTheme} from '../../theme';
+import {useSelector} from 'react-redux';
+import {ScreensName} from '../../constants/ScreensStrings';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import Txt from './Txt';
+
+const Frame = ({
+  children,
+  mode,
+  headerVariant,
+  bottomLogo,
+  style,
+  containerStyle,
+  showBottomSheet,
+  snapPoints,
+  bottomSheetContent,
+  enablePanDownToClose,
+  bottomSheetProps,
+  customBackDrop,
+  backDropComp,
+  screenTitle,
+  ...props
+}) => {
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
+  const {name: ScreenName} = useRoute();
+  const isDarkMode = useSelector(state => state.mode.colorScheme);
+
+  //* Bottom Sheet Logic
+  const bottomSheetRef = useRef(null);
+  const renderBackdropBottomSheet = useCallback(
+    props => (
+      <BottomSheetBackdrop
+        BackdropPressBehavior={'close'}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+        {...props}
+      />
+    ),
+    [],
+  );
+
+  //* Main View Mode: (View || ScrollView)
+  const content =
+    mode === SCROLL_VIEW ? (
+      <GestureHandlerRootView style={{flex: 1}}>
+        <ScrollView
+          style={[styles(isDarkMode).container, style]}
+          contentContainerStyle={[styles().contentContainer, containerStyle]}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}>
+          {children}
+        </ScrollView>
+        {showBottomSheet && (
+          <BottomSheet
+            ref={bottomSheetRef}
+            snapPoints={snapPoints}
+            index={0}
+            enablePanDownToClose={enablePanDownToClose}
+            enabledInnerScrolling={true}
+            backdropComponent={
+              customBackDrop ? backDropComp : renderBackdropBottomSheet
+            }
+            backgroundStyle={{
+              backgroundColor: isDarkMode
+                ? AppTheme.COLORS.wrapperDarkModeBg
+                : AppTheme.COLORS.white,
+            }}
+            handleIndicatorStyle={{
+              backgroundColor: '#D9D9D966',
+            }}
+            {...bottomSheetProps}>
+            {bottomSheetContent}
+          </BottomSheet>
+        )}
+      </GestureHandlerRootView>
+    ) : (
+      <GestureHandlerRootView style={{flex: 1}}>
+        <View style={[styles(isDarkMode).container, style]}>{children}</View>
+        {showBottomSheet && (
+          <BottomSheet
+            ref={bottomSheetRef}
+            snapPoints={snapPoints}
+            index={0}
+            enablePanDownToClose={enablePanDownToClose}
+            enabledInnerScrolling={true}
+            backdropComponent={
+              customBackDrop ? backDropComp : renderBackdropBottomSheet
+            }
+            backgroundStyle={{
+              backgroundColor: isDarkMode
+                ? AppTheme.COLORS.wrapperDarkModeBg
+                : AppTheme.COLORS.white,
+            }}
+            handleIndicatorStyle={{
+              backgroundColor: '#D9D9D966',
+            }}
+            {...bottomSheetProps}>
+            {bottomSheetContent}
+          </BottomSheet>
+        )}
+      </GestureHandlerRootView>
+    );
+
+  //* Return Header Based on Passed Variant
+  const Header = variant => {
+    switch (variant) {
+      case 'blank':
+        return <View />;
+      case 'v1':
+        return (
+          <View style={styles().backWithScrnName}>
+            <Pressable onPress={() => navigation.goBack()}>
+              <BackIcon />
+            </Pressable>
+            <Txt numberOfLines={1} style={styles().screenName}>
+              {screenTitle !== '' ? screenTitle : ScreenName}
+            </Txt>
+          </View>
+        );
+      case 'v2':
+        return (
+          <View style={styles().backWithScrnName}>
+            <Pressable onPress={() => navigation.goBack()}>
+              <BackIcon />
+            </Pressable>
+          </View>
+        );
+      case 'v3':
+        return (
+          <View style={styles().defAlignmentWithSpBtw}>
+            <LogoWithName width={81} height={47} />
+            <View style={styles().rightSideLinks}>
+              <Pressable
+                onPress={() =>
+                  navigation.navigate(ScreensName.NotificationListScreen)
+                }
+                style={styles().notificationIcon}>
+                <NotificationLink />
+              </Pressable>
+              <Pressable
+                onPress={() => navigation.navigate(ScreensName.mainMenuScreen)}>
+                <Menu />
+              </Pressable>
+            </View>
+          </View>
+        );
+      case 'v4':
+        return (
+          <View style={styles().defAlignmentWithSpBtw}>
+            <LogoWithName width={81} height={47} />
+            <Pressable onPress={() => navigation.goBack()}>
+              <Close height={scale(16)} width={scale(16)} />
+            </Pressable>
+          </View>
+        );
+      default:
+        return (
+          <View style={styles().backWithScrnName}>
+            <Pressable onPress={() => navigation.goBack()}>
+              <BackIcon />
+            </Pressable>
+            <Txt numberOfLines={1} style={styles().screenName}>
+              {screenTitle !== '' ? screenTitle : ScreenName}
+            </Txt>
+          </View>
+        );
+    }
+  };
+
+  return (
+    isFocused && (
+      <SafeAreaView style={styles().superContainer}>
+        <View style={styles().topBar}>{Header(headerVariant)}</View>
+        {content}
+        {bottomLogo ? <FintechBottomLogoDark /> : null}
+      </SafeAreaView>
+    )
+  );
+};
+
+export const styles = isDarkMode => {
+  const isDarkModeActivated = isDarkMode
+    ? AppTheme.COLORS.darkModeBg
+    : AppTheme.COLORS.white;
+
+  let style = {
+    ...style
+  };
+
+  return StyleSheet.create(style);
+};
+
+Frame.propTypes = {
+  children: PropTypes.node,
+  mode: PropTypes.oneOf(['View', 'Scrollview']),
+  headerVariant: PropTypes.oneOf(['v1', 'v2', 'v3', 'v4', 'blank']),
+  bottomLogo: PropTypes.bool,
+};
+
+Frame.defaultProps = {
+  mode: SCROLL_VIEW,
+  headerVariant: 'v1',
+  bottomLogo: false,
+  customBackDrop: false,
+  screenTitle: '',
+};
+
+export default Frame;
+
+//* Documentation
+/**
+Frame is a custom component that provides a standardized screen layout for the app.
+It consists of a header, content area, and optional bottom logo.
+@param {object} props - The component props.
+@param {node} props.children - The content to render inside the Frame component.
+@param {string} [props.mode=SCROLL_VIEW] - The mode of the main content area, either 'VIEW' or 'SCROLL_VIEW'.
+@param {string} [props.headerVariant='v1'] - The variant of the header to be displayed.
+@param {bool} [props.bottomLogo=false] - Whether or not to display the bottom logo.
+@param {object} [props.style] - The style object to apply to the Frame component.
+@return {JSX.Element} - A Frame component with a standardized layout.
+*/

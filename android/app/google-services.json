@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "597153010623",
+    "project_id": "fintech-5e50d",
+    "storage_bucket": "fintech-5e50d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:597153010623:android:82027b45441d7a6eec470a",
+        "android_client_info": {
+          "package_name": "com.fintechhub"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGcJOFa2tR3W-QjJVq6zJemNqC6vMMqho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
