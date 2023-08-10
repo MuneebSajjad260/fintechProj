@@ -1,0 +1,147 @@
+[
+  {
+    "isBooked": false,
+    "timeHours": "08:00 am",
+    "timeNumber": 8
+  },
+  {
+    "isBooked": false,
+    "timeHours": "08:30 am",
+    "timeNumber": 8.5
+  },
+  {
+    "isBooked": false,
+    "timeHours": "09:00 am",
+    "timeNumber": 9
+  },
+  {
+    "isBooked": false,
+    "timeHours": "09:30 am",
+    "timeNumber": 9.5
+  },
+  {
+    "isBooked": false,
+    "timeHours": "10:00 am",
+    "timeNumber": 10
+  },
+  {
+    "isBooked": false,
+    "timeHours": "10:30 am",
+    "timeNumber": 10.5
+  },
+  {
+    "isBooked": true,
+    "timeHours": "11:00 am",
+    "timeNumber": 11
+  },
+  {
+    "isBooked": true,
+    "timeHours": "11:30 am",
+    "timeNumber": 11.5
+  },
+  {
+    "isBooked": false,
+    "timeHours": "12:00 pm",
+    "timeNumber": 12
+  },
+  {
+    "isBooked": false,
+    "timeHours": "12:30 pm",
+    "timeNumber": 12.5
+  },
+  {
+    "isBooked": true,
+    "timeHours": "01:00 pm",
+    "timeNumber": 13
+  },
+  {
+    "isBooked": false,
+    "timeHours": "01:30 pm",
+    "timeNumber": 13.5
+  },
+  {
+    "isBooked": false,
+    "timeHours": "02:00 pm",
+    "timeNumber": 14
+  },
+  {
+    "isBooked": false,
+    "timeHours": "02:30 pm",
+    "timeNumber": 14.5
+  },
+  {
+    "isBooked": false,
+    "timeHours": "03:00 pm",
+    "timeNumber": 15
+  },
+  {
+    "isBooked": false,
+    "timeHours": "03:30 pm",
+    "timeNumber": 15.5
+  },
+  {
+    "isBooked": false,
+    "timeHours": "04:00 pm",
+    "timeNumber": 16
+  },
+  {
+    "isBooked": false,
+    "timeHours": "04:30 pm",
+    "timeNumber": 16.5
+  },
+  {
+    "isBooked": false,
+    "timeHours": "05:00 pm",
+    "timeNumber": 17
+  },
+  {
+    "isBooked": false,
+    "timeHours": "05:30 pm",
+    "timeNumber": 17.5
+  },
+  {
+    "isBooked": false,
+    "timeHours": "06:00 pm",
+    "timeNumber": 18
+  },
+  {
+    "isBooked": false,
+    "timeHours": "06:30 pm",
+    "timeNumber": 18.5
+  },
+  {
+    "isBooked": false,
+    "timeHours": "07:00 pm",
+    "timeNumber": 19
+  },
+  {
+    "isBooked": false,
+    "timeHours": "07:30 pm",
+    "timeNumber": 19.5
+  },
+  {
+    "isBooked": false,
+    "timeHours": "08:00 pm",
+    "timeNumber": 20
+  },
+  {
+    "isBooked": false,
+    "timeHours": "08:30 pm",
+    "timeNumber": 20.5
+  },
+  {
+    "isBooked": false,
+    "timeHours": "09:00 pm",
+    "timeNumber": 21
+  },
+  {
+    "isBooked": false,
+    "timeHours": "09:30 pm",
+    "timeNumber": 21.5
+  },
+  {
+    "isBooked": false,
+    "timeHours": "10:00 pm",
+    "timeNumber": 22
+  }
+]

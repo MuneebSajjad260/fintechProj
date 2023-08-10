@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>FintechHub.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>buildNumber</key>
+			<string>1</string>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>226F8FAD763F8C75D77BFF6E0A3E9C33378617BD</string>
+				<key>dateExpires</key>
+				<string>17/05/2024</string>
+				<key>type</key>
+				<string>Apple Development</string>
+			</dict>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>KZ59F464CP.com.fintechhub</string>
+				<key>aps-environment</key>
+				<string>development</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>KZ59F464CP</string>
+				<key>get-task-allow</key>
+				<true/>
+				<key>keychain-access-groups</key>
+				<array>
+					<string>KZ59F464CP.com.fintechhub</string>
+				</array>
+			</dict>
+			<key>name</key>
+			<string>FintechHub.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>12ace33d-a2ad-4ddc-9795-cdbe46d5884d</string>
+				<key>dateExpires</key>
+				<string>06/06/2024</string>
+				<key>name</key>
+				<string>iOS Team Provisioning Profile: com.fintechhub</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>KZ59F464CP</string>
+				<key>name</key>
+				<string>Fintech Saudi (SAU)</string>
+			</dict>
+			<key>versionNumber</key>
+			<string>1.0</string>
+		</dict>
+	</array>
+</dict>
+</plist>

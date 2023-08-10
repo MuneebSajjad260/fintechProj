@@ -1,0 +1,89 @@
+[
+  {
+    "title": "Today",
+    "data": [
+      {
+        "id": 1,
+        "header": "Meeting Room",
+        "notification": "3 mins in checkout. Avoid locked doors and checkout in time",
+        "recent": true,
+        "time": "8:26"
+      },
+      {
+        "id": 2,
+        "header": "Separate Room",
+        "notification": "3 mins in checkout. Avoid locked doors and checkout in time",
+        "recent": true,
+        "time": "8:26"
+      }
+    ]
+  },
+  {
+    "title": "Yesterday",
+    "data": [
+      {
+        "id": 1,
+        "header": "Meeting Room",
+        "notification": "3 mins in checkout. Avoid locked doors and checkout in time",
+        "recent": false,
+        "time": "8:26"
+      },
+      {
+        "id": 1,
+        "header": "Meeting Room",
+        "notification": "3 mins in checkout. Avoid locked doors and checkout in time",
+        "recent": false,
+        "time": "8:26"
+      },
+      {
+        "id": 1,
+        "header": "Meeting Room",
+        "notification": "3 mins in checkout. Avoid locked doors and checkout in time",
+        "recent": false,
+        "time": "8:26"
+      },
+      {
+        "id": 1,
+        "header": "Meeting Room",
+        "notification": "3 mins in checkout. Avoid locked doors and checkout in time",
+        "recent": false,
+        "time": "8:26"
+      },
+      {
+        "id": 1,
+        "header": "Meeting Room",
+        "notification": "3 mins in checkout. Avoid locked doors and checkout in time",
+        "recent": false,
+        "time": "8:26"
+      },
+      {
+        "id": 1,
+        "header": "Meeting Room",
+        "notification": "3 mins in checkout. Avoid locked doors and checkout in time",
+        "recent": false,
+        "time": "8:26"
+      },
+      {
+        "id": 1,
+        "header": "Meeting Room",
+        "notification": "3 mins in checkout. Avoid locked doors and checkout in time",
+        "recent": false,
+        "time": "8:26"
+      },
+      {
+        "id": 1,
+        "header": "Meeting Room",
+        "notification": "3 mins in checkout. Avoid locked doors and checkout in time",
+        "recent": false,
+        "time": "8:26"
+      },
+      {
+        "id": 1,
+        "header": "Meeting Room",
+        "notification": "3 mins in checkout. Avoid locked doors and checkout in time",
+        "recent": false,
+        "time": "8:26"
+      }
+    ]
+  }
+]
