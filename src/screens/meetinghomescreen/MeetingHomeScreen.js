@@ -749,8 +749,8 @@ const MeetingWelcomeScreen = ({route}) => {
               />
             </Pressable>
 
-            <Txt style={style.whatshappeningtext}>{Strings.WhatHappening}</Txt>
-
+          {false ? <Txt style={style.whatshappeningtext}>{Strings.WhatHappening}</Txt>:null}
+        
             {/* EXTRACTING FIRST 2 ELEMENTS OF ARRAY FEED */}
             <FlatList
               data={seeMore ? feedRecord.slice(2) : feedRecord.slice(0, 2)}
@@ -760,6 +760,7 @@ const MeetingWelcomeScreen = ({route}) => {
                   accessibilityLabel="Announcement Card"
                   onPress={() =>
                     navigation.navigate(ScreensName.AnnouncementScreen, {item})
+                  
                   }>
                   <AnnouncementCard
                     key={item?.Id}
@@ -775,19 +776,25 @@ const MeetingWelcomeScreen = ({route}) => {
                   />
                 </Pressable>
               )}
-              ListEmptyComponent={() => (
-                <AnnouncementCard
-                  item={{
-                    id: '',
-                    title: '',
-                    info: '',
-                    date: '',
-                    fullText: '',
-                    image: '',
-                  }}
-                  isDataLoaded={false}
-                />
-              )}
+              ListEmptyComponent={() => {
+                return (
+                  <>
+                  {
+                    false?<AnnouncementCard
+                    item={{
+                      id: '',
+                      title: '',
+                      info: '',
+                      date: '',
+                      fullText: '',
+                      image: '',
+                    }}
+                    isDataLoaded={false}
+                  />:null
+                  }
+                  </>
+                )
+              }}
             />
 
             {/* IF FEEDS ARE LESS THAN 2 , HIDE SEE MORE BUTTON */}

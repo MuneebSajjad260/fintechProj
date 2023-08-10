@@ -155,12 +155,12 @@ export default function BookMeetingRoomScreen({navigation, route}) {
   //* Calling the "getBookingsApi" or "Date Picker" on "Meeting Room" Button Press
   useEffect(() => {
     if (meetingRooms.length > 0) {
-      if (selectedMode == 'date') {
+      // if (selectedMode == 'date') {
         getBookingsApi(
           meetingRooms[selectedRoomIndex].Id,
           moment(selectedDate).format('YYYY-MM-DD'),
         );
-      }
+      // }
     }
   }, [selectedRoomIndex, selectedDate]);
 
@@ -360,31 +360,7 @@ export default function BookMeetingRoomScreen({navigation, route}) {
           );
 
           // setBookings(slots);
-          const splitValue = timeValue.split(' ');
-          if (
-            timeValue.length !== 0 && isAnySlotBookedInRange(
-              completeTimeline,
-              splitValue[0],
-              splitValue[2],
-              splitValue[3].toLowerCase(),
-            )
-          ) {
-            setIsOnBooked(true);
-          } else {
-            setIsOnBooked(false);
-          }
           setBookings(completeTimeline);
-          // const isAnyBooked = isAnySlotBookedInRange(
-          //   completeTimeline,
-          //   start,
-          //   end,
-          //   period,
-          // );
-          // console.warn(
-          //   'Is any slot booked in the range?----------------------',
-          //   isAnyBooked,
-          //   timeValue,
-          // );
           //! Test end
           setIsLoadingTimeline(false);
         } else {
@@ -396,6 +372,21 @@ export default function BookMeetingRoomScreen({navigation, route}) {
         setIsLoadingTimeline(false);
         console.error('Error while getting meeting rooms details: ', error);
         setError('Error while getting meeting rooms details.');
+      } finally {
+        setIsOnBooked(false)
+        const splitValue = timeValue.split(' ');
+        if (
+          timeValue.length !== 0 && isAnySlotBookedInRange(
+            bookings,
+            splitValue[0],
+            splitValue[2],
+            splitValue[3].toLowerCase(),
+          )
+        ) {
+          setIsOnBooked(true);
+        } else {
+          setIsOnBooked(false);
+        }
       }
     },
     [dispatch],
@@ -452,23 +443,30 @@ export default function BookMeetingRoomScreen({navigation, route}) {
       if (centerIndex !== -1) {
         //* Set states
         setSelectedDate(currentDate);
+        // setIsOnBooked(false)
         const timeRange = getDefaultTimeRange(currentDate, selectedDurationBtn);
         setTimeValue(timeRange);
         setPassedDate(moment(new Date(currentDate), 'DD-MM-YYYY').format('LL'));
         //* Check whether its on booked slot
         const splitValue = timeRange.split(' ');
-        if (
-          isAnySlotBookedInRange(
-            bookings,
-            splitValue[0],
-            splitValue[2],
-            splitValue[3].toLowerCase(),
-          )
-        ) {
-          setIsOnBooked(true);
-        } else {
-          setIsOnBooked(false);
-        }
+        isAnySlotBookedInRange(
+              bookings,
+              splitValue[0],
+              splitValue[2],
+              splitValue[3].toLowerCase(),
+            )
+        // if (
+        //   isAnySlotBookedInRange(
+        //     bookings,
+        //     splitValue[0],
+        //     splitValue[2],
+        //     splitValue[3].toLowerCase(),
+        //   )
+        // ) {
+        //   setIsOnBooked(true);
+        // } else {
+        //   setIsOnBooked(false);
+        // }
         //* Animate to the matched index
         timelineListRef.current.scrollToIndex({
           animated: true,
