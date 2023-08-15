@@ -379,7 +379,7 @@ const MeetingWelcomeScreen = ({route}) => {
         setMemeDetailRes({statusCode});
         if (statusCode === 200) {
           setMembershipDetails(data);
-          // console.warn("Data of Memner:--------------------------",data)
+          console.warn("Data of Memner:--------------------------",data)
         } else {
           setMembershipDetails(null);
         }
@@ -662,6 +662,7 @@ const MeetingWelcomeScreen = ({route}) => {
                 accessibilityLabel="meetingroomBook"
                 onPress={() => {
                   if (status === 'pending' || status === 'expire') {
+                    // if (!(status === 'pending' || status === 'expire')) {
                     if (Platform.OS === 'android') {
                       ToastAndroid.showWithGravity(
                         'Inactive Membership',

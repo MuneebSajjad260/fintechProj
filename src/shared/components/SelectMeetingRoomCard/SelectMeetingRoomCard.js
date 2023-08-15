@@ -1,5 +1,5 @@
 import {Text, View, Image, FlatList} from 'react-native';
-import React from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import normalize from 'react-native-normalize';
 import ImageItem from '../core/ImageItem';
 import {useSelector} from 'react-redux';
@@ -8,12 +8,42 @@ import Wrapper from '../core/Wrapper';
 import CardContainer from '../cardWrapper/CardContainer';
 import {AppTheme, Images} from '../../theme';
 import styles from './SelectMeetingRoomCard.style';
+import moment from 'moment';
 
 const SelectMeetingRoomCard = props => {
-  const {item, itemStatus, renderItem, data, ref} = props;
-  console.log('itemStatus---', item);
-  console.log('itemStatus---', data);
-  console.log('--ref--', ref);
+  const {item, itemStatus, renderItem, data, startTime} = props;
+  console.log('itemStatus 1---', item);
+  console.log('itemStatus 2---', data);
+
+  const flatListRef = useRef(null); // Create a ref for the FlatList
+  // Calculate the index of the selected start time in the data array
+  // const startIndex = data.findIndex((item) => item.start === props.start);
+
+  // Calculate the index of the selected end time in the data array
+  //  const endIndex = data.findIndex((item) => item.end === props.end);
+
+  // console.log('startTime 22---', startTime);
+  // console.log("startIndex-",startIndex)
+
+  function convert12HourTo24Hour(time12h) {
+    const time24h = moment(time12h, 'hh:mm A').format('HH:mm');
+    return time24h;
+  }
+
+  const time24h = convert12HourTo24Hour(startTime);
+  console.log('time 24h---', time24h); // Output: "18:00"
+  const [matchingIndex, setMatchingIndex] = useState(0);
+
+  useEffect(() => {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].time === convert12HourTo24Hour(startTime)) {
+        setMatchingIndex(i);
+        break;
+      }
+    }
+  }, [startTime]);
+
+  console.log('matchingIndex-', matchingIndex);
   const isDarkMode = useSelector(state => state?.mode?.colorScheme);
 
   const TextExtractor = description => {
@@ -65,12 +95,27 @@ const SelectMeetingRoomCard = props => {
         <View style={styles.flatList}>
           <FlatList
             data={data}
+            ref={ref => {
+              console.log('matchingIndex 2===', !!matchingIndex);
+              if (!!matchingIndex && matchingIndex >= 0) {
+                flatListRef.current = ref; // Assign the ref to flatListRef
+                 ref && ref.scrollToIndex({ animated: false, index: matchingIndex });
+              } // Scroll to the selected start time initially
+            }}
             renderItem={renderItem}
             keyExtractor={item => item.index.toString()}
-            ref={ref}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
             style={{height: normalize(42)}}
+            // onScrollToIndexFailed={(info) => {
+            //   // Handle the failure, you might want to log an error message or take other action
+            //   console.warn("Scroll to index failed:", info);
+            // }}
+            getItemLayout={(data, index) => ({
+              length: normalize(42),
+              offset: normalize(39) * index,
+              index,
+            })}
           />
         </View>
 

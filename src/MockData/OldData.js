@@ -1903,1519 +1903,918 @@ export default function DummyScreen({navigation}) {
 }
 
 // BookMeetinRoomScreen Data 2/8/23
+import React, {useState, useEffect, useCallback, useRef} from 'react';
 import {
-  StatusBar,
-  Text,
   View,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
   FlatList,
-  ScrollView,
+  Animated,
+  PanResponder,
   Platform,
-  Alert,
-  Pressable,
-  TouchableWithoutFeedback,
+  TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
-import React, {
-  useState,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-  useMemo,
-  useEffect,
-} from 'react';
-import BottomSheet, {
-  BottomSheetBackdrop,
-  useBottomSheetDynamicSnapPoints,
-  BottomSheetFlatList,
-  BottomSheetView,
-  BottomSheetScrollView,
-} from '@gorhom/bottom-sheet';
-import {Provider} from 'react-native-paper';
-import {FlatList as GestureHandlerFlatList} from 'react-native-gesture-handler';
-import NetInfo from '@react-native-community/netinfo';
-import {Divider} from 'react-native-paper';
-import {Svg} from 'react-native-svg';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import styles from './BookMeetingRoomScreen.Style';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
+import {useMemo} from 'react';
+import uuid from 'react-native-uuid';
+import Toast from 'react-native-root-toast';
+const moment = require('moment');
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
-import DatePicker from 'react-native-date-picker';
-import moment from 'moment';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import CalendarPicker from 'react-native-calendar-picker';
-import Modal from 'react-native-modal';
-import {useDispatch, useSelector} from 'react-redux';
-import 'intl';
-import 'intl/locale-data/jsonp/en';
-import Txt from '../../shared/components/core/Txt';
+//* Components
 import Frame from '../../shared/components/core/Frame';
+import Txt from '../../shared/components/core/Txt';
+import ImageView from 'react-native-image-viewing';
+import MeetingRoomDetailSkeleton from '../../shared/components/MeetingRoomDetailSkeleton/MeetingRoomDetailSkeleton';
+import MeetingRoomButton from '../../shared/components/MeetingRoomButton/MeetingRoomButton';
+import MeetingRoomDetails from '../../shared/components/MeetingRoomDetails/MeetingRoomDetails';
+import DurationButton from '../../shared/components/DurationButton/DurationButton';
+import TimelineItem from '../../shared/components/TimelineItem/TimelineItem';
+import RepeatBookingBtn from '../../shared/components/RepeatBookingBtn/RepeatBookingBtn';
+import ScheduleBtn from '../../shared/components/ScheduleBtn/ScheduleBtn';
+import GuideLog from '../../shared/components/GuideLog/GuideLog';
+import Botton from '../../shared/components/core/Botton';
+//* API Helper Methods
+import {useDispatch, useSelector} from 'react-redux';
+import {GetMeetingRoom} from '../../shared/redux/action/GetMeetingRoom';
+import {GetMeetingNewTimeLine} from '../../shared/redux/action/GetMeetingNewTimeLine';
+//* Helper function
 import {
-  selectLoginUserId,
-  selectLoginUserName,
-} from '../../shared/redux/slices/isadminSlice';
-import {DayPassCheck} from '../../shared/redux/action/DayPassCheck';
-import {GetMeetingBooking} from '../../shared/redux/action/GetMeetingBooking';
-import SelectMeetingRoomCard from '../../shared/components/SelectMeetingRoomCard/SelectMeetingRoomCard';
-import {PrimaryButton} from '../../shared/components';
+  calculateWidth,
+  duration,
+  recurring,
+  getDefaultTimeRange,
+  getTimeRangeIn24HourFormat,
+  getRandomInt,
+  convertTimeRange,
+} from '../../shared/utils/helper';
+import {scale} from '../../shared/utils/scale';
+//* Others
 import {AppTheme} from '../../shared/theme';
 import Strings from '../../shared/constants/Strings';
-import styles from './BookMeetingRoomScreen.Style';
-import style from '../privateOfficeSummaryScreen/privateOfficeSummaryScreen.style';
-import {useNavigation} from '@react-navigation/native';
 import {ScreensName} from '../../shared/constants/ScreensStrings';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {GetMeetingRoom} from '../../shared/redux/action/GetMeetingRoom';
 
-import ClockIcon from '../../assets/images/clockMode.js';
-import CalendarDark from '../../assets/images/calendarDark.svg';
-import DateIcon from '../../assets/images/dateIcon.svg';
-import Botton from '../../shared/components/core/Botton';
-import {scale} from '../../shared/utils/scale';
-
-// const data = [];
-const Meetingroom = ({route}) => {
-  const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
-  const dispatch = useDispatch();
-  const coworkerId = useSelector(selectLoginUserId);
-  const coworkerName = useSelector(selectLoginUserName);
-  const isDarkMode = useSelector(state => state?.mode?.colorScheme);
-
-  const bottomSheetRefTimePicker = useRef(null);
-  const bottomSheetRefRecurringDays = useRef(null);
-  const snapPoints = useMemo(() => ['48%'], []);
-  const snapPointsRecurringDays = useMemo(() => ['55%'], []);
-  const bottomSheetNoBooking = useRef(null);
-  const snapPointsNoBooking = useMemo(() => ['28%'], []);
-
+export default function BookMeetingRoomScreen({navigation, route}) {
+  //* Passed Params
   const {
-    meetingRoomOne,
     dayPass,
     dateReschedule,
-    rescheduleStartTime,
-    rescheduleEndTime,
-    rescheduleDuration,
-    
-    ,
+    meetingRoomOne,
     idReschedule,
+    rescheduleEndTime,
+    rescheduleTeamMembers,
     isRescheduleRequest,
+    rescheduleStartTime,
+    rescheduleDuration,
     rescheduleRepeatBooking,
     rescheduleRecurringDay,
     participant,
   } = route.params;
-  console.log(
-    'dayPass----',
-    dayPass,
-    '---',
-    rescheduleStartTime,
-    '---',
-    rescheduleEndTime,
-    rescheduleDuration,
+  // const {Id} = useSelector(selectUserData);
+  // console.warn(Id)
+  // console.warn(
+  //   // 'Checking the Rescheduled data:-----------------',
+  //   // rescheduleEndTime,
+  //   // rescheduleStartTime,
+  //   rescheduleDuration,
+  //   // rescheduleRepeatBooking,
+  //   // rescheduleRecurringDay,
+  //   // participant,
+  //   // idReschedule,
+  //   // isRescheduleRequest,
+  //   // rescheduleTeamMembers,
+  //   // dateReschedule,
+  //   // meetingRoomOne
+  // );
+  //? Data States
+  //* API states
+  const [meetingRooms, setMeetingRooms] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingTimeLine, setIsLoadingTimeline] = useState(true);
+  const [error, setError] = useState(null);
+  //* Track index States
+  const [selectedDurationBtnIndex, setSelectedDurationBtnIndex] = useState(
+    isRescheduleRequest
+      ? duration.indexOf(Number(rescheduleDuration))
+      : duration.indexOf(60),
   );
-  console.log('meetingRoomOne----', meetingRoomOne);
-  const minDate = new Date(); // Today
-  // let tomorrow  = moment(minDate).add(1,'days');
-
-  const meetingRoom = [
-    {
-      id: 1,
-      officeNo: 'Meeting Room',
-      btnLabel: 'Monthly Plan',
-      roomDesc: 'A room has a big table in the middle with Smart TV',
-    },
-    {
-      id: 2,
-      officeNo: 'Meeting Room 2',
-      btnLabel: 'Monthly Plan 2',
-      roomDesc: 'A room has a big table in the middle with Smart TV',
-    },
-    {
-      id: 3,
-      officeNo: 'Meeting Room 3',
-      btnLabel: 'Monthly Plan 3',
-      roomDesc: 'A room has a big table in the middle with Smart TV',
-    },
-  ];
-
-  const showHours = () => {
-    timeLine?.map(item => {
-      console.log('timeline data----', item);
-    });
-  };
-  const [bottomSheet, setBottomSheet] = useState({
-    bsTimePicker: false,
-    bsRepeat: false,
-  });
-  const [selectedTime, setSelectedTime] = useState([]);
-
-  const recurring = [
-    {id: 0, recurringDay: 'Everyday', isSelected: false},
-    {id: 1, recurringDay: 'Every Week', isSelected: false},
-    {id: 2, recurringDay: 'Every 2 Weeks', isSelected: false},
-    {id: 3, recurringDay: 'Every Month', isSelected: false},
-  ];
-  const duration = [
-    {id: 1, hour: 30, timeUnit: 'min'},
-    {id: 2, hour: 1, timeUnit: 'h'},
-    {id: 3, hour: 1.5, timeUnit: 'h'},
-    {id: 4, hour: 2, timeUnit: 'h'},
-  ];
-  const [meetingRoomNo, setMeetingRoomNo] = useState([]);
-  const meetingRoomPending = useSelector(
-    state => state?.getMeetingRoom?.loading,
-  );
-  const GetMeetingBookingPending = useSelector(
-    state => state?.getMeetingBooking?.loading,
-  );
-  const navigation = useNavigation();
-
-  const [timebtn, settimebtn] = useState(
-    rescheduleDuration ? rescheduleDuration : 1,
-  );
-  console.log('timebtn---', timebtn);
-  console.log(
-    'rescheduleRecurringDay,rescheduleRepeatBooking---',
-    rescheduleRepeatBooking,
-    '---',
-    rescheduleRecurringDay,
-  );
-  const [repeatBooking, setRepeatBooking] = useState(
-    rescheduleRepeatBooking ? rescheduleRepeatBooking : 'No',
-  );
-  const [selectMeetingRoom, setSelectMeetingRoom] = useState(
-    meetingRoomOne?.Title,
-  );
-  const [addTimeDuration, setAddTimeDuration] = useState();
-  console.log('addTimeDuration---', addTimeDuration);
-
-  // const formattedDat= moment(new Date(),'DD-MM-YYYY').format('DD/MM/YYYY');
-  const formattedDat = moment(new Date()).format('LL');
-
-  const formattedDateReschedule = moment(dateReschedule, 'DD, MMM YYYY').format(
-    'LL',
-  );
-  console.log(
-    'formatted--dateReschedule---22--',
-    formattedDateReschedule,
-    '---',
-  );
-
-  const [selectedDate, setSelectedDate] = useState(
-    dateReschedule ? formattedDateReschedule : formattedDat,
-  );
-  console.log('selectedDate---', selectedDate);
-
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
-  const [timePicker, setTimePicker] = useState(new Date());
-  const [isInitialSelection, setIsInitialSelection] = useState(true);
-  const [minimumDate, setMinimumDate] = useState(new Date());
-
-  useEffect(() => {
-    if (isInitialSelection) {
-      setTimeout(() => {
-        const currentDate = new Date();
-        const currentMinutes = currentDate.getMinutes();
-        let initialSelectedTime = new Date(currentDate);
-
-        if (currentMinutes >= 1 && currentMinutes <= 29) {
-          initialSelectedTime.setMinutes(30);
-        } else if (currentMinutes >= 31) {
-          initialSelectedTime.setHours(currentDate.getHours() + 1);
-          initialSelectedTime.setMinutes(0);
-        }
-
-        setTimePicker(initialSelectedTime);
-        setMinimumDate(initialSelectedTime);
-        setIsInitialSelection(false);
-      }, 0);
-    }
-  }, [isInitialSelection]);
-
-  const [GMTTime, setGMTTime] = useState();
-  const [timeFormat, setTimeFormat] = useState();
-  console.log('startTime---reshedule--', rescheduleStartTime);
-
-  /// SETTING TIME IN SHOW TIME STATE
-  const roundedTime = roundToNearestHalfHour(timePicker);
-  const localDateTime = moment.utc(roundedTime).local(); // Convert UTC to local time
-  const formattedDateTime = localDateTime.format('hh:mm A'); // Format the local time
-  console.log('time123--', formattedDateTime);
-
-  const [showTime, setShowTime] = useState(
-    rescheduleStartTime
-      ? rescheduleStartTime
-      : formattedDateTime
-      ? formattedDateTime
+  const [selectedRoomIndex, setSelectedRoomIndex] = useState(0);
+  //* Others states
+  const [viewImage, setViewImage] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedMode, setSelectedMode] = useState('date');
+  const [showPicker, setShowPicker] = useState(false);
+  const [repeatBooking, setRepeatBooking] = useState('no');
+  const [isOnBooked, setIsOnBooked] = useState(false);
+  const [selectedRecurringDay, setSelectedRecurringDay] = useState(
+    isRescheduleRequest && rescheduleRepeatBooking === 'Yes'
+      ? rescheduleRecurringDay.recurringDay
       : null,
   );
-  console.log('showTime---', showTime);
+  const [passedRecurringDay, setPassedRecurringDay] = useState(
+    isRescheduleRequest && rescheduleRepeatBooking === 'Yes'
+      ? rescheduleRecurringDay
+      : null,
+  );
+  const [scrollEnd, setScrollEnd] = useState(false);
+  const [scrollStart, setScrollStart] = useState(true);
+  //* Date & Timeline States
+  const [selectedDurationBtn, setSelectedDurationBtn] = useState(duration[1]);
+  const [selectedDate, setSelectedDate] = useState(
+    isRescheduleRequest
+      ? moment(dateReschedule, 'DD, MMM YYYY')
+      : moment().toDate(),
+  );
+  const [timeValue, setTimeValue] = useState('');
+  const [passedDateToAnotherScrn, setPassedDate] = useState(
+    isRescheduleRequest
+      ? moment(dateReschedule, 'DD, MMM YYYY')
+      : moment().toDate(),
+  );
 
-  const [recurringDaysData, setRecurringDaysData] = useState(
-    rescheduleRecurringDay ? rescheduleRecurringDay?.recurringDay : null,
-  );
-  const [recurringDayObject, setRecurringDayObject] = useState(
-    rescheduleRecurringDay ? rescheduleRecurringDay : null,
-  );
-  console.log(
-    'recurringDaysData-----',
-    recurringDaysData,
-    '--',
-    recurringDayObject,
-  );
-  const [showRecurringDay, setShowRecurringDay] = useState(
-    rescheduleRecurringDay ? rescheduleRecurringDay?.recurringDay : null,
-  );
-  const [borderBlue, setBorderBlue] = useState(false);
-  const [timeSlots, setTimeSlots] = useState([]);
-  const [dayPassCheck, setDayPassCheck] = useState();
+  //? Others
+  const dispatch = useDispatch();
+  const isDarkMode = useSelector(state => state?.mode?.colorScheme);
+  const timelineListRef = useRef(null); //* ref for the auto scroll of FlatList
+  const scrollX = useRef(new Animated.Value(0)).current; //* Track the value of X-axis scroll
+  const snapPointsRecurring = useMemo(() => ['50%'], []);
+  const btmRefRecurring = useRef(null);
+  const SkeletonLoader = createShimmerPlaceholder(LinearGradient);
+  const upperFrameRef = useRef(null);
 
-  const convertTimeString = timeString => {
-    if (timeString) {
-      console.log('timeString---', timeString);
-      const [hoursMinutes, period] = timeString.split(' ');
-      const [hours, minutes] = hoursMinutes.split(':').map(Number);
-      console.log('hourmin---', hoursMinutes);
-      let newHours = period === 'AM' ? hours : hours + 12;
-
-      if (newHours === 12) {
-        newHours = 0;
-      }
-      if (newHours === 24) {
-        newHours = 12;
-      }
-      if (newHours < 10) {
-        newHours = `0${newHours}`;
-      }
-      // let ampm = 'AM'
-      // if (newHours > 11) {
-      //     period === "AM" ? hours : hours + 12;
+  //? Effects
+  //* API Effects
+  //* Calling the "getMeetingRoomsApi" on 1st render
+  useEffect(() => {
+    getMeetingRoomsApi();
+    return () => {
+      setMeetingRooms([]);
+      setError(null);
+      setSelectedImage(null);
+      setIsLoading(false);
+    };
+  }, []);
+  //* Calling the "getBookingsApi" or "Date Picker" on "Meeting Room" Button Press
+  useEffect(() => {
+    if (meetingRooms.length > 0) {
+      // if (selectedMode == 'date') {
+        getBookingsApi(
+          meetingRooms[selectedRoomIndex].Id,
+          moment(selectedDate).format('YYYY-MM-DD'),
+        );
       // }
-      let min = minutes === 0 ? '00' : minutes;
-      return `${newHours}:${min}`;
     }
-  };
+  }, [selectedRoomIndex, selectedDate]);
 
-  const data = [];
-
-  const availableTimeSlots = [];
-  let previousBookedEndTime = '00:00';
-
-  //CHECKING IF TIME SLOT IS EMPTY ELSE STARTS FROM 00:00 TO 1 LESSER THAN START TIME OF NEXT BOOKING
-
-  if (timeSlots.length === 0) {
-    const fullDaySlot = {start: '00:00', end: '23:59'};
-    availableTimeSlots.push(fullDaySlot);
-  } else if (timeSlots[0].start > previousBookedEndTime) {
-    const firstAvailableTimeSlot = {
-      start: '00:00',
-      end: moment(timeSlots[0].start, 'HH:mm')
-        .subtract(1, 'minute')
-        .format('HH:mm'),
-    };
-    availableTimeSlots.push(firstAvailableTimeSlot);
-    previousBookedEndTime = moment(timeSlots[0].end, 'HH:mm').format('HH:mm');
-  }
-
-  // CHECKING IF BOOKING LIES BETWEEN TWO BOOKINGS , THEN ITS START TIME BECOMES 1 MIN GREATER AND END TIME 1 MIN LESSER
-  for (let i = 0; i < timeSlots.length; i++) {
-    const {start: currentBookedStartTime, end: currentBookedEndTime} =
-      timeSlots[i];
-
-    if (currentBookedStartTime > previousBookedEndTime) {
-      const currentAvailableTimeSlot = {
-        start: moment(previousBookedEndTime, 'HH:mm')
-          .add(1, 'minute')
-          .format('HH:mm'),
-        end: moment(currentBookedStartTime, 'HH:mm')
-          .subtract(1, 'minute')
-          .format('HH:mm'),
-      };
-
-      availableTimeSlots.push(currentAvailableTimeSlot, currentBookedStartTime);
-    }
-
-    previousBookedEndTime = currentBookedEndTime;
-  }
-  // THIS IS CHECK FOR LAST BOOKING WHERE START TIME BECOMES ONE MIN GREATER AND END TIME BECOMES 23:59
-  if (previousBookedEndTime < '23:59') {
-    const lastAvailableTimeSlot = {
-      start: moment(previousBookedEndTime, 'HH:mm')
-        .add(1, 'minute')
-        .format('HH:mm'),
-      end: '23:59',
-    };
-
-    availableTimeSlots.push(lastAvailableTimeSlot);
-  }
-
-  // return availableTimeSlots;
-  console.log('availabletime----', availableTimeSlots);
-  //   };
-
-  let convertedShowTime;
-  let convertedAddTimeDuration;
-  if (showTime) {
-    convertedShowTime = convertTimeString(showTime);
-    console.log('convertedTime------', convertedShowTime);
-
-    convertedAddTimeDuration = convertTimeString(addTimeDuration);
-    console.log('convertedTime 22------', convertedAddTimeDuration);
-  }
-  const selectedStart = convertedShowTime;
-  const selectedEnd = convertedAddTimeDuration;
-  console.log(' showTime--', showTime);
-  console.log(' addTimeDuration--', addTimeDuration);
-
-  //     const startHour = 8;
-  // const endHour = 22.25;
-  // const numIntervals = (endHour - startHour) * 4;
-  for (let i = 0; i < 96; i++) {
-    let hours = Math.floor(i / 4);
-    let minutes = (i % 4) * 15;
-    let time = `${hours < 10 ? '0' + hours : hours}:${
-      minutes < 10 ? '0' + minutes : minutes
-    }`;
-    let index = i * 0.25;
-    // console.log("index---",index)
-    //converting 24 hour timeline to 12 hour timeline
-    let ampm = 'AM';
-    if (hours > 11) {
-      ampm = 'PM';
-    }
-    if (hours > 12) {
-      hours -= 12;
-    }
-    if (hours === 0) {
-      hours = 12;
-    }
-
-    //  console.log("time----", time)
-
-    let status = 'unavailable';
-    let statusSelectedSlots = 'unselected';
-
-    let statusStartTime = false;
-    let statusEndTime = false;
-
-    let borderStatusBlue = false;
-    let borderStatusRed = false;
-    let borderStatusNull = false;
-
-    //showing available slots
-
-    for (const slot of availableTimeSlots) {
-      // console.log("time-slot-22--", slot)
-      if (time >= slot.start && time <= slot.end) {
-        status = 'available';
-        break;
-      }
-    }
-    // checks for handling starttime and end time borderWidth
-    if (time >= selectedStart && time <= selectedEnd) {
-      statusSelectedSlots = 'selected';
-      statusStartTime = !statusStartTime;
-      statusEndTime = !statusEndTime;
-    }
-
-    if (selectedStart === time) {
-      statusStartTime = !statusStartTime;
-    }
-    if (selectedEnd === time) {
-      statusEndTime = !statusEndTime;
-    }
-
-    let isStartInSlot = false;
-    let isEndInSlot = false;
-    let isSlotBetween = false;
-    let timeBetweenStartEndInSlot = false;
-    // checks for use cases when user select the time slot
-    for (const slot of availableTimeSlots) {
-      if (selectedStart >= slot.start && selectedStart < slot.end) {
-        isStartInSlot = true;
-      }
-
-      if (selectedEnd > slot.start && selectedEnd <= slot.end) {
-        isEndInSlot = true;
-      }
-
-      // isSlotbetween below all three clauses checks when either unavalable slot lies between two avalable slots or avalable slot lies between two unavailable slots ,
-      // so border width turns red when isSlotBetween status turns red
-
-      if (selectedStart < slot.start && selectedEnd > slot.end) {
-        isSlotBetween = true;
-      }
-      if (
-        selectedStart < slot.start &&
-        selectedEnd > slot.start &&
-        selectedEnd <= slot.end
-      ) {
-        isSlotBetween = true;
-      }
-      if (
-        selectedStart < slot.end &&
-        selectedEnd > slot.end &&
-        selectedStart > slot.start
-      ) {
-        isSlotBetween = true;
-      }
-
-      if (selectedStart === slot.end) {
-        isStartInSlot = true;
-        isEndInSlot = false;
-      }
-      if (selectedEnd === slot.start) {
-        isEndInSlot = true;
-        isStartInSlot = false;
-      }
-    }
-    if (isStartInSlot && isEndInSlot) {
-      if (!isSlotBetween) {
-        borderStatusBlue = !borderStatusBlue;
-      } else {
-        borderStatusRed = !borderStatusRed;
-      }
-    } else if (isStartInSlot || isEndInSlot || isSlotBetween) {
-      borderStatusRed = !borderStatusRed;
-    } else {
-      borderStatusNull = !borderStatusNull;
-    }
-
-    data.push({
-      key: `${hours}:${minutes === 0 ? '00' : minutes}`,
-      status,
-      statusSelectedSlots,
-      statusEndTime,
-      statusStartTime,
-      time,
-      borderStatusBlue,
-      borderStatusRed,
-      borderStatusNull,
-      ampm,
-      index,
-    });
-  }
-  // console.log("dataaaaa----",data)
-  const Item = ({item}) => {
-    setBorderBlue(item?.borderStatusBlue);
-    return (
-      <View
-        style={[
-          styles.itemContainer,
-          {
-            backgroundColor:
-              item.status === 'available' ? '#D8DEFF' : '#EEEEEE',
-
-            borderTopWidth: item.statusSelectedSlots === 'selected' ? 2 : 0,
-            borderBottomWidth: item.statusSelectedSlots === 'selected' ? 2 : 0,
-            borderRightWidth:
-              item.statusSelectedSlots === 'selected' &&
-              item.statusEndTime === false
-                ? 2
-                : 0,
-            borderLeftWidth:
-              item.statusSelectedSlots === 'selected' &&
-              item.statusStartTime === false
-                ? 2
-                : 0,
-
-            borderColor:
-              item.borderStatusBlue === true
-                ? AppTheme.COLORS.purple
-                : item.borderStatusRed === true
-                ? AppTheme.COLORS.error
-                : AppTheme.COLORS.error,
-          },
-        ]}>
-        <Txt
-          style={[
-            styles.time,
-            item.key.endsWith(`:00`) ? styles.boldHourTxt : styles.lightHourTxt,
-          ]}>
-          {`${item.key}`}
-        </Txt>
-        <Txt style={styles.ampmTxt}>
-          {item.key.endsWith(`:00`) ? item.ampm : null}
-        </Txt>
-      </View>
-    );
-  };
-
-  console.log('borderrED-----------222---', borderBlue);
-  const getTime = (timeObj, format) => {
-    if (!timeObj) return 'hh:mm A';
-    const time = moment(timeObj).format(format);
-    return time;
-  };
-
-  const addTime = () => {
-    console.log('showTime999---', GMTTime);
-    // const date = new Date(`2022-04-10T${timeString}:00`);
-    // console.log("showTime999---", showTime)
-
-    const timeMoment = moment(showTime, 'hh:mm A');
-    const newTimeMoment = timeMoment.add(timebtn, 'minutes');
-    const newTimeString = newTimeMoment.format('hh:mm A');
-
-    console.log('iso string---2--', newTimeString); // Output: '04:45 PM'
-
-    if (GMTTime) {
-      if (timebtn < 12) {
-        let time1 = moment(GMTTime).add(timebtn, 'hours').format('hh:mm A');
-        setAddTimeDuration(time1);
-      } else {
-        let time1 = moment(GMTTime).add(timebtn, 'minutes').format('hh:mm A');
-        setAddTimeDuration(time1);
-      }
-      console.log('--addTimeDuration 11---', addTimeDuration);
-    } else {
-      if (timebtn < 12) {
-        let time1 = moment(showTime, 'hh:mm A')
-          .add(timebtn, 'hours')
-          .format('hh:mm A');
-        setAddTimeDuration(time1);
-      } else {
-        let time1 = moment(showTime, 'hh:mm A')
-          .add(timebtn, 'minutes')
-          .format('hh:mm A');
-        setAddTimeDuration(time1);
-      }
-      console.log('--addTimeDuration 11---', addTimeDuration);
-    }
-  };
-
-  const showDatePicker = () => {
-    setDatePickerVisibility(!isDatePickerVisible);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = date => {
-    console.log(
-      'A date has been picked: ',
-      date,
-      '----',
-      moment(new Date(date), 'DD-MM-YYYY').format('DD/MM/YYYY'),
-    );
-    const formattedDat1 = moment(new Date(date), 'DD-MM-YYYY').format('LL');
-
-    setSelectedDate(formattedDat1);
-    console.log('selectedDate---', selectedDate);
-    hideDatePicker();
-  };
-
-  const renderBackdropBottomSheet = useCallback(
-    props => (
-      <BottomSheetBackdrop
-        {...props}
-        BackdropPressBehavior="close"
-        disappearsOnIndex={-1}
-        appearsOnIndex={0}
-      />
-    ),
-    [],
-  );
-
-  const {
-    animatedHandleHeight,
-    animatedSnapPoints,
-    animatedContentHeight,
-    handleContentLayout,
-  } = useBottomSheetDynamicSnapPoints(snapPoints);
-
-  // This function rounds a given time to the nearest half hour.
-  function roundToNearestHalfHour(time) {
-    const hour = time.getHours();
-    const minute = time.getMinutes();
-
-    if (minute === 0) {
-      // If the current time is exactly on the hour
-      return new Date(
-        time.getFullYear(),
-        time.getMonth(),
-        time.getDate(),
-        hour,
-        0,
-      );
-    } else if (minute >= 1 && minute <= 29) {
-      // If the current time is between X:01 and X:29
-      return new Date(
-        time.getFullYear(),
-        time.getMonth(),
-        time.getDate(),
-        hour,
-        30,
-      );
-    } else if (minute === 30) {
-      return new Date(
-        time.getFullYear(),
-        time.getMonth(),
-        time.getDate(),
-        hour,
-        30,
-      );
-    } else {
-      // If the current time is between X:31 and X:59
-      const roundedHour = (hour + 1) % 24;
-      return new Date(
-        time.getFullYear(),
-        time.getMonth(),
-        time.getDate(),
-        roundedHour,
-        0,
-      );
-    }
-  }
-
-  const flatListRef = useRef(null);
-  const onSelectionofNoOfTime = () => {
-    //     setGMTTime(timePicker);
-    // setTimeFormat(getTime(timePicker, 'hh:mm A'));
-
-    const roundedTime = roundToNearestHalfHour(timePicker);
-    console.log('time picker---', getTime(roundedTime, 'hh:mm A'));
-    setShowTime(timeFormat ? timeFormat : getTime(roundedTime, 'hh:mm A'));
-    console.log('time format---', timeFormat);
-    bottomSheetRefTimePicker.current?.closeBottomSheet();
-    console.log('flatListRef.current:', flatListRef.current);
-    setTimeout(() => {
-      if (flatListRef.current) {
-        flatListRef.current.scrollToIndex({animated: true, index: 12});
-      }
-    }, 100);
-    console.log('flatListRef.current:2-', flatListRef.current);
-  };
-
-  const selectReccuringDays = (userType, item) => {
-    setRecurringDaysData(userType);
-    if (recurringDaysData === userType) {
-      setRecurringDaysData(!userType);
-    }
-    setRecurringDayObject(item);
-    console.log('select recurring Day pressed ');
-  };
-
-  const timeDuration = usertype => {
-    console.log('show me time btn---', usertype);
-    settimebtn(usertype);
-
-    // if (timebtn === usertype) {
-    //     settimebtn(!usertype);
-
-    // }
-
-    console.log('duration btn pressed ');
-  };
-  const repeatbookingpress = usertype => {
-    setRepeatBooking(usertype);
-    console.log('repeat booking pressed ');
-  };
-
-  const [currentMeetingRoom, setCurrentMeetingRoom] = useState();
-
-  const selectMeetingRoompress = (usertype, item) => {
-    console.log('index---', item);
-    setSelectMeetingRoom(usertype);
-    setCurrentMeetingRoom(item);
-
-    // if (selectMeetingRoom === usertype) {
-    //     setSelectMeetingRoom(!usertype);
-    // }
-    // handleTimeLine()
-    console.log('select meeting room pressed ');
-  };
-
+  //* Timeline & Others Effects
+  //* useEffect to set the initial date and time
   useEffect(() => {
-    addTime();
-  }, [timebtn, showTime]);
-
-  useEffect(() => {
-    dispatch(GetMeetingRoom())
-      .unwrap()
-      .then(result => {
-        console.warn('Meeting Room---------', result?.meetingRooms);
-        setMeetingRoomNo(result ? result?.meetingRooms : []);
-      });
-  }, [dispatch]);
-
-  const mergeDateTime = (Dates, Time) => {
-    console.log('date 11---', Dates);
-    const date = moment(Dates, 'LL').format('YYYY-MM-DD');
-    const time = moment(Time, 'h:mm A').format('HH:mm');
-    console.log('date 11---', date);
-    console.log('time 11---', time);
-    const isoDate = moment(`${date}T${time}:00.000Z`);
-
-    // const isoDate = date.toISOString();
-
-    console.log('isoDate---', isoDate);
-    return isoDate;
-  };
-
-  // useEffect(()=>{
-  // mergeDateTime()
-  // },[showTime , addTimeDuration])
-
-  const convertTo24HourTime = isoTime => {
-    const date = new Date(isoTime);
-    const options = {
-      hour: 'numeric',
-      minute: 'numeric',
-      // hour12: true,
-      timeZone: 'UTC',
-    };
-    const timeFormatter = new Intl.DateTimeFormat(undefined, options);
-
-    // Format the Date object to the desired time format
-    const formattedTime = timeFormatter.format(date);
-
-    console.log('formattedTime show please----', formattedTime);
-
-    const [time, modifier] = formattedTime.split(' ');
-
-    let [hours, minutes] = time.split(':');
-
-    if (hours === '12' && modifier === 'AM') {
-      hours = '00';
-    } else if (hours !== '12' && modifier === 'PM') {
-      hours = parseInt(hours, 10) + 12;
-    }
-
-    return `${hours.toString().padStart(2, '0')}:${minutes
-      .toString()
-      .padStart(2, '0')}`;
-
-    // const hours= date.getHours().toString().padStart(2,'0')
-    // const minutes= date.getMinutes().toString().padStart(2,'0')
-    // return `${h}:${m}`;
-  };
-
-  const filterSlots = (slots, date) => {
-    console.log('date----', date);
-    console.log('slot----', slots);
-
-    // const dateString = '14/04/2023';
-    const [d, m, y] = date.split('/').map(Number);
-    // const isoDateString = `${y}-${m.toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
-    // const dateObj = new Date(isoDateString);
-
-    const dateObj = new Date(date);
-    const isoDateString = dateObj.toISOString().split('T')[0];
-
-    // const dateObj=new Date(date)
-    // console.log('dateObj---',dateObj)
-    console.log('date 2 ---', isoDateString); // Output: date--- Fri Apr 14 2023 00:00:00 GMT+0000 (Coordinated Universal Time)
-    console.log('day 2---', dateObj.getDate()); // Output: day--- 14
-    const day = dateObj.getDate();
-    console.log('day---', day);
-
-    const filter = slots.filter(slot => {
-      console.log("'start date--", slot.FromTime);
-      const apiDay = moment.utc(slot.FromTime).format('DD');
-
-      // console.log(dayOfMonth);
-      // const apiDate=new Date(slot.FromTime)
-      // const apiDay= apiDate.getDate()
-
-      console.log('apiDay 22---', apiDay);
-      return Number(apiDay) === day;
-    });
-    console.log('filter---', filter);
-
-    const convertedTimeSlots = filter.map(
-      ({FromTime, ToTime, Id, ResourceId, ResourceName}) => {
-        return {
-          Id: Id,
-          ResourceId: ResourceId,
-          ResourceName: ResourceName,
-          start: convertTo24HourTime(FromTime),
-          end: convertTo24HourTime(ToTime),
-        };
-      },
-    );
-    convertedTimeSlots.push(
-      {
-        start: '22:15',
-        end: '23:45',
-      },
-      {
-        start: '00:00',
-        end: '07:45',
-      },
-    );
-    console.log('convertedTimeSlots ---', convertedTimeSlots);
-
-    // Sort the Time array based on start time
-    const sortedSlots = convertedTimeSlots.sort((a, b) => {
-      const timeA = a.start.split(':');
-      const timeB = b.start.split(':');
-      return timeA[0] - timeB[0] || timeA[1] - timeB[1];
-    });
-
-    // Output the sorted Time array
-    console.log('sortedSlots----', sortedSlots);
-
-    setTimeSlots(sortedSlots);
-  };
-
-  //get bookings of meeting room from API
-  useEffect(() => {
-    dispatch(
-      GetMeetingBooking(
-        currentMeetingRoom ? currentMeetingRoom?.Id : meetingRoomOne?.Id,
-      ),
-    )
-      .unwrap()
-      .then(result => {
-        console.log('resultt -- GetMeetingBooking ---', result?.meetingRooms);
-        filterSlots(result?.meetingRooms, selectedDate);
-      })
-      .catch(err => {
-        console.log('slots api failed', err);
-      });
-  }, [dispatch, selectedDate, currentMeetingRoom ? currentMeetingRoom : null]);
-
-  console.log('timeSlots------', timeSlots);
-
-  // CHECKING DAY PASS AVAILIBILITY FOR MEETING ROOM
-  // useEffect(()=>{
-  // const dayPassDate= moment(selectedDate).format('YYYY-MM-DD')
-  // const body ={id:coworkerId,date:dayPassDate}
-  // console.log("body----2233--",body)
-  // if (dayPass){
-  // dispatch(DayPassCheck(body)).unwrap().then(result=>{
-  //     console.log("result of day pas check =>>>>>>>",result)
-  //     setDayPassCheck(result?.available)
-  //     if(result?.available === false){
-  //         bottomSheetNoBooking.current?.snapToIndex(0);
-  //     }
-  // }).catch(error=>{
-  //     console.log("error of day pass check---",error)
-  // })
-  // }
-  // else{
-
-  // }
-  // },[dayPass,selectedDate])
-
-  //HIDING DATES BETWEEN 10 PM AND 8 AM
-  useEffect(() => {
-    const currentHour = new Date().getHours();
-    if (currentHour < 8 || currentHour >= 22) {
-      setTimePicker(null);
+    if (!isRescheduleRequest) {
+      const currentTime = moment();
+      const timeRange = getDefaultTimeRange(currentTime, selectedDurationBtn);
+      //* Update the time value state with the formatted time range
+      setTimeValue(timeRange);
     } else {
-      setTimePicker(new Date());
+      const timeRange = convertTimeRange(
+        rescheduleStartTime,
+        rescheduleEndTime,
+      );
+      //* Update the time value state with the formatted time range
+      setTimeValue(timeRange);
     }
   }, []);
 
-  //////The isToday() function is a custom function that you'll need to implement to check whether selectedDate is today's date.////
-  function isToday(date) {
-    const today = new Date();
-    console.log('is today date--', date);
-    const providedDate = new Date(date);
-    console.log('provides date--', providedDate, '--', today);
-    return (
-      providedDate.getDate() === today.getDate() &&
-      providedDate.getMonth() === today.getMonth() &&
-      providedDate.getFullYear() === today.getFullYear()
-    );
+  //* Update the the time tab according to the duration
+  useEffect(() => {
+    if (!isRescheduleRequest) {
+      const timeRange = getDefaultTimeRange(selectedDate, selectedDurationBtn);
+      //* Update the time value state with the formatted time range
+      setTimeValue(timeRange);
+    } else {
+      const timeRange = convertTimeRange(
+        rescheduleStartTime,
+        rescheduleEndTime,
+      );
+      //* Update the time value state with the formatted time range
+      setTimeValue(timeRange);
+    }
+  }, [selectedDurationBtn]);
+
+  //* Event listener for selected recurring if selected set to "yes" else "no
+  useEffect(() => {
+    if (selectedRecurringDay === null) {
+      setRepeatBooking('no');
+    } else {
+      setRepeatBooking('yes');
+    }
+  }, [selectedRecurringDay]);
+
+  useEffect(() => {
+    if (isRescheduleRequest) {
+      setRepeatBooking(rescheduleRepeatBooking.toLowerCase());
+    }
+  }, []);
+
+  //? Actions
+  //* Get Meeting Rooms API
+  const getMeetingRoomsApi = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const {statusCode, meetingRooms: data} = await dispatch(
+        GetMeetingRoom(),
+      ).unwrap();
+      if (statusCode === 200) {
+        setMeetingRooms(data);
+        if (isRescheduleRequest) {
+          const index = data.findIndex(
+            (item, index) => item.Id === meetingRoomOne.Id,
+          );
+          setSelectedRoomIndex(index);
+        }
+        // console.log('Room Data API;---------------', data);
+        getBookingsApi(data[0].Id, moment(selectedDate).format('YYYY-MM-DD'));
+        setSelectedImage({
+          uri: String(
+            `https://nexudus.spaces.nexudus.com//en/publicresources/getimage/${data[0]?.Id}?w=600&h=600&anchor=middlecenter&cache=2023-03-16T07:23:02Z`,
+          ),
+          id: uuid.v4(),
+        });
+        setIsLoading(false);
+      } else {
+        setMeetingRooms([]);
+        setSelectedImage(null);
+        setIsLoading(false);
+      }
+    } catch (error) {
+      setMeetingRooms([]);
+      setSelectedImage(null);
+      setIsLoading(false);
+      console.error('Error while getting meeting rooms details: ', error);
+      setError('Error while getting meeting rooms details.');
+    }
+  }, [dispatch]);
+  //* Get Bookings API
+
+  //! Test
+  function isAnySlotBookedInRange(data, start, end, period) {
+    const startTime = moment(`${start} ${period}`, 'hh:mm A');
+    const endTime = moment(`${end} ${period}`, 'hh:mm A');
+
+    for (const slot of data) {
+      const slotTime = moment(slot.timeHours, 'hh:mm A');
+      if (slotTime.isSame(startTime) || slotTime.isSame(endTime)) {
+        if (slot.isBooked) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
 
-  /////////////////////////////BOTTOM SHEETS ////////////////////////////
+  const generateAdditionalTimeSlots = (startHour, numSlots, isBefore) => {
+    const additionalSlots = [];
+    const slotInterval = 0.5; // Half-hour interval
 
-  const bottomSheetContentTimePicker = (
-    <View style={styles.bottomSheetContainer}>
-      <Txt style={[styles.title, styles.BottomSheetTitle]}>
-        {Strings.startTime}
-      </Txt>
-      <View style={styles.timePickerContainer}>
-        {timePicker && (
-          <DatePicker
-            androidVariant="iosClone"
-            date={timePicker}
-            textColor={
-              isDarkMode ? AppTheme.COLORS.white : AppTheme.COLORS.black
-            }
-            fadeToColor={'none'}
-            onDateChange={value => {
-              setTimePicker(value);
-              console.log('value--', value);
-              setGMTTime(value);
-              console.log('value', getTime(value, 'hh:mm A'));
-              setTimeFormat(getTime(value, 'hh:mm A'));
-            }}
-            mode="time"
-            is24hourSource="locale"
-            minuteInterval={15}
-            minimumDate={
-              (isToday(selectedDate) ? minimumDate : undefined) ||
-              new Date(new Date().setHours(8, 0, 0))
-            }
-            maximumDate={new Date(new Date().setHours(22, 0, 0))}
-          />
-        )}
-      </View>
-      <Botton
-        loading={false}
-        title={'Confirm'}
-        disabled={false}
-        accessibilityLabel="confirmTime"
-        singleButtonStyle={{marginTop: scale(10)}}
-        onPress={() => onSelectionofNoOfTime()}
-      />
-    </View>
+    for (let i = 0; i < numSlots; i++) {
+      let timeNumber;
+      if (isBefore) {
+        timeNumber = startHour - (i + 1) * slotInterval;
+        if (timeNumber < 0) {
+          timeNumber += 24;
+        }
+      } else {
+        timeNumber = startHour + i * slotInterval;
+        if (timeNumber >= 24) {
+          timeNumber -= 24;
+        }
+      }
+
+      // Normalize timeNumber to always be between 0 and 24
+      if (timeNumber < 0) {
+        timeNumber += 24;
+      } else if (timeNumber >= 24) {
+        timeNumber -= 24;
+      }
+      //TODO: Temp fix please filter duplicate values
+      //! Skip if timeNumber is 21.5 (9:30 PM)
+      if (timeNumber === 21.5) {
+        continue;
+      }
+
+      const formattedHours = Math.floor(timeNumber);
+      const minutes = (timeNumber - formattedHours) * 60;
+      const period = formattedHours >= 12 ? 'pm' : 'am';
+
+      const timeHours =
+        moment()
+          .hour(formattedHours % 12)
+          .minutes(minutes)
+          .format('hh:mm') +
+        ' ' +
+        period;
+
+      additionalSlots.push({
+        isBooked: true,
+        timeHours,
+        timeNumber: timeNumber,
+      });
+    }
+
+    // Sort the additionalSlots array by timeNumber
+    additionalSlots.sort((a, b) => a.timeNumber - b.timeNumber);
+
+    return additionalSlots;
+  };
+
+  //! Test end
+  const getBookingsApi = useCallback(
+    async (id, date) => {
+      try {
+        setIsLoadingTimeline(true);
+        const passingData = {id, date};
+        const {statusCode, slots} = await dispatch(
+          GetMeetingNewTimeLine(passingData),
+        ).unwrap();
+        if (statusCode === 200) {
+          console.log('Data API;---------------', slots);
+
+          const numSlotsBeforeStart = 4;
+          const numSlotsAfterEnd = 4;
+
+          const startHour = slots[0].timeNumber;
+          const endHour = slots[slots.length - 1].timeNumber;
+
+          const additionalSlotsBeforeStart = generateAdditionalTimeSlots(
+            startHour,
+            numSlotsBeforeStart,
+            true,
+          );
+          const additionalSlotsAfterEnd = generateAdditionalTimeSlots(
+            endHour,
+            numSlotsAfterEnd,
+            false,
+          );
+
+          const completeTimeline = additionalSlotsBeforeStart.concat(
+            slots,
+            additionalSlotsAfterEnd,
+          );
+
+          // setBookings(slots);
+          setBookings(completeTimeline);
+          //! Test end
+          setIsLoadingTimeline(false);
+        } else {
+          setBookings([]);
+          setIsLoadingTimeline(false);
+        }
+      } catch (error) {
+        setBookings([]);
+        setIsLoadingTimeline(false);
+        console.error('Error while getting meeting rooms details: ', error);
+        setError('Error while getting meeting rooms details.');
+      } finally {
+        setIsOnBooked(false)
+        const splitValue = timeValue.split(' ');
+        if (
+          timeValue.length !== 0 && isAnySlotBookedInRange(
+            bookings,
+            splitValue[0],
+            splitValue[2],
+            splitValue[3].toLowerCase(),
+          )
+        ) {
+          setIsOnBooked(true);
+        } else {
+          setIsOnBooked(false);
+        }
+      }
+    },
+    [dispatch],
   );
+  //* Press Handler for "Meeting Room Buttons" and "Durations Button"
+  const handleButtonClick = data => {
+    if (data.type === 'meetingBtn') {
+      setSelectedRoomIndex(data.index);
+      setSelectedImage({
+        uri: `https://nexudus.spaces.nexudus.com//en/publicresources/getimage/${
+          meetingRooms[data.index]?.Id
+        }?w=600&h=600&anchor=middlecenter&cache=2023-03-16T07:23:02Z`,
+        id: uuid.v4(),
+      });
+    } else if (data.type === 'durationBtn') {
+      setSelectedDurationBtnIndex(data.index);
+      setSelectedDurationBtn(duration[data.index]);
+    } else {
+      console.error('Please Pass a Valid Data!');
+    }
+  };
+  //* Time & Calender Picker Handler
+  const onChange = (event, selected) => {
+    const currentDate = selected || selectedDate;
+    setShowPicker(false);
+    const [startTimeIn24HourFormat, endTimeIn24HourFormat] =
+      getTimeRangeIn24HourFormat(currentDate, selectedDurationBtn);
+    //* AnimateTo Selected Index In Timeline
+    animateToSelectedIndexInTimeline(
+      [startTimeIn24HourFormat, endTimeIn24HourFormat],
+      currentDate,
+    );
+  };
+  //* Auto Scroll to selected Duration (in Timeline)
+  const animateToSelectedIndexInTimeline = (passedIndexes, currentDate) => {
+    if (
+      passedIndexes &&
+      Array.isArray(passedIndexes) &&
+      passedIndexes.length === 2
+    ) {
+      const [startTimeNumber, endTimeNumber] = passedIndexes;
+      // Find the index of the selected time slot based on the new "time range"
+      const startIndex = bookings.findIndex(
+        item => item.timeNumber == startTimeNumber,
+      );
+      const endIndex = bookings.findIndex(
+        item => item.timeNumber == endTimeNumber,
+      );
 
-  const bottomSheetRecurringContent = (
+      // Calculate the center index
+      const centerIndex = startIndex + Math.floor((endIndex - startIndex) / 2);
+
+      //* Scroll to the center index smoothly
+      if (centerIndex !== -1) {
+        //* Set states
+        setSelectedDate(currentDate);
+        // setIsOnBooked(false)
+        const timeRange = getDefaultTimeRange(currentDate, selectedDurationBtn);
+        setTimeValue(timeRange);
+        setPassedDate(moment(new Date(currentDate), 'DD-MM-YYYY').format('LL'));
+        //* Check whether its on booked slot
+        const splitValue = timeRange.split(' ');
+        isAnySlotBookedInRange(
+              bookings,
+              splitValue[0],
+              splitValue[2],
+              splitValue[3].toLowerCase(),
+            )
+        // if (
+        //   isAnySlotBookedInRange(
+        //     bookings,
+        //     splitValue[0],
+        //     splitValue[2],
+        //     splitValue[3].toLowerCase(),
+        //   )
+        // ) {
+        //   setIsOnBooked(true);
+        // } else {
+        //   setIsOnBooked(false);
+        // }
+        //* Animate to the matched index
+        timelineListRef.current.scrollToIndex({
+          animated: true,
+          index: centerIndex,
+          viewPosition: 0.5, //* Center the selected time slot
+        });
+      } else {
+        if (Platform.OS === 'android') {
+          ToastAndroid.showWithGravity(
+            'The selected time range is not available!',
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM,
+          );
+        } else {
+          Toast.show('The selected time range is not available!', {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+            backgroundColor: isDarkMode
+              ? AppTheme.COLORS.white
+              : AppTheme.COLORS.black,
+            textColor: isDarkMode
+              ? AppTheme.COLORS.black
+              : AppTheme.COLORS.white,
+            opacity: 1,
+          });
+        }
+      }
+    } else {
+      console.error('Please provide a valid dataset!');
+    }
+  };
+  //* Move the timeline upper frame logic
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        // console.log('onMoveShouldSetPanResponder - dx:', gestureState.dx);
+
+        // Flatlist Start
+        if (scrollStart && gestureState.dx < 0) {
+          console.log('Start');
+          return true;
+        }
+
+        // Flatlist End
+        if (scrollEnd && gestureState.dx > 0) {
+          console.log('End');
+          return false;
+        }
+
+        return false;
+      },
+      onPanResponderMove: (_, gestureState) => {
+        if (scrollStart) {
+          // Calculate the new scrollX value
+          const newScrollX = scrollX._value - gestureState.dx;
+          // Limit the scrollX value based on the scrollStart and scrollEnd states
+          const leftLimit = 0;
+
+          // Limit scrolling to the left (from the start position)
+          if (newScrollX > leftLimit) {
+            // console.log("ScrollStart 'if' newScrollX > leftLimit", leftLimit);
+            scrollX.setValue(leftLimit);
+          } else {
+            // console.log(
+            //   "ScrollStart 'else' newScrollX > leftLimit: ",
+            //   newScrollX,
+            // );
+            // scrollX.setValue(newScrollX);
+          }
+        }
+
+        // console.log(
+        //   'onPanResponderMove - dx:',
+        //   gestureState.dx,
+        //   newScrollX,
+        //   scrollX._value,
+        // );
+
+        // Update the scrollX value based on the gesture
+        Animated.event([null, {dx: scrollX}], {
+          useNativeDriver: false,
+        })(_, gestureState);
+      },
+    }),
+  ).current;
+
+  //? Others
+  //* Bottom Sheet Components
+  const renderItemRecurring = ({item, index}, selectRecurringMatch) => (
+    <TouchableOpacity
+      onPress={() => {
+        setSelectedRecurringDay(
+          item.recurringDay !== selectRecurringMatch ? item.recurringDay : null,
+        );
+        setPassedRecurringDay(recurring[index]);
+      }}
+      style={[
+        styles.recurringDaysContainer,
+        {borderWidth: selectRecurringMatch === item.recurringDay ? 1 : 0},
+      ]}>
+      <Txt style={styles.recurringText}>{item.recurringDay}</Txt>
+      {selectRecurringMatch === item.recurringDay && (
+        <View style={styles.checkedContainer}>
+          <MaterialCommunityIcons
+            name="check"
+            size={20}
+            color={AppTheme.COLORS.white}
+          />
+        </View>
+      )}
+    </TouchableOpacity>
+  );
+  const btmRecurringContent = (
     <View style={styles.bottomSheetContainer}>
-      <Txt style={[styles.title, styles.BottomSheetTitle]}>
-        {Strings.repeatMeeting}
-      </Txt>
-
-      {recurring.map((item, index) => (
-        <TouchableOpacity
-          onPress={() => {
-            selectReccuringDays(item?.recurringDay, item);
-            console.log('selected day', item?.recurringDay);
-          }}
-          style={[
-            styles.recurringDaysContainer,
-            {borderWidth: recurringDaysData == item?.recurringDay ? 1 : 0},
-          ]}>
-          <Txt style={styles.recurringText}>{item?.recurringDay}</Txt>
-          {recurringDaysData == item?.recurringDay && (
-            <View style={styles.checkedContainer}>
-              <MaterialCommunityIcons
-                name="check"
-                size={20}
-                color={AppTheme.COLORS.white}
-              />
-            </View>
-          )}
-        </TouchableOpacity>
-      ))}
-
+      <Txt style={styles.BottomSheetTitle}>{Strings.repeatMeeting}</Txt>
+      <BottomSheetFlatList
+        showsVerticalScrollIndicator={false}
+        data={recurring}
+        renderItem={item => {
+          return <>{renderItemRecurring(item, selectedRecurringDay)}</>;
+        }}
+        keyExtractor={item => item.id.toString()}
+      />
       <View style={styles.bottomSheetBtnContainer}>
         <Botton
           loading={false}
-          title={'Confirm'}
+          title="Confirm"
           disabled={false}
-          //    singleButtonStyle={{backgroundColor:isDarkMode ? AppTheme.COLORS.purple : AppTheme.COLORS.black}}
           accessibilityLabel="confirmRecurring"
           onPress={() => {
-            setShowRecurringDay(recurringDaysData);
-            bottomSheetRefRecurringDays.current?.closeBottomSheet();
+            // Use the selectedRecurringDay as needed
+            btmRefRecurring.current?.closeBottomSheet();
           }}
         />
       </View>
     </View>
   );
 
-  ///////////////////////////////////////////////////////////////////////
+  //! Test
+  // Function to calculate the current index based on the position of the UpperFrame
+  const calculateCurrentIndex = nativeEvent => {
+    const offsetX = nativeEvent.contentOffset.x;
+    const itemHeight = 58.66666793823242; // Replace with your actual item height
+    const index = Math.floor(offsetX / itemHeight);
 
-  useEffect(() => {
-    if (bottomSheet.bsTimePicker) {
-      console.log('timepicker is true');
-      bottomSheetRefTimePicker.current?.expandBottomSheet();
-    } else if (bottomSheet.bsRepeat) {
-      console.log('bsRepeat is true');
-      bottomSheetRefRecurringDays.current?.expandBottomSheet();
-    }
-  }, [bottomSheet]); // dependency array
+    console.log('Scroll Offset:', offsetX);
+    console.log('Item Index:', index);
+    console.log('nativeEvent:', nativeEvent.contentOffset);
+  };
+  //! Test end
 
   return (
-    <>
-      <Frame
-        showBottomSheet={true}
-        snapPoints={
-          bottomSheet.bsTimePicker ? snapPoints : snapPointsRecurringDays
-        }
-        bottomSheetContent={
-          bottomSheet.bsTimePicker
-            ? bottomSheetContentTimePicker
-            : bottomSheetRecurringContent
-        }
-        ref={
-          bottomSheet.bsTimePicker
-            ? bottomSheetRefTimePicker
-            : bottomSheetRefRecurringDays
-        }>
-        <View style={styles.mainContainer}>
-          <Txt style={styles.scheduleText}>{Strings.schedule}</Txt>
-          <View
-            style={[
-              styles.flexDirectionRow,
-              {alignItems: 'center', justifyContent: 'space-between'},
-            ]}>
-            <TouchableOpacity
-              accessibilityLabel="selectDateView"
-              onPress={() => {
-                console.log('i am date');
-                showDatePicker();
-              }}>
-              {/* <Txt style={[styles.inputViewText,{color:isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)'}]}>{Strings.date}</Txt> */}
-              <View
-                style={[
-                  styles.inputView,
-                  {
-                    backgroundColor: isDarkMode
-                      ? AppTheme.COLORS.wrapperDarkModeBg
-                      : AppTheme.COLORS.secondaryGreyLightBg,
-                  },
-                ]}>
-                <View style={[styles.flexDirectionRow, {alignItems: 'center'}]}>
-                  <View>
-                    <Svg width={'100%'}>
-                      {isDarkMode ? <CalendarDark /> : <DateIcon />}
-                    </Svg>
-                  </View>
-                  <Txt style={styles.placeHolder}>{selectedDate}</Txt>
-                </View>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              accessibilityLabel="selectTime"
-              onPress={() => {
-                console.log('i am time');
-                setBottomSheet({bsTimePicker: true, bsRepeat: false});
-                bottomSheetRefTimePicker.current?.expandBottomSheet();
-              }}>
-              {/* <Txt style={[styles.inputViewText,{color:isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)'}]}>{Strings.startTime}</Txt> */}
-              <View
-                style={[
-                  styles.inputView,
-                  {
-                    backgroundColor: isDarkMode
-                      ? AppTheme.COLORS.wrapperDarkModeBg
-                      : AppTheme.COLORS.secondaryGreyLightBg,
-                  },
-                ]}>
-                <View style={[styles.flexDirectionRow, {alignItems: 'center'}]}>
-                  <View>
-                    <ClockIcon
-                      stroke={
-                        isDarkMode
-                          ? AppTheme.COLORS.white
-                          : AppTheme.COLORS.black
-                      }
-                    />
-                  </View>
-                  <Txt style={styles.placeHolder}>
-                    {timebtn && showTime
-                      ? `${showTime} - ${addTimeDuration}`
-                      : showTime
-                      ? showTime
-                      : 'hh : mm'}
-                  </Txt>
-                </View>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={[
-              styles.flexDirectionRow,
-              {
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginTop: AppTheme.SPACINGS.MARGINS.M4,
-              },
-            ]}>
-            <Txt style={styles.screenHeadings}>{Strings.duration}</Txt>
-            <View style={styles.durationBoxesView}>
-              {duration.map(item => (
-                <TouchableOpacity
-                  accessibilityLabel="duration"
-                  onPress={() => timeDuration(item.hour)}
-                  style={
-                    timebtn === item.hour
-                      ? [
-                          styles.btnPress,
-                          {
-                            backgroundColor: isDarkMode
-                              ? AppTheme.COLORS.white
-                              : AppTheme.COLORS.black,
-                          },
-                        ]
-                      : [styles.btnNormal, {borderColor: '#C9C9C9'}]
-                  }>
-                  <Txt
-                    style={
-                      timebtn === item.hour
-                        ? [
-                            isDarkMode
-                              ? [
-                                  styles.durationBoxesOnPressText,
-                                  {
-                                    color: AppTheme.COLORS.black,
-                                    fontFamily: AppTheme.FONTS.TYPE.SEMIBOLD,
-                                  },
-                                ]
-                              : styles.durationBoxesOnPressText,
-                          ]
-                        : styles.durationBoxesDefaultText
-                    }>{`${item.hour} ${item.timeUnit}`}</Txt>
-                </TouchableOpacity>
+    <Frame
+      showBottomSheet
+      snapPoints={snapPointsRecurring}
+      bottomSheetContent={btmRecurringContent}
+      ref={btmRefRecurring}
+      screenTitle={'Scheduled Meeting Room'}
+      style={styles.container}>
+      <View style={styles.innerContainer}>
+        <View>
+          <ScheduleBtn
+            onCalenderPress={() => {
+              setSelectedMode('date');
+              setShowPicker(true);
+            }}
+            error={isOnBooked}
+            onTimePress={() => {
+              setSelectedMode('time');
+              setShowPicker(true);
+            }}
+            dateValue={moment(selectedDate).format('D MMM, YYYY')}
+            timeValue={timeValue}
+          />
+          {/* Duration */}
+          <View style={styles.durationContainer}>
+            <Txt style={styles.duration}>Duration</Txt>
+            <View style={{flexDirection: 'row'}}>
+              {duration.map((item, index) => (
+                <DurationButton
+                  key={item}
+                  dataLength={duration.length - 1}
+                  duration={item}
+                  index={index}
+                  isSelected={index === selectedDurationBtnIndex}
+                  isDarkMode={isDarkMode}
+                  onPress={() =>
+                    handleButtonClick({type: 'durationBtn', index})
+                  }
+                />
               ))}
             </View>
           </View>
+          {/* if "Day Pass" don't show repeat booking */}
           {!dayPass ? (
-            <View style={[style.flexDirectionRow, {alignItems: 'center'}]}>
-              <View>
-                <Txt style={styles.screenHeadings}>{Strings.repeatBooking}</Txt>
-                {repeatBooking === 'Yes' && (
-                  <>
-                    <TouchableOpacity
-                      accessibilityLabel="repeatDaysSelect"
-                      onPress={() => {
-                        bottomSheetRefRecurringDays.current?.expandBottomSheet();
-                        setBottomSheet({bsTimePicker: false, bsRepeat: true});
-                      }}>
-                      <Txt style={styles.recurringselectiontext}>
-                        {showRecurringDay
-                          ? showRecurringDay
-                          : 'Select Repeat Days'}
-                      </Txt>
-                    </TouchableOpacity>
-                  </>
-                )}
-              </View>
-              <View style={styles.repeatBookingBoxesView}>
-                <TouchableOpacity
-                  accessibilityLabel="repeatYes"
-                  onPress={() => {
-                    repeatbookingpress('Yes');
-                    bottomSheetRefRecurringDays.current?.expandBottomSheet();
-                    setBottomSheet({bsTimePicker: false, bsRepeat: true});
-                    // isModalVisible
-                  }}
-                  style={
-                    repeatBooking === 'Yes'
-                      ? [
-                          styles.bookingbtnPress,
-                          {
-                            backgroundColor: isDarkMode
-                              ? AppTheme.COLORS.white
-                              : AppTheme.COLORS.black,
-                          },
-                        ]
-                      : [styles.bookingbtnNormal, {borderColor: '#C9C9C9'}]
-                  }>
-                  <Txt
-                    style={
-                      repeatBooking === 'Yes'
-                        ? [
-                            isDarkMode
-                              ? [
-                                  styles.repeatbookingBoxesOnPressText,
-                                  {
-                                    color: AppTheme.COLORS.black,
-                                    fontFamily: AppTheme.FONTS.TYPE.SEMIBOLD,
-                                  },
-                                ]
-                              : styles.repeatbookingBoxesOnPressText,
-                          ]
-                        : styles.repeatbookingBoxesDefaultText
-                    }>
-                    Yes
-                  </Txt>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  accessibilityLabel="repeatNo"
-                  onPress={() => {
-                    repeatbookingpress('No');
-                  }}
-                  style={
-                    repeatBooking === 'No'
-                      ? [
-                          styles.bookingbtnPress,
-                          {
-                            backgroundColor: isDarkMode
-                              ? AppTheme.COLORS.white
-                              : AppTheme.COLORS.black,
-                          },
-                        ]
-                      : [styles.bookingbtnNormal, {borderColor: '#C9C9C9'}]
-                  }>
-                  <Txt
-                    style={
-                      repeatBooking === 'No'
-                        ? [
-                            isDarkMode
-                              ? [
-                                  styles.repeatbookingBoxesOnPressText,
-                                  {
-                                    color: AppTheme.COLORS.black,
-                                    fontFamily: AppTheme.FONTS.TYPE.SEMIBOLD,
-                                  },
-                                ]
-                              : styles.repeatbookingBoxesOnPressText,
-                          ]
-                        : styles.repeatbookingBoxesDefaultText
-                    }>
-                    No
-                  </Txt>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : null}
-          <Divider
-            style={[
-              styles.divider,
-              {
-                backgroundColor: isDarkMode
-                  ? 'rgba(255, 255, 255, 0.3)'
-                  : 'rgba(202, 202, 202, 0.5)',
-              },
-            ]}
-          />
-          <Txt style={styles.screenHeadings}>{Strings.selectMeetingRoom}</Txt>
-
-          <View style={styles.shimmerAlign}>
-            <ShimmerPlaceHolder
-              visible={meetingRoomPending === false}
-              shimmerStyle={styles.shimmerAvail}></ShimmerPlaceHolder>
-
-            <ShimmerPlaceHolder
-              visible={meetingRoomPending === false}
-              shimmerStyle={styles.shimmerAvail}></ShimmerPlaceHolder>
-
-            <ShimmerPlaceHolder
-              visible={meetingRoomPending === false}
-              shimmerStyle={styles.shimmerAvail}></ShimmerPlaceHolder>
-          </View>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.selectMeetingRoomBoxesView}>
-            {meetingRoomNo.map((item, index) => (
-              <TouchableOpacity
-                onPress={() => {
-                  selectMeetingRoompress(item.Title, item);
-                  console.log('select meeting room N0 ---', item?.Title);
-                }}
-                style={
-                  selectMeetingRoom === item.Title
-                    ? [
-                        styles.meetingRoombtnPress,
-                        {
-                          backgroundColor: isDarkMode
-                            ? AppTheme.COLORS.white
-                            : AppTheme.COLORS.black,
-                        },
-                      ]
-                    : [styles.meetinroombtnNormal, {borderColor: '#C9C9C9'}]
-                }>
-                <Txt
-                  style={
-                    selectMeetingRoom === item.Title
-                      ? [
-                          isDarkMode
-                            ? [
-                                styles.meetingRoomOnPressText,
-                                {
-                                  color: AppTheme.COLORS.black,
-                                  fontFamily: AppTheme.FONTS.TYPE.SEMIBOLD,
-                                },
-                              ]
-                            : styles.meetingRoomOnPressText,
-                        ]
-                      : styles.meetingRoomOnDefaultText
-                  }>
-                  {item.Title}
-                </Txt>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-
-          {/* {console.log('1212121------',meetingRoomNo[0])} */}
-          <SelectMeetingRoomCard
-            item={currentMeetingRoom ? currentMeetingRoom : meetingRoomOne}
-            // timeLine={timeLine}
-            data={data}
-            ref={flatListRef}
-            renderItem={Item}
-            disabled={true}
-            itemStatus={data.map(item => item.status)}
-          />
-          {console.log('day pass checkis---', dayPassCheck)}
-          <View style={styles.proceedBtn}>
-            <Botton
-              accessibilityLabel="proceedBtn"
-              loading={false}
-              title={'Proceed'}
-              disabled={
-                !dayPass
-                  ? !GetMeetingBookingPending &&
-                    showTime &&
-                    addTimeDuration &&
-                    timebtn &&
-                    selectMeetingRoom &&
-                    (repeatBooking === 'No'
-                      ? repeatBooking
-                      : showRecurringDay) &&
-                    borderBlue
-                    ? false
-                    : true
-                  : !GetMeetingBookingPending &&
-                    showTime &&
-                    addTimeDuration &&
-                    timebtn &&
-                    //  dayPassCheck &&
-                    selectMeetingRoom &&
-                    borderBlue
-                  ? false
-                  : true
-              }
-              // disabled={true}
-              small={false}
-              onPress={() => {
-                console.log('currentMeetingRoom---', currentMeetingRoom);
-                console.log(' meetingRoomOne', meetingRoomOne);
-                navigation.navigate(ScreensName.invitationScreen, {
-                  FromTime: showTime,
-                  ToTime: addTimeDuration,
-                  repeatBooking: repeatBooking === 'Yes' ? true : false,
-                  recurringDaysData:
-                    repeatBooking === 'Yes' ? recurringDayObject : null,
-                  currentMeetingRoom: currentMeetingRoom
-                    ? currentMeetingRoom?.Id
-                    : meetingRoomOne?.Id,
-                  currentMeetingName: currentMeetingRoom
-                    ? currentMeetingRoom?.Title
-                    : meetingRoomOne?.Title,
-                  isoStartTime: mergeDateTime(selectedDate, showTime),
-                  isoEndTime: mergeDateTime(selectedDate, addTimeDuration),
-                  dayPass: dayPass,
-                  selectedDate: selectedDate,
-                  allocation: currentMeetingRoom
-                    ? currentMeetingRoom?.Allocation
-                    : meetingRoomOne?.Allocation,
-                  rescheduleTeamMembers: rescheduleTeamMembers,
-                  isRescheduleRequest: isRescheduleRequest,
-                  idReschedule: idReschedule,
-                  participant: false,
-                  Description: currentMeetingRoom
-                    ? currentMeetingRoom?.Description
-                    : meetingRoomOne?.Description,
-                });
+            <RepeatBookingBtn
+              onNo={() => {
+                setRepeatBooking('no');
+                setSelectedRecurringDay(null);
+                setPassedRecurringDay(null);
               }}
+              onYes={() => {
+                btmRefRecurring.current?.expandBottomSheet();
+              }}
+              selected={repeatBooking}
+              bottomContent={selectedRecurringDay}
             />
-          </View>
-        </View>
-
-        <Modal
-          isVisible={isDatePickerVisible}
-          animationIn="pulse"
-          animationOut="fadeOut"
-          // transparent={true}
-        >
-          <View style={styles.modalContainer}>
-            <Pressable
-              onPress={() => {
-                hideDatePicker();
-              }}>
-              <View
+          ) : null}
+          {/* Meeting Rooms Buttons */}
+          <View>
+            {/* Divider */}
+            <View
+              style={[
+                styles.divider,
+                {
+                  backgroundColor: isDarkMode ? '#FFFFFF1A' : '#C9C9C9',
+                },
+              ]}
+            />
+            <View style={styles.meetingRoomsBtnContainer}>
+              <Txt
                 style={[
-                  styles.CalendarPickerContainer,
-                  {
-                    backgroundColor: isDarkMode
-                      ? AppTheme.COLORS.wrapperDarkModeBg
-                      : '#FFFFFF',
-                  },
+                  styles.duration,
+                  {paddingHorizontal: AppTheme.SPACINGS.PADDINGS.P1},
                 ]}>
-                <CalendarPicker
-                  onDateChange={handleConfirm}
-                  width={350}
-                  minDate={minDate}
-                  monthTitleStyle={[
-                    styles.calendarMonth,
-                    {
-                      color: isDarkMode
-                        ? AppTheme.COLORS.orange
-                        : AppTheme.COLORS.purple,
-                    },
-                  ]}
-                  yearTitleStyle={[
-                    styles.calendarYear,
-                    {
-                      color: isDarkMode
-                        ? AppTheme.COLORS.orange
-                        : AppTheme.COLORS.purple,
-                    },
-                  ]}
-                  todayBackgroundColor="#D8DEFF"
-                  selectedDayColor="#D8DEFF"
-                  textStyle={[
-                    styles.calendarText,
-                    {
-                      color: isDarkMode
-                        ? AppTheme.COLORS.white
-                        : AppTheme.COLORS.black,
-                    },
-                  ]}
-                  // textStyle={{backgroundColor:'red'}}
-                  previousTitle={
-                    <MaterialIcons
-                      name={'keyboard-arrow-left'}
-                      size={24}
-                      color={
-                        isDarkMode
-                          ? AppTheme.COLORS.white
-                          : AppTheme.COLORS.black
-                      }
-                    />
-                  }
-                  nextTitle={
-                    <MaterialIcons
-                      name={'keyboard-arrow-right'}
-                      size={24}
-                      color={
-                        isDarkMode
-                          ? AppTheme.COLORS.white
-                          : AppTheme.COLORS.black
-                      }
-                    />
-                  }
-                />
-              </View>
-            </Pressable>
-          </View>
-        </Modal>
-
-        <BottomSheet
-          ref={bottomSheetNoBooking}
-          snapPoints={snapPointsNoBooking}
-          backdropComponent={renderBackdropBottomSheet}
-          index={-1}
-          enablePanDownToClose={true}
-          enabledInnerScrolling={true}>
-          <BottomSheetView style={styles.bottomSheetTitle}>
-            <Txt style={styles.noResource}>No Day Pass Available</Txt>
-            <Txt style={styles.noResourceDesc}>
-              Oppss. We are sorry that no day pass is available at the moment.
-              Please bear with us.
-            </Txt>
-            <View style={styles.btnContainerHome}>
-              <PrimaryButton
-                loading={false}
-                title={'close'}
-                disabled={false}
-                small={false}
-                onPress={() => {
-                  bottomSheetNoBooking.current?.close();
-                }}
+                Select meeting room
+              </Txt>
+              <FlatList
+                data={meetingRooms}
+                renderItem={({item, index}) => (
+                  <MeetingRoomButton
+                    item={item}
+                    index={index}
+                    isSelected={index === selectedRoomIndex}
+                    isDarkMode={isDarkMode}
+                    onPress={index => {
+                      setSelectedRoomIndex(index);
+                      setSelectedImage({
+                        uri: `https://nexudus.spaces.nexudus.com//en/publicresources/getimage/${meetingRooms[index]?.Id}?w=600&h=600&anchor=middlecenter&cache=2023-03-16T07:23:02Z`,
+                        id: uuid.v4(),
+                      });
+                    }}
+                  />
+                )}
+                keyExtractor={item => item.Id.toString()}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.flatListContainer}
+                ListEmptyComponent={() => (
+                  <View style={styles.emptyContainer}>
+                    {!isLoading ? (
+                      <Txt style={styles.notFound}>No meeting rooms found!</Txt>
+                    ) : (
+                      <MeetingRoomDetailSkeleton />
+                    )}
+                  </View>
+                )}
               />
             </View>
-          </BottomSheetView>
-        </BottomSheet>
-      </Frame>
-    </>
+          </View>
+          {/* Meeting Room Details */}
+          {meetingRooms && meetingRooms.length > 0 && (
+            <MeetingRoomDetails
+              selectedRoom={meetingRooms[selectedRoomIndex]}
+              isDarkMode={isDarkMode}
+              onViewImage={() => setViewImage(true)}
+            />
+          )}
+          {/* Timeline */}
+          {bookings && bookings.length > 0 && (
+            <>
+              {meetingRooms.length > 0 && !isLoadingTimeLine ? (
+                <View style={styles.timeLineContainer}>
+                  <Animated.View
+                    ref={upperFrameRef}
+                    // pointerEvents="box-none"
+                    style={[
+                      styles.timelineUpperFrame,
+                      {
+                        width: calculateWidth(
+                          duration[selectedDurationBtnIndex],
+                          duration,
+                        ),
+                        borderRadius:
+                          duration[selectedDurationBtnIndex] == 30
+                            ? 16
+                            : 100 / 2,
+                        borderColor: isDarkMode
+                          ? isOnBooked
+                            ? AppTheme.COLORS.error
+                            : AppTheme.COLORS.white
+                          : isOnBooked
+                          ? AppTheme.COLORS.error
+                          : AppTheme.COLORS.black,
+                        transform: [{translateX: scrollX}],
+                      },
+                    ]}
+                    // {...panResponder.panHandlers}
+                  />
+                  <FlatList
+                    data={bookings}
+                    ref={timelineListRef}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={item => item.timeHours.toString()}
+                    contentContainerStyle={{
+                      backgroundColor: isDarkMode
+                        ? AppTheme.COLORS.wrapperDarkModeBg
+                        : '#F1F1F1',
+                    }}
+                    renderItem={({item, index}) => (
+                      <TimelineItem
+                        bookings={bookings}
+                        item={item}
+                        index={index}
+                        isDarkMode={isDarkMode}
+                      />
+                    )}
+                    onEndReached={() => {
+                      setScrollStart(false);
+                      setScrollEnd(true);
+                    }}
+                    onScroll={({nativeEvent}) => {
+                      // const upperViewEvent = upperFrameRef.current;
+                      // calculateCurrentIndex(nativeEvent);
+                      if (nativeEvent.contentOffset.x === 0) {
+                        setScrollEnd(false);
+                        setScrollStart(true);
+                        console.log('At Start');
+                      } else {
+                        setScrollEnd(false);
+                        setScrollStart(false);
+                      }
+                    }}
+                  />
+                </View>
+              ) : (
+                <View style={styles.timelineSkeletonContainer}>
+                  <SkeletonLoader
+                    key={getRandomInt(100, 300)}
+                    visible={false}
+                    shimmerStyle={[styles.timelineSkeleton]}
+                  />
+                </View>
+              )}
+            </>
+          )}
+          <GuideLog />
+        </View>
+        <Botton
+          title={'Proceed'}
+          singleButtonStyle={styles.mainBtn}
+          disabled={
+            bookings.length === 0 ||
+            meetingRooms.length === 0 ||
+            isLoadingTimeLine ||
+            isLoading ||
+            isOnBooked
+          }
+          onPress={() => {
+            if (meetingRooms.length > 0) {
+              navigation.navigate(ScreensName.invitationScreen, {
+                isoStartTime: moment(passedDateToAnotherScrn)
+                  .set(
+                    'hour',
+                    moment(
+                      `${timeValue.split(' ')[0]} ${timeValue.split(' ')[3]}`,
+                      'h:mm A',
+                    ).hours(),
+                  )
+                  .set(
+                    'minute',
+                    moment(
+                      `${timeValue.split(' ')[0]} ${timeValue.split(' ')[3]}`,
+                      'h:mm A',
+                    ).minutes(),
+                  )
+                  .seconds(0)
+                  .milliseconds(0)
+                  .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
+                isoEndTime: moment(passedDateToAnotherScrn)
+                  .set(
+                    'hour',
+                    moment(
+                      `${timeValue.split(' ')[2]} ${timeValue.split(' ')[3]}`,
+                      'h:mm A',
+                    ).hours(),
+                  )
+                  .set(
+                    'minute',
+                    moment(
+                      `${timeValue.split(' ')[2]} ${timeValue.split(' ')[3]}`,
+                      'h:mm A',
+                    ).minutes(),
+                  )
+                  .seconds(0)
+                  .milliseconds(0)
+                  .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
+                duration: selectedDurationBtn,
+                start_end_time: timeValue,
+                repeatBooking: Boolean(repeatBooking === 'yes' ? true : false),
+                recurringDaysData: passedRecurringDay,
+                currentMeetingRoom: meetingRooms[selectedRoomIndex].Id,
+                currentMeetingName: meetingRooms[selectedRoomIndex].Title,
+                Description: meetingRooms[selectedRoomIndex].Description,
+                allocation: meetingRooms[selectedRoomIndex].Allocation,
+                selectedDate: passedDateToAnotherScrn,
+                participant: false,
+                rescheduleTeamMembers,
+                isRescheduleRequest,
+                idReschedule,
+                dayPass,
+              });
+            }
+          }}
+        />
+      </View>
+      <ImageView
+        images={[selectedImage]}
+        imageIndex={0}
+        visible={viewImage}
+        onRequestClose={() => setViewImage(false)}
+      />
+      {showPicker && (
+        <RNDateTimePicker
+          testID="dateTimePicker"
+          themeVariant={isDarkMode ? 'dark' : 'light'}
+          value={selectedDate}
+          mode={selectedMode}
+          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+          // minimumDate={new Date()} //* Set minimum date to today's date
+          maximumDate={moment().add(1, 'year').toDate()}
+          onChange={onChange}
+          minuteInterval={30}
+        />
+      )}
+    </Frame>
   );
-};
-
-export default Meetingroom;
+}
 
 // Styles
 import { StyleSheet } from 'react-native';
