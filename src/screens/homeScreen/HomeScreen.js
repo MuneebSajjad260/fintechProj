@@ -110,8 +110,10 @@ const HomeScreen = () => {
       .unwrap()
       .then(result => {
         // check result
-        console.warn('Finding Hybrid', JSON.stringify(result));
+        console.log(' resource plans data --', JSON.stringify(result));
         setResourcePlanData(result);
+      }).catch(err=>{
+        console.log(" resource plans err--",err)
       });
   }, []);
 

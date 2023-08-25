@@ -102,7 +102,8 @@ const MeetingWelcomeScreen = ({route}) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState('');
-  const data = route.params;
+  const data = route.params || false;
+  console.log("data----",data)
   const printingCredit = {
     id: 1,
     officeNo: 'Meeting Room',
@@ -661,8 +662,8 @@ const MeetingWelcomeScreen = ({route}) => {
               <Pressable
                 accessibilityLabel="meetingroomBook"
                 onPress={() => {
-                  if (status === 'pending' || status === 'expire') {
-                    // if (!(status === 'pending' || status === 'expire')) {
+                  // if (status === 'pending' || status === 'expire') {
+                     if (!(status === 'pending' || status === 'expire')) {
                     if (Platform.OS === 'android') {
                       ToastAndroid.showWithGravity(
                         'Inactive Membership',

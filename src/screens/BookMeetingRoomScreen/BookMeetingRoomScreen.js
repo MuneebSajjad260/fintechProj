@@ -97,6 +97,7 @@ const Meetingroom = ({route}) => {
     rescheduleRepeatBooking,
     rescheduleRecurringDay,
     participant,
+    rescheduleTeamMembers
   } = route.params;
   console.log(
     'dayPass----',

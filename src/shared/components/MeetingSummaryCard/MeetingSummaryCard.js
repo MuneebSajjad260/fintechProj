@@ -15,7 +15,7 @@ import styles from './MeetingSummaryCard.style';
 import ImageItem from '../core/ImageItem';
 
 const MeetingSummaryCard = (props) => {
-  const { item,date,durationTime,desc ,id, allocation,status,label, start_end_time} = props;
+  const { item,startTime, endTime ,date,durationTime,desc ,id, allocation,status,label} = props;
   const isDarkMode = useSelector(state=>state?.mode?.colorScheme);
   // console.log('date---',date,'--',item);
 
@@ -85,7 +85,7 @@ const MeetingSummaryCard = (props) => {
 
               <Txt
                 style={[styles.time,{color:isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)'}]}>
-                {start_end_time}
+                {`${startTime} - ${endTime}`}
               </Txt>
             </View>
           </View>
