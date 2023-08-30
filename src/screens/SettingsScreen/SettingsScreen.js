@@ -26,30 +26,30 @@ const SettingsScreen = ({navigation}) => {
   const [isGuideVisible, setIsGuideVisible] = useState(false);
   const [guideTarget, setGuideTarget] = useState(null);
   // const [userId, setUserId] = useState('');
-  const handleGuideClose = () => {
-    setIsGuideVisible(false);
-  };
+  // const handleGuideClose = () => {
+  //   setIsGuideVisible(false);
+  // };
  
   //popover appears when user login for the first time only
-  useEffect(() => {
+  // useEffect(() => {
     
-    const checkUserVisitedSettings = async () => {
-      try {
-        //const userId = Id; // Get the unique user identifier, e.g., from authentication
-        // setUserId(Id);
+  //   const checkUserVisitedSettings = async () => {
+  //     try {
+  //       //const userId = Id; // Get the unique user identifier, e.g., from authentication
+  //       // setUserId(Id);
 
-        const userVisitedSettings = await AsyncStorage.getItem(`userVisitedSettings_${Id}`);
-        if (userVisitedSettings === null) {
-          setIsGuideVisible(true);
-          await AsyncStorage.setItem(`userVisitedSettings_${Id}`, 'true');
-        }
-      } catch (error) {
-        console.log('AsyncStorage Error:', error);
-      }
-    };
+  //       const userVisitedSettings = await AsyncStorage.getItem(`userVisitedSettings_${Id}`);
+  //       if (userVisitedSettings === null) {
+  //         setIsGuideVisible(true);
+  //         await AsyncStorage.setItem(`userVisitedSettings_${Id}`, 'true');
+  //       }
+  //     } catch (error) {
+  //       console.log('AsyncStorage Error:', error);
+  //     }
+  //   };
 
-    checkUserVisitedSettings();
-  }, []);
+  //   checkUserVisitedSettings();
+  // }, []);
   
   return (
     <Frame style={styles.innerContainer}>
@@ -93,14 +93,14 @@ const SettingsScreen = ({navigation}) => {
           </View>
         </TouchableOpacity>
       </Wrapper>
-      {isGuideVisible && (
+      {/* {isGuideVisible && (
         <PopupGuide
           isVisible={isGuideVisible}
           target={guideTarget}
           onClose={handleGuideClose}
           message={'click to change access key settings'}
         />
-      )}
+      )} */}
     </Frame>
   );
 };

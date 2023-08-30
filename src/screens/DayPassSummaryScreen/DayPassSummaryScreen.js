@@ -1,5 +1,5 @@
 import React, {  useLayoutEffect, useRef,useState, useMemo,useEffect} from 'react';
-import { View } from 'react-native';
+import { View,Pressable } from 'react-native';
 import { Svg } from 'react-native-svg';
 import moment from 'moment';
 import { Divider } from 'react-native-paper';
@@ -7,6 +7,7 @@ import { useSelector,useDispatch } from 'react-redux';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import normalize from 'react-native-normalize';
+import Modal from 'react-native-modal';
 
 import Frame from '../../shared/components/core/Frame';
 import Txt from '../../shared/components/core/Txt';
@@ -21,6 +22,8 @@ import Wrapper from '../../shared/components/core/Wrapper';
 import { BookingSetting } from '../../shared/redux/action/BookingSetting';
 import DayPassSchedule from '../../assets/images/DayPassSchedule.js';
 import DayPassPayment from '../../assets/images/DayPassPayment.js';
+import Error from '../../assets/images/errorApi.svg';
+
 import { AppTheme } from '../../shared/theme';
 
 const DayPassSummaryScreen =({navigation,route})=>  {
@@ -35,7 +38,7 @@ const DayPassSummaryScreen =({navigation,route})=>  {
   const  dayPassPaymentDetailLoading= useSelector((state) => state.dayPassPaymentDetail?.loading);
   const  DayPassRescheduleLoading= useSelector((state) => state.dayPassReschedule?.loading);
   const[tentative,setTentative]=useState();
-
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const dayPassProduct=useSelector(selectdayPassProductData);
   console.log('dayPassProduct----',dayPassProduct);
   const date=new Date();
@@ -60,6 +63,14 @@ const DayPassSummaryScreen =({navigation,route})=>  {
   const snapPointsNoBooking = useMemo(() => ['28%'], []);
 
   
+  const showDatePicker = () => {
+    setDatePickerVisibility(!isDatePickerVisible);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
   const onSubmitYes=(data)=>{
 
     console.log('showData---',data);
@@ -99,44 +110,98 @@ const DayPassSummaryScreen =({navigation,route})=>  {
       }
       else{
         // navigation.navigate(ScreensName.bookingConfirmed,{dayPass:true});
+        console.log('400 result--',result);
+        bottomSheetrequestSubmit.current?.closeBottomSheet();
+        showDatePicker();
+       
       }
     }).catch(error=>{
       console.log('error--',error);
       bottomSheetrequestSubmit.current?.closeBottomSheet();
+      showDatePicker();
       // bottomSheetNoBooking.current?.snapToIndex(0);
     });
 
   };
 
-  // const onSubmitYesReshedule =(data)=>{
-  //   console.log('onSubmitYesReshedule data ---',data);
+  const onSubmitYesReshedule =(data)=>{
+    console.log('onSubmitYesReshedule data ---',data);
+    dispatch(DayPassPaymentDetail(data)).unwrap().then(result=>{
+      if(result?.statusCode === 200){
+    dispatch(DayPassReschedule(data)).unwrap().then(result=>{
+      dispatch(setDayPassId(result?.data?.id));
+      console.log('result-09000--',result);
+      bottomSheetrequestSubmit.current?.closeBottomSheet();
+      // if (result?.statusCode === 200){
+      //   navigation.navigate(ScreensName.dayPassPayment,{
+      //     dueDate:newDate,
+      //     price:dayPassPrice?.EstimatedCost,
+      //     dayPassConfirm:tentative,
+      //     id:result?.data?.id,
+      //     invoiceNo:result?.data?.InvoiceNo,
+      //     paymentStatus:result?.data?.paymentStatus,
+      //     dayPass:true,
+      //     dayPassSubmit:true,
+      //   });
+      // }
+      if (result?.statusCode === 200){
+        if(dayPassPrice?.EstimatedCost == 0){
+          navigation.navigate(ScreensName.bookingConfirmed,{dayPass:true});
+        }
+        else{
+          navigation.navigate(ScreensName.dayPassPayment,{
+            dueDate:newDate,
+            price:dayPassPrice?.EstimatedCost,
+            dayPassConfirm:tentative,
+            id:result?.data?.id,
+            invoiceNo:result?.data?.InvoiceNo,
+            paymentStatus:result?.data?.paymentStatus,
+            dayPass:true,
+            dayPassSubmit:true,
+            resheduleData:
+          {
+            isRescheduleRequest: isRescheduleRequest, 
+            rescheduleId: rescheduleId,
+            FromTime:FromTime,
+            ToTime:ToTime,
+            TypeName:TypeName,
+            CoworkerId:CoworkerId,
+            Tentative: tentative,
+            BookedOn:date,
+            CoworkerName:userName,
+            Price:dayPassPrice?.EstimatedCost
+          }
+          });
+        }
+      }
+      else{
+        // navigation.navigate(ScreensName.dayPassRequestSent,{dayPass:true});
+        console.log('400 result reshedule--',result);
+        bottomSheetrequestSubmit.current?.closeBottomSheet();
+        showDatePicker();
+      }
+    }).catch(error=>{
+      console.log('error reshedule--',error);
+      bottomSheetrequestSubmit.current?.closeBottomSheet();
+      showDatePicker();
+    //  bottomSheetNoBooking.current?.snapToIndex(0);
+    });
+  }
+  else{
+    console.log('testing data-----', data);
+    console.log('result--',result);
+    bottomSheetrequestSubmit.current?.closeBottomSheet();
+    showDatePicker();
+  
 
-  //   dispatch(DayPassReschedule(data)).unwrap().then(result=>{
-  //     dispatch(setDayPassId(result?.data?.id));
-  //     console.log('result-09000--',result);
-  //     bottomSheetrequestSubmit.current?.close();
-  //     if (result?.statusCode === 200){
-  //       navigation.navigate(ScreensName.dayPassPayment,{
-  //         dueDate:newDate,
-  //         price:dayPassPrice?.EstimatedCost,
-  //         dayPassConfirm:tentative,
-  //         id:result?.data?.id,
-  //         invoiceNo:result?.data?.InvoiceNo,
-  //         paymentStatus:result?.data?.paymentStatus,
-  //         dayPass:true,
-  //         dayPassSubmit:true,
-  //       });
-  //     }
-  //     else{
-  //       // navigation.navigate(ScreensName.dayPassRequestSent,{dayPass:true});
-  //     }
-  //   }).catch(error=>{
-  //     console.log('error--',error);
-  //     bottomSheetrequestSubmit.current?.close();
-  //     bottomSheetNoBooking.current?.snapToIndex(0);
-  //   });
-
-  // };
+  }
+}).catch(err=>{
+  console.log('booking is failed for reshedule--',err);
+  bottomSheetrequestSubmit.current?.closeBottomSheet();
+  showDatePicker();
+  
+});
+  };
 
 
 
@@ -159,17 +224,17 @@ const DayPassSummaryScreen =({navigation,route})=>  {
           button1Style={styles.btn1}
         
           onContinue={() => {
-            // if (isRescheduleRequest === true ){
-            //   onSubmitYesReshedule({FromTime:FromTime,ToTime:ToTime,TypeName:TypeName,CoworkerId:CoworkerId,
-            //     Tentative: tentative,BookedOn:date,CoworkerName:userName,Price:dayPassPrice?.EstimatedCost,
-            //     isRescheduleRequest: isRescheduleRequest, rescheduleId: rescheduleId
-            //   });
-            // }
-            // else{
+            if (isRescheduleRequest === true ){
+              onSubmitYesReshedule({FromTime:FromTime,ToTime:ToTime,TypeName:TypeName,CoworkerId:CoworkerId,
+                Tentative: tentative,BookedOn:date,CoworkerName:userName,Price:dayPassPrice?.EstimatedCost,
+                isRescheduleRequest: isRescheduleRequest, rescheduleId: rescheduleId
+              });
+            }
+            else{
             onSubmitYes({FromTime:FromTime,ToTime:ToTime,TypeName:TypeName,CoworkerId:CoworkerId,
               Tentative: tentative,BookedOn:date,CoworkerName:userName,Price:dayPassPrice?.EstimatedCost
             });
-            // }
+             }
           }}
           onCancel={() => {
             bottomSheetrequestSubmit.current?.closeBottomSheet();
@@ -301,7 +366,32 @@ const DayPassSummaryScreen =({navigation,route})=>  {
         </View>
       </View>
 
- 
+      <Modal
+        isVisible={isDatePickerVisible}
+        animationIn="pulse"
+        animationOut="fadeOut"
+        // transparent={true}
+      >
+        <View
+          style={styles.modalContainer}>
+          <Pressable
+            onPress={() => { hideDatePicker(); }}>
+            <View style={styles.mainModalContainer}>
+              <View style={styles.innerModal}>
+                <View>
+                  <Svg width={'100%'}>
+                    <Error/>
+                  </Svg>
+                </View>
+                <Txt style={styles.header}>Failed to book meeting room</Txt>
+                <Txt style={styles.desc}>This booking cannot be created at this time, please try again later</Txt>
+
+              </View>
+            </View>
+          </Pressable>
+        </View>
+      </Modal>
+     
 
     </Frame>
   );

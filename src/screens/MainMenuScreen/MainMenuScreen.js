@@ -30,12 +30,14 @@ import SettingsActive from '../../assets/images/SettingsActive.js';
 import LogoutBs from '../../assets/images/LogoutBs.js';
 import CopyIcon from '../../assets/images/CopyIcon.js';
 import FaqIcon from '../../assets/images/FaqIcon';
+import { set } from 'react-native-reanimated';
 
 const MainMenuScreen = ({navigation,route}) => {
 
   const loginData = useSelector(state => state.auth);
   const loginDone = loginData?.data;
   const isFocused = useIsFocused();
+  const[loading , setLoading] = useState(false)
   const [pendingStatus, setPendingStatus] = useState();
   const [profileData,setProfileData] = useState();
 
@@ -101,6 +103,7 @@ const MainMenuScreen = ({navigation,route}) => {
   };
 
   useEffect(()=>{
+    setLoading(true)
     dispatch(GetProfile(loginDone?.access_token))
       .unwrap()
       .then(result => {
@@ -113,9 +116,21 @@ const MainMenuScreen = ({navigation,route}) => {
         console.log('checkMember-',checkMember);
       }).catch(err=>{
         console.log('error get profile-',err);
+      }).finally(()=>{
+        setLoading(false)
       });
 
   },[dispatch, loginDone?.access_token,isFocused]);
+
+   // Function to truncate the name if it exceeds 12 letters
+   const truncateName = (name, maxLength) => {
+    if (name?.length <= maxLength) {
+      return name;
+    } else {
+      return name?.substr(0, maxLength) + "...";
+    }
+  };
+
   return (
     <Frame
       headerVariant={'v4'}
@@ -150,7 +165,7 @@ const MainMenuScreen = ({navigation,route}) => {
                   </View>
                   <View>
                     <Txt style={styles.tabName}>{ profileData?.UserFullName}</Txt>
-                    <Txt style={styles.profileEmail}>{profileData?.Email}</Txt>
+                    <Txt style={styles.profileEmail} >{!loading ? truncateName(profileData?.Email, 30) : null }</Txt>
                   </View>
                 </View>
               </TouchableOpacity>

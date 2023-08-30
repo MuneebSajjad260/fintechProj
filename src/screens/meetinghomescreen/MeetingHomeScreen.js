@@ -102,7 +102,11 @@ const MeetingWelcomeScreen = ({route}) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [status, setStatus] = useState('');
-  const data = route.params || false;
+  //const {data} = route.params || false;
+  const data = route?.params?.dragBlocked !== undefined
+  ? route?.params.dragBlocked
+  : false;
+
   console.log("data----",data)
   const printingCredit = {
     id: 1,
@@ -662,8 +666,8 @@ const MeetingWelcomeScreen = ({route}) => {
               <Pressable
                 accessibilityLabel="meetingroomBook"
                 onPress={() => {
-                  // if (status === 'pending' || status === 'expire') {
-                     if (!(status === 'pending' || status === 'expire')) {
+                    if (status === 'pending' || status === 'expire') {
+                   //  if (!(status === 'pending' || status === 'expire')) {
                     if (Platform.OS === 'android') {
                       ToastAndroid.showWithGravity(
                         'Inactive Membership',
@@ -822,7 +826,7 @@ const MeetingWelcomeScreen = ({route}) => {
               navigation={navigation}
               scaleValue={scaleValue}
               block={
-                !(status === 'pending' || status === 'expire') || meetingInvitee
+                !(status == 'pending' || status == 'expire') || meetingInvitee
                   ? false
                   : true
               }
@@ -837,12 +841,13 @@ const MeetingWelcomeScreen = ({route}) => {
           scaleValue={scaleValue}
           isDragAble={false}
           block={
-            !(status === 'pending' || status === 'expire') || meetingInvitee
+            !(status == 'pending' || status == 'expire') || meetingInvitee
               ? false
               : true
           }
           onPress={() => {
-            status === 'pending' || status === 'expire' || meetingInvitee
+            console.log("status iss-=",status)
+            !(status == 'pending' || status == 'expire') || meetingInvitee
               ? navigation.navigate('QRStack', {
                   screen: ScreensName.QRCodeScreen,
                 })

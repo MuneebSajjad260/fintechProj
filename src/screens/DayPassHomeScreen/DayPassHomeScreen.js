@@ -114,7 +114,7 @@ const DayPassHomeScreen = ({navigation,route}) => {
         // TODO Revert me
         // setNotVisitor(result?.userExits);
         //! Test
-        setNotVisitor(!result?.userExits);
+        setNotVisitor(result?.userExits);
       })
       .catch(err => {
         console.log('check visiotr error---', err);

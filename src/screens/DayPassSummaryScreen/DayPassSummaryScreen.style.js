@@ -183,6 +183,43 @@ const styles = StyleSheet.create({
     },
   btn1:{
     marginLeft:scale(30)
+  },
+  modalContainer:
+  {
+    flex: 1,
+
+  },
+mainModalContainer:
+  {
+
+    backgroundColor: '#FFFFFF',
+    marginTop: normalize(190),
+    width: '100%',
+    height: '48%',
+    alignItems: 'center',
+    // justifyContent: "center",
+    borderWidth: 1,
+    borderRadius: 8
+  },
+innerModal:
+  {
+    marginTop:39,
+    alignItems: 'center',
+  },
+  header:{
+    fontFamily: AppTheme.FONTS.TYPE.MEDIUM,
+    //color: AppTheme.COLORS.black
+    marginTop:normalize(30),
+    textAlign: 'center',
+    fontSize:AppTheme.FONTS.SIZE.TEXT.T1,
+  },
+  desc:{
+    fontFamily: AppTheme.FONTS.TYPE.REGULAR,
+    color: AppTheme.COLORS.text,
+    marginTop:normalize(14),
+    textAlign: 'center',
+    fontSize: AppTheme.FONTS.SIZE.SUBTITLES.S1,
+    paddingHorizontal:normalize(40)
   }
 });
 
