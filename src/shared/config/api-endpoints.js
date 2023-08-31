@@ -3,9 +3,9 @@
 export const API_ENDPOINTS = {
   /////////LIVE PRODUCTION////////
 
-  // fintech_backend_url: 'https://hubportalapi.fintechsaudi.com/',
-  // nexudus_url: 'https://fintechhub.spaces.nexudus.com',
-  // stage_Web_Views:'https://hub.fintechsaudi.com',
+  fintech_backend_url: 'https://hubportalapi.fintechsaudi.com/',
+  nexudus_url: 'https://fintechhub.spaces.nexudus.com',
+  stage_Web_Views:'https://hub.fintechsaudi.com',
 
   /////////LOCAL///////
 
@@ -28,8 +28,8 @@ export const API_ENDPOINTS = {
 
   /////////TESTING///////
 
-   nexudus_url: 'https://fintechhub.spaces.nexudus.com',
-   fintech_backend_url: 'http://192.168.0.34:3000/',
-   stage_Web_Views:'https://hub.fintechsaudi.com',
+  //  nexudus_url: 'https://fintechhub.spaces.nexudus.com',
+  //  fintech_backend_url: 'http://192.168.0.233:3000/',
+  //  stage_Web_Views:'https://hub.fintechsaudi.com',
 
 };

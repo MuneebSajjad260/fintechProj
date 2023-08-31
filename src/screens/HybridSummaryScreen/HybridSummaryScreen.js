@@ -760,10 +760,35 @@ const HybridSummaryScreen = ({navigation, route}) => {
                   ]}>
                   VAT 15%
                 </Txt>
+
+                <ShimmerPlaceHolder
+                  visible={
+                    singlePlanLeadPending === false &&
+                    singlePlanMemberPending === false &&
+                    singlePlanLeadDeskPending === false &&
+                    singlePlanMemberDeskPending === false
+                  }
+                  shimmerStyle={styles.shimmerPlanFee}></ShimmerPlaceHolder>
+
                 <Txt
                   accessibilityLabel="vat"
                   style={styles.paymentContainerValues}>
-                  0
+                 {  singlePlanLeadPending === false &&
+                    singlePlanMemberPending === false &&
+                    singlePlanLeadDeskPending === false &&
+                    singlePlanMemberDeskPending === false 
+                    ?
+                    singlePlanMember?.vat && singlePlanLead?.vat && singlePlanLeadDesk?.vat &&
+                    singlePlanMemberDesk?.vat 
+                    ?
+
+                    singlePlanMember?.vat + singlePlanLead?.vat + singlePlanLeadDesk?.vat +
+                    singlePlanMemberDesk?.vat 
+                    :
+                    0
+                    :
+                    null
+                 }
                 </Txt>
               </View>
 

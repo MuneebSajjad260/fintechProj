@@ -420,10 +420,19 @@ const SummaryScreen = ({navigation, route}) => {
                 },
               ]}>
               <Txt style={styles.paymentContainerHeadings}>VAT 15%</Txt>
+              <ShimmerPlaceHolder
+                  visible={
+                    singlePlanLeadPending === false &&
+                    singlePlanMemberPending === false
+                  }
+                  shimmerStyle={styles.shimmerPlanFee}></ShimmerPlaceHolder>
               <Txt
                 accessibilityLabel="vat"
                 style={styles.paymentContainerValues}>
-                0
+               { singlePlanLeadPending === false &&
+                  singlePlanMemberPending === false ?
+                singlePlanMember?.vat && singlePlanLead?.vat ? singlePlanMember?.vat + singlePlanLead?.vat : 0 :
+                null}
               </Txt>
             </View>
 

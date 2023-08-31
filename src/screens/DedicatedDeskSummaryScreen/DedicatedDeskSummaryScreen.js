@@ -518,7 +518,16 @@ const DedicatedDeskSummaryScreen = ({navigation, route}) => {
                   ]}>
                   VAT 15%
                 </Txt>
-                <Txt style={styles.paymentContainerValues}>0</Txt>
+                <ShimmerPlaceHolder
+                  visible={
+                    singlePlanLeadPending === false &&
+                    singlePlanMemberPending === false
+                  }
+                  shimmerStyle={styles.shimmerPlanFee}></ShimmerPlaceHolder>
+                <Txt style={styles.paymentContainerValues}>{ singlePlanLeadPending === false &&
+                  singlePlanMemberPending === false ?
+                singlePlanMember?.vat && singlePlanLead?.vat ? singlePlanMember?.vat + singlePlanLead?.vat : 0 :
+                null}</Txt>
               </View>
 
               <View
