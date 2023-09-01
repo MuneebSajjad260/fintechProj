@@ -341,6 +341,7 @@ const MeetingSummaryScreen = ({route}) => {
     }
   };
   const [priceDayPass,setPriceDayPass] = useState();
+  const [vatDaypass,setVatDaypass] = useState();
   //DAYPASS PRICING API
   useEffect(()=>{
     
@@ -354,6 +355,7 @@ const MeetingSummaryScreen = ({route}) => {
     )).unwrap().then(result=>{
       console.log('data price--- daypass',result);
       setPriceDayPass(result?.Price?.EstimatedCost);
+      setVatDaypass(result?.Price?.vat)
     }).catch(err=>{
       console.log('error price--daypass',err);
     });
@@ -476,6 +478,32 @@ const MeetingSummaryScreen = ({route}) => {
                       shimmerStyle={[styles.shimmerPlanFee,{ marginLeft: normalize(200),width:'18%'}]}>
                     </ShimmerPlaceHolder>
                     <Txt accessibilityLabel='meetingroomSubtotal' style={styles.paymentContainerValues}>{ priceLoading === false ? convertTimeToDecimal(FromTime,ToTime) * payment?.Price : null}</Txt>
+                  </View>
+                }
+               
+              </View>
+              <View style={[styles.flexDirectionRow,
+                {
+                  justifyContent: 'space-between'
+
+                }]}>
+                <Txt style={[styles.paymentContainerHeadings,{marginTop:AppTheme.SPACINGS.MARGINS.M6,color:isDarkMode ? 'rgba(255, 255, 255, 0.5)' :  'rgba(0, 0, 0, 0.5)'}]}>VAT 15%</Txt>
+                
+                {dayPass ?
+                  <View>
+                    <ShimmerPlaceHolder
+                      visible={DayPassPriceLoading === false }
+                      shimmerStyle={[styles.shimmerPlanFee,{ marginLeft: normalize(200),width:'18%'}]}>
+                    </ShimmerPlaceHolder>
+                    <Txt accessibilityLabel='daypassSubtotal' style={[styles.paymentContainerValues,{marginTop:AppTheme.SPACINGS.MARGINS.M6}]}>{ DayPassPriceLoading === false ?  vatDaypass ? vatDaypass : 0 : null}</Txt>
+                  </View>
+                  :
+                  <View>
+                    <ShimmerPlaceHolder
+                      visible={priceLoading === false }
+                      shimmerStyle={[styles.shimmerPlanFee,{ marginLeft: normalize(200),width:'18%'}]}>
+                    </ShimmerPlaceHolder>
+                    <Txt accessibilityLabel='meetingroomSubtotal' style={[styles.paymentContainerValues,{marginTop:AppTheme.SPACINGS.MARGINS.M6}]}>{ priceLoading === false ?  payment?.vat ? payment?.vat : 0 : null}</Txt>
                   </View>
                 }
                

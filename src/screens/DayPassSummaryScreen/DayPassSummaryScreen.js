@@ -339,6 +339,18 @@ const DayPassSummaryScreen =({navigation,route})=>  {
 
               <Txt accessibilityLabel='subtotal' style={styles.payemntValueTxt}>{!dayPassPricePending  ? dayPassPrice?.EstimatedCost : null}</Txt>
             </View>
+
+            <View style={styles.allignInRow}>
+              <Txt style={[styles.paymentHeadings,{marginTop:AppTheme.SPACINGS.MARGINS.M6,color:isDarkMode ? AppTheme.COLORS.lightDarkModeTxt : AppTheme.COLORS.lightLightModeTxr}]}>VAT 15%</Txt>
+
+              <ShimmerPlaceHolder
+                visible={dayPassPricePending === false }
+                shimmerStyle={[styles.shimmerAvail,{marginLeft:normalize(202)}]}>
+              </ShimmerPlaceHolder>
+
+              <Txt accessibilityLabel='subtotal' style={[styles.payemntValueTxt,{marginTop:AppTheme.SPACINGS.MARGINS.M6}]}>{!dayPassPricePending  ? dayPassPrice?.vat ? dayPassPrice?.vat : 0 : null}</Txt>
+            </View>
+
             <Divider style={styles.divider} />
             <View style={styles.allignInRow}>
               <Txt style={styles.totalPayableTxt}>Total payable</Txt>
