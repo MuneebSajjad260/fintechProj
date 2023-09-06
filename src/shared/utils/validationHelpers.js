@@ -29,7 +29,8 @@ const setPasswordValidator = (password) => {
   const minChar = /.{8,}/;
   const upperCase = /[A-Z]/;
   const numeric = /[0-9]/;
-  const specialSymbol = /[!@#$%^&*(),.?":{}|<>]/;
+  const specialSymbol = /[! £ $ % ^ & \\ - * # : @ ? > <]/;
+  
 
   if (!password) {
     return { error: 'password is empty', id: [{ id: -1 }] };

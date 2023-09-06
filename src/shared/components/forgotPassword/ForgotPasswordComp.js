@@ -28,7 +28,7 @@ const ForgotPasswordComp = ({route}) => {
   const submitEmail = useCallback(async email => {
     try {
       setIsEmailSubmitted(true);
-      const {statusCode} = await dispatch(ForgotPassword(email)).unwrap();
+      const {statusCode} = await dispatch(ForgotPassword(email.toLowerCase())).unwrap();
       console.log('Response is Here:------------->', statusCode);
       if (statusCode == 200) {
         setShowNextBtm(true);
