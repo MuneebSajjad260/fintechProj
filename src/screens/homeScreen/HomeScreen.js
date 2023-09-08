@@ -38,6 +38,7 @@ import Pending from '../../assets/images/Pending.js';
 import {useState} from 'react';
 import Frame from '../../shared/components/core/Frame';
 import Txt from '../../shared/components/core/Txt';
+import { Tax } from '../../shared/redux/action/Tax';
 
 const HomeScreen = () => {
   const administrator = useSelector(selectAdministrator);
@@ -152,6 +153,18 @@ const HomeScreen = () => {
     dispatch(GetPendingPlan(teamId));
     console.log('pendingError--', pendingError);
   }, [teamId, isFocused, dispatch]);
+
+  //TAX calculate
+
+  useEffect(()=>{
+dispatch(Tax()).unwrap().then(result=>{
+  console.log(" result tax --", result)
+}).catch(err=>{
+  console.log("err tax--",err)
+})
+
+  },[dispatch])
+
   console.log('pendig 222--', pendingStatus);
   {
     /* PENDING STATUS 200 MEANS THAT STATUS IS PENDING AND 500 MEANS THAT REQUEST IS DENIED */

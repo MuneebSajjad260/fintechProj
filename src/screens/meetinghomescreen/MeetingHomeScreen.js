@@ -67,6 +67,7 @@ import {
   setQrDirection,
   setQrTrigger,
 } from '../../shared/redux/slices/qrDirectionSlice';
+import { Tax } from '../../shared/redux/action/Tax';
 
 const MeetingWelcomeScreen = ({route}) => {
   const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
@@ -124,6 +125,17 @@ const MeetingWelcomeScreen = ({route}) => {
     }
   };
 
+  //TAX calculate
+
+  useEffect(()=>{
+    dispatch(Tax()).unwrap().then(result=>{
+      console.log(" result tax --", result)
+    }).catch(err=>{
+      console.log("err tax--",err)
+    })
+    
+      },[dispatch])
+      
   const handleSeeMorePress = () => {
     setSeeMore(true);
   };

@@ -10,7 +10,7 @@ export const API_ENDPOINTS = {
   /////////LOCAL///////
 
   // nexudus_url:'https://fintechstaging.spaces.nexudus.com',
-  // fintech_backend_url: 'http://192.168.10.108:3000',
+  // fintech_backend_url: 'http://192.168.0.237:3000/',
   // stage_Web_Views:'https://int-fintech-web.devbeans.io',
 
   /////////Saife///////

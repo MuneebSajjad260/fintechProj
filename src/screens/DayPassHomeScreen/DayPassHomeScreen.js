@@ -47,6 +47,7 @@ import {scale} from '../../shared/utils/scale';
 import {selectUserData} from '../../shared/redux/slices/isadminSlice';
 import {CheckVisitor} from '../../shared/redux/action/CheckVisitor';
 import {result} from 'lodash';
+import { Tax } from '../../shared/redux/action/Tax';
 //? QR Animation Dep
 import QRButton from '../../shared/components/QRButton/QRButton';
 import {PanGestureHandler} from 'react-native-gesture-handler';
@@ -103,6 +104,17 @@ const DayPassHomeScreen = ({navigation,route}) => {
       return text;
     }
   };
+
+   //TAX calculate
+
+   useEffect(()=>{
+    dispatch(Tax()).unwrap().then(result=>{
+      console.log(" result tax --", result)
+    }).catch(err=>{
+      console.log("err tax--",err)
+    })
+    
+      },[dispatch])
 
   //////CHECK VISITOR //////////////
   useEffect(() => {

@@ -64,6 +64,9 @@ const HybridSummaryScreen = ({navigation, route}) => {
   const months = useSelector(selectNoOfMonths);
   console.log('months---', months);
 
+
+  const tax = useSelector(state=> state?.tax?.data)
+console.log("tax---",tax,'-',tax?.setting?.isTaxEnable)
   const singlePlanLead = useSelector(state => state?.getSinglePlan?.data?.data);
   const singlePlanMember = useSelector(
     state => state?.getSinglePlanMember?.data?.data,
@@ -758,7 +761,7 @@ const HybridSummaryScreen = ({navigation, route}) => {
                         : 'rgba(0, 0, 0, 0.5)',
                     },
                   ]}>
-                  VAT 15%
+                  VAT {tax?.setting?.taxRate}%
                 </Txt>
 
                 <ShimmerPlaceHolder
@@ -776,17 +779,8 @@ const HybridSummaryScreen = ({navigation, route}) => {
                  {  singlePlanLeadPending === false &&
                     singlePlanMemberPending === false &&
                     singlePlanLeadDeskPending === false &&
-                    singlePlanMemberDeskPending === false 
-                    ?
-                    singlePlanMember?.vat && singlePlanLead?.vat && singlePlanLeadDesk?.vat &&
-                    singlePlanMemberDesk?.vat 
-                    ?
-
-                    singlePlanMember?.vat + singlePlanLead?.vat + singlePlanLeadDesk?.vat +
-                    singlePlanMemberDesk?.vat 
-                    :
-                    0
-                    :
+                    singlePlanMemberDeskPending === false ?
+                   tax?.setting?.isTaxEnable   ? (tax?.setting?.taxRate / 100) * (dedicatedDeskPrice + privateOfficePrice) : 0 :
                     null
                  }
                 </Txt>
@@ -874,7 +868,8 @@ const HybridSummaryScreen = ({navigation, route}) => {
                   singlePlanMemberPending === false &&
                   singlePlanLeadDeskPending === false &&
                   singlePlanMemberDeskPending === false
-                    ? `SAR ${totalPayable}`
+                  ?  tax?.setting?.isTaxEnable  ? `SAR ${totalPayable + ((tax?.setting?.taxRate / 100) * (dedicatedDeskPrice + privateOfficePrice)) }`
+                  : `SAR ${totalPayable}`
                     : null}
                 </Txt>
               </View>

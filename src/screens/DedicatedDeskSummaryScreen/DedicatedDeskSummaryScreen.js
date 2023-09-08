@@ -52,6 +52,8 @@ const DedicatedDeskSummaryScreen = ({navigation, route}) => {
 
   const dispatch = useDispatch();
 
+  const tax = useSelector(state=> state?.tax?.data)
+console.log("tax---",tax,'-',tax?.setting?.isTaxEnable)
   const singlePlanLead = useSelector(state => state?.getSinglePlan?.data?.data);
   const singlePlanMember = useSelector(
     state => state?.getSinglePlanMember?.data?.data,
@@ -516,7 +518,7 @@ const DedicatedDeskSummaryScreen = ({navigation, route}) => {
                         : 'rgba(0, 0, 0, 0.5)',
                     },
                   ]}>
-                  VAT 15%
+                  VAT {tax?.setting?.taxRate}%
                 </Txt>
                 <ShimmerPlaceHolder
                   visible={
@@ -526,7 +528,7 @@ const DedicatedDeskSummaryScreen = ({navigation, route}) => {
                   shimmerStyle={styles.shimmerPlanFee}></ShimmerPlaceHolder>
                 <Txt style={styles.paymentContainerValues}>{ singlePlanLeadPending === false &&
                   singlePlanMemberPending === false ?
-                singlePlanMember?.vat && singlePlanLead?.vat ? singlePlanMember?.vat + singlePlanLead?.vat : 0 :
+                  tax?.setting?.isTaxEnable   ? (tax?.setting?.taxRate / 100) * dedicatedDeskPrice : 0 :
                 null}</Txt>
               </View>
 
@@ -600,7 +602,8 @@ const DedicatedDeskSummaryScreen = ({navigation, route}) => {
                   ]}>
                   {singlePlanLeadPending === false &&
                   singlePlanMemberPending === false
-                    ? `SAR ${totalPayable}`
+                  ?  tax?.setting?.isTaxEnable  ? `SAR ${totalPayable + ((tax?.setting?.taxRate / 100) * dedicatedDeskPrice) }`
+                  : `SAR ${totalPayable}`
                     : null}
                 </Txt>
               </View>

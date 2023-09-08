@@ -35,6 +35,9 @@ const DayPassSummaryScreen =({navigation,route})=>  {
   const dayPassPricePending=useSelector((state) => state?.dayPassPrice?.loading);
   console.log('dayPassPrice----',dayPassPrice);
 
+  const tax = useSelector(state=> state?.tax?.data)
+  console.log("tax---",tax,'-',tax?.setting?.isTaxEnable)
+
   const  dayPassPaymentDetailLoading= useSelector((state) => state.dayPassPaymentDetail?.loading);
   const  DayPassRescheduleLoading= useSelector((state) => state.dayPassReschedule?.loading);
   const[tentative,setTentative]=useState();
@@ -44,11 +47,11 @@ const DayPassSummaryScreen =({navigation,route})=>  {
   const date=new Date();
   console.log('date------',date);
   //TODAY'S DATE
-  const newDate=moment(date).format('Do MMMM, YYYY');
+  const newDate=moment(date).format('Do MMM, YYYY');
   //SELECTED DATE
   const {selectedDate,userName,FromTime,ToTime,TypeName,CoworkerId, isRescheduleRequest ,rescheduleId }=route.params;
   console.log('show data ---',rescheduleId,'--',isRescheduleRequest,'--',selectedDate,'--',FromTime,'--',ToTime);
-  const formattedSelectedDate=moment(selectedDate,'DD/MM/YYYY').format('Do MMMM, YYYY');
+  const formattedSelectedDate=moment(selectedDate,'DD/MM/YYYY').format('Do MMM, YYYY');
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -341,14 +344,16 @@ const DayPassSummaryScreen =({navigation,route})=>  {
             </View>
 
             <View style={styles.allignInRow}>
-              <Txt style={[styles.paymentHeadings,{marginTop:AppTheme.SPACINGS.MARGINS.M6,color:isDarkMode ? AppTheme.COLORS.lightDarkModeTxt : AppTheme.COLORS.lightLightModeTxr}]}>VAT 15%</Txt>
+              <Txt style={[styles.paymentHeadings,{marginTop:AppTheme.SPACINGS.MARGINS.M6,color:isDarkMode ? AppTheme.COLORS.lightDarkModeTxt : AppTheme.COLORS.lightLightModeTxr}]}>VAT {tax?.setting?.taxRate}%</Txt>
 
               <ShimmerPlaceHolder
                 visible={dayPassPricePending === false }
                 shimmerStyle={[styles.shimmerAvail,{marginLeft:normalize(202)}]}>
               </ShimmerPlaceHolder>
 
-              <Txt accessibilityLabel='subtotal' style={[styles.payemntValueTxt,{marginTop:AppTheme.SPACINGS.MARGINS.M6}]}>{!dayPassPricePending  ? dayPassPrice?.vat ? dayPassPrice?.vat : 0 : null}</Txt>
+              <Txt accessibilityLabel='subtotal' style={[styles.payemntValueTxt,{marginTop:AppTheme.SPACINGS.MARGINS.M6}]}>{!dayPassPricePending  ?
+                tax?.setting?.isTaxEnable   ? ((tax?.setting?.taxRate / 100) * dayPassPrice?.EstimatedCost).toFixed(2) : 0
+              : null}</Txt>
             </View>
 
             <Divider style={styles.divider} />
@@ -360,7 +365,11 @@ const DayPassSummaryScreen =({navigation,route})=>  {
                 shimmerStyle={[styles.shimmerAvail,{marginLeft:normalize(175)}]}>
               </ShimmerPlaceHolder>
 
-              <Txt accessibilityLabel='totalPayable' style={styles.totalPayableAmount}>{!dayPassPricePending  ? `SAR ${dayPassPrice?.EstimatedCost}` : null}</Txt>
+              <Txt accessibilityLabel='totalPayable' style={styles.totalPayableAmount}>{!dayPassPricePending  ? 
+                 tax?.setting?.isTaxEnable  ? `SAR ${(dayPassPrice?.EstimatedCost + ((tax?.setting?.taxRate / 100) * dayPassPrice?.EstimatedCost)).toFixed(2) }`
+                 : `SAR ${dayPassPrice?.EstimatedCost}`
+
+               : null}</Txt>
             </View>
 
           </View>

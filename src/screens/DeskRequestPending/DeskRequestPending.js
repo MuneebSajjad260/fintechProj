@@ -38,6 +38,8 @@ const DeskRequestPending = ({ navigation, route }) => {
   const loginData = useSelector((state) => state.auth?.data);
   const token = loginData?.access_token;
 
+  const tax = useSelector(state=> state?.tax?.data)
+  console.log("tax---",tax,'-',tax?.setting?.isTaxEnable)
   const resourcePlan = useSelector((state) => state?.resourcePlan);
   const resourcePlanData = useSelector((state) => state?.resourcePlan?.data);
   console.log('allResources', resourcePlan);
@@ -182,14 +184,14 @@ const DeskRequestPending = ({ navigation, route }) => {
         </Wrapper>
 
         {/* resource type card */}
-        {pendingPlanObject?.ResourceTypeId===+process.env.privateOfficeID ?
+        {pendingPlanObject?.ResourceTypeId == ResourceId?.privateOffice ?
           <View style={styles.officeCard}>
 
             <PrivateOfficeCard item={privateOffice} disabled={true} btnLabel={'Monthly Plan'} />
 
           </View>
           :
-          pendingPlanObject?.ResourceTypeId === +process.env.dedicatedDeskID ?
+          pendingPlanObject?.ResourceTypeId == ResourceId?.dedicatedDesk ?
             <View style={styles.officeCard}>
 
               < DedicatedDeskCard item={deskItem} />
@@ -467,7 +469,7 @@ const DeskRequestPending = ({ navigation, route }) => {
                   shimmerStyle={styles.shimmerDesk}>
                 </ShimmerPlaceHolder>
                 {pendingPlanDataPending === false ? 
-                  <Txt style={styles.paymentContainerValues}>{pendingPlanObject?.ResourceTypeId === +process.env.dedicatedDeskID ? `SAR ${pendingPlanObject?.deskPrice}` :
+                  <Txt style={styles.paymentContainerValues}>{pendingPlanObject?.ResourceTypeId === ResourceId?.dedicatedDesk ? `SAR ${pendingPlanObject?.deskPrice}` :
                     `SAR ${pendingPlanObject?.privateOfficePrice}`}</Txt>
                   : null}
               </View>
@@ -523,8 +525,27 @@ const DeskRequestPending = ({ navigation, route }) => {
                 justifyContent: 'space-between',
 
               }]}>
-              <Txt style={[styles.paymentContainerHeadings,{color:isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)'}]}>VAT 15%</Txt>
-              <Txt style={styles.paymentContainerValues}>0</Txt>
+              <Txt style={[styles.paymentContainerHeadings,{color:isDarkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)'}]}>VAT {tax?.setting?.taxRate}%</Txt>
+              <ShimmerPlaceHolder
+                    visible={pendingPlanDataPending === false   }
+                    shimmerStyle={[styles.shimmerDesk,{marginLeft: normalize(196)}]}>
+                  </ShimmerPlaceHolder>
+              <Txt style={styles.paymentContainerValues}>
+                {
+              pendingPlanDataPending === false ?
+              pendingPlanObject?.isMultiple  ? tax?.setting?.isTaxEnable   ? (tax?.setting?.taxRate / 100) * (pendingPlanObject?.deskPrice + pendingPlanObject?.privateOfficePrice) : 0 :
+
+              pendingPlanObject?.ResourceTypeId === ResourceId?.dedicatedDesk ?  tax?.setting?.isTaxEnable   ? (tax?.setting?.taxRate / 100) * pendingPlanObject?.deskPrice : 0 :
+              tax?.setting?.isTaxEnable   ? (tax?.setting?.taxRate / 100) * pendingPlanObject?.privateOfficePrice 
+
+              : 
+              0
+              :
+              null
+
+
+
+            }</Txt>
             </View>
 
             <View style={[styles.flexDirectionRow,
@@ -559,9 +580,21 @@ const DeskRequestPending = ({ navigation, route }) => {
                 shimmerStyle={styles.shimmerTotalPayable}>
               </ShimmerPlaceHolder>
               <Txt style={[styles.totalPayableValue,{ color: isDarkMode ? AppTheme.COLORS.white : AppTheme.COLORS.purple,}]}>
-                {
-                  pendingPlanDataPending === false ? `SAR ${pendingPlanObject?.price}`  : null
-                }
+                
+              {
+              pendingPlanDataPending === false ?
+              pendingPlanObject?.isMultiple  ? tax?.setting?.isTaxEnable   ? `SAR ${pendingPlanObject?.price + (tax?.setting?.taxRate / 100) * (pendingPlanObject?.deskPrice + pendingPlanObject?.privateOfficePrice)}` : `SAR ${pendingPlanObject?.price}` :
+
+              pendingPlanObject?.ResourceTypeId === ResourceId?.dedicatedDesk ?  tax?.setting?.isTaxEnable   ? `SAR ${pendingPlanObject?.price +(tax?.setting?.taxRate / 100) * pendingPlanObject?.deskPrice}` : `SAR ${pendingPlanObject?.price}` :
+              tax?.setting?.isTaxEnable   ? `SAR ${pendingPlanObject?.price +(tax?.setting?.taxRate / 100) * pendingPlanObject?.privateOfficePrice }`
+
+              : 
+              `SAR ${pendingPlanObject?.price}`
+              :
+              null
+            }
+                
+               
               </Txt>
             </View>
 

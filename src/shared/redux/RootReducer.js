@@ -78,6 +78,7 @@ import GetMeetingNewTimeLine from './slices/GetMeetingNewTimeLineSlice'
 import PatchNotificationSettingsSlice from './slices/PatchNotificationSettingsSlice';
 import GetNotificationSettingsSlice from './slices/GetNotificationSettingsSlice';
 import NexudusTimingSlice from './slices/NexudusTimingSlice';
+import TaxSlice from './slices/TaxSlice';
 
 const persistConfig = {
   key: 'root',
@@ -168,6 +169,7 @@ const rootReducer = combineReducers({
   noticationSetting: GetNotificationSettingsSlice,
   patchNotificationSetting: PatchNotificationSettingsSlice,
   nexudusTiming:NexudusTimingSlice,
+  tax:TaxSlice
 });
 
 export default persistReducer(persistConfig, rootReducer);
