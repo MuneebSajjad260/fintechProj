@@ -739,15 +739,22 @@ const Meetingroom = ({route}) => {
   const mergeDateTime = (Dates, Time) => {
     console.log('date 11---', Dates);
     const date = moment(Dates, 'LL').format('YYYY-MM-DD');
-    const time = moment(Time, 'h:mm A').format('HH:mm');
+    // const time = moment(Time, 'h:mm A').format('HH:mm');
+    const time = moment(Time,'h:mm A').format('HH:mm');
     console.log('date 11---', date);
     console.log('time 11---', time);
     const isoDate = moment(`${date}T${time}:00.000Z`);
 
+    const newToTime = moment(isoDate).subtract(
+        moment().utcOffset(),
+        "minutes"
+      );
+  
+  
     // const isoDate = date.toISOString();
-
-    console.log('isoDate---', isoDate);
-    return isoDate;
+    console.log('isoDate---',newToTime)
+    
+    return newToTime;
   };
 
   // useEffect(()=>{
@@ -760,7 +767,7 @@ const Meetingroom = ({route}) => {
       hour: 'numeric',
       minute: 'numeric',
       // hour12: true,
-      timeZone: 'UTC',
+    //  timeZone: 'UTC',
     };
     const timeFormatter = new Intl.DateTimeFormat(undefined, options);
 

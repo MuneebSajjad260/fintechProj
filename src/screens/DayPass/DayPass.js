@@ -50,8 +50,21 @@ const DayPass =({navigation,route})=> {
   const [day,month,year]= selectedDate.split('/'); 
   const fromDate=new Date(Date.UTC(year , month -1 , day , 8, 0, 0));
   const toDate=new Date(Date.UTC(year , month -1 , day , 22, 0, 0));
-  const fromDateIso=fromDate.toISOString();
-  const ToDateIso=toDate.toISOString();
+  const sDateIso=fromDate.toISOString();
+  const TDateIso=toDate.toISOString();
+
+  const fromDateIso = moment(sDateIso).subtract(
+      moment().utcOffset(),
+      "minutes"
+    );
+
+    const  ToDateIso = moment( TDateIso).subtract(
+      moment().utcOffset(),
+      "minutes"
+    );
+
+
+  console.log(" fromDateIso--",  fromDateIso , '--' ,ToDateIso )
   const apiDate=moment(selectedDate , 'DD/MM/YYYY').format('YYYY-MM-DD');
 
   const availibilityPending = useSelector((state)=>state.dayPassAvailibilty?.loading);

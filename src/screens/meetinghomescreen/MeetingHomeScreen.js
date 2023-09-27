@@ -188,7 +188,7 @@ const MeetingWelcomeScreen = ({route}) => {
       hour: 'numeric',
       minute: 'numeric',
       hour12: true,
-      timeZone: 'UTC',
+     // timeZone: 'UTC',
     };
     const timeFormatter = new Intl.DateTimeFormat(undefined, options);
 

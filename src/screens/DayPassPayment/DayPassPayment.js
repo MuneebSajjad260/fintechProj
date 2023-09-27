@@ -350,7 +350,8 @@ const DayPassPayment = ({route}) => {
             <Botton
               loading={ 
                 resheduleData?.isRescheduleRequest === true ? (dayPassCommentLoading || meetingRoomCommentLoading || DayPassRescheduleLoading || meetingRescheduleLoading || uploadPhotoLoading ) ? true :false 
-                  : (dayPassCommentLoading || meetingRoomCommentLoading || uploadPhotoLoading  ) ? true :false
+                  : (dayPassCommentLoading || meetingRoomCommentLoading 
+                    || uploadPhotoLoading  ) ? true :false
               }
               accessibilityLabel='confirmBtn'
               title={'Confirm'}

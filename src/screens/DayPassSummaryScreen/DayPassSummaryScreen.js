@@ -44,7 +44,10 @@ const DayPassSummaryScreen =({navigation,route})=>  {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const dayPassProduct=useSelector(selectdayPassProductData);
   console.log('dayPassProduct----',dayPassProduct);
-  const date=new Date();
+  const date1=new Date();
+
+  const date = moment(date1).format("YYYY-MM-DDTHH:mm:ss[Z]");
+
   console.log('date------',date);
   //TODAY'S DATE
   const newDate=moment(date).format('Do MMM, YYYY');

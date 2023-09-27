@@ -190,7 +190,7 @@ const DayPassHomeScreen = ({navigation,route}) => {
       hour: 'numeric',
       minute: 'numeric',
       hour12: true,
-      timeZone: 'UTC',
+    //  timeZone: 'UTC',
     };
     const timeFormatter = new Intl.DateTimeFormat(undefined, options);
 
@@ -377,9 +377,9 @@ const DayPassHomeScreen = ({navigation,route}) => {
       if(meetingRooms.length>=1){
         console.log('yes meeting');
     
-        const currentTime = moment.utc().local().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');//5 hours  adjust for the time zone difference;
-        const fromTime = moment.utc(meetingRooms[0].FromTime).local();
-        const toTime = moment.utc(meetingRooms[0].ToTime).local();
+        const currentTime = moment.local().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');//5 hours  adjust for the time zone difference;
+        const fromTime = moment(meetingRooms[0].FromTime).local();
+        const toTime = moment(meetingRooms[0].ToTime).local();
         const rangeStartTime = fromTime.clone().subtract(30, 'minutes');
         const rangeEndTime = toTime.clone().add(30, 'minutes');
         const isInRange =

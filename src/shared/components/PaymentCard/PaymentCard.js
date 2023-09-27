@@ -21,20 +21,25 @@ const PaymentCard = (props) => {
   const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
   const navigation = useNavigation();
   const isDarkMode = useSelector(state => state.mode.colorScheme);
-  console.log('status-11-1',status);
+ 
   const { item,disable,price,loading,resourceName,date,CoworkerInvoiceNumber,status} = props;
+  console.log('status-11-1',status, price);
   return (
     <>
       <Wrapper style={styles.card}>
         <View style={[styles.flexDirection,{justifyContent:'space-between'}]}>
           <View style={styles.flexDirection}>
             <Txt style={styles.payment}>Payment</Txt>
+            { price != 0 ?
             <View style={[status === 'pending' ? styles.pendingContainer : status === 'approved' ? styles.paidContainer : status === 'objected' ? styles.objectedContainer : styles.refundedContainer]}>
               <Txt
                 style={[status === 'pending' ? styles.pending : status === 'approved' ? styles.paid  : status === 'objected' ? styles.objected  : styles.refunded ]}>
                 {status === 'pending' ? 'pending' : status === 'approved' ? 'paid' : status === 'objected' ? 'objection' : 'deny'}
               </Txt>
             </View>
+            :
+            null
+}
           </View>
           {CoworkerInvoiceNumber ?
             <TouchableOpacity
@@ -70,11 +75,11 @@ const PaymentCard = (props) => {
         >
             
           <Txt style={styles.resource}>
-            Day Pass
+          {resourceName}
           </Txt>
           <ShimmerPlaceHolder
             visible={loading === false}
-            shimmerStyle={[styles.shimmerAvail]}>
+            shimmerStyle={[styles.shimmerAvail,{marginLeft:normalize(150)}]}>
 
           </ShimmerPlaceHolder>
           <Txt style={styles.resourcePrice}>
