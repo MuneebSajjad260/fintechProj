@@ -276,7 +276,7 @@ const DayPass =({navigation,route})=> {
               <CalendarPicker
                 onDateChange={handleConfirm}
                 width={350}
-                minDate={tomorrow }
+                 minDate={tomorrow }
                 disabledDates={checkSlots}
                 monthTitleStyle={[styles.calendarMonth,{color: isDarkMode ? AppTheme.COLORS.orange : AppTheme.COLORS.purple}]}
                 yearTitleStyle={[styles.calendarYear ,{color: isDarkMode ? AppTheme.COLORS.orange : AppTheme.COLORS.purple}]}

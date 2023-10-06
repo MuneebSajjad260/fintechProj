@@ -484,14 +484,16 @@ const MeetingWelcomeScreen = ({route}) => {
         customerMeetingRooms.data.length > 0
       ) {
         console.log('customerMeetingRooms?.data?-', customerMeetingRooms?.data);
-        const currentTime = moment
-          .utc()
-          .local()
-          .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'); //5 hours  adjust for the time zone difference;
-        const fromTime = moment
-          .utc(customerMeetingRooms?.data[0].FromTime)
-          .local();
-        const toTime = moment.utc(customerMeetingRooms?.data[0].ToTime).local();
+        // const currentTime = moment
+        //   .utc()
+        //   .local()
+        //   .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'); //5 hours  adjust for the time zone difference;
+
+        const currentTime= new Date()
+
+        const fromTime = moment(customerMeetingRooms?.data[0].FromTime)
+         
+        const toTime = moment(customerMeetingRooms?.data[0].ToTime)
         const rangeStartTime = fromTime.clone().subtract(30, 'minutes');
         const rangeEndTime = toTime.clone().add(30, 'minutes');
         const isInRange = moment(currentTime).isBetween(

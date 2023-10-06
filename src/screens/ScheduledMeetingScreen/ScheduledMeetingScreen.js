@@ -104,7 +104,7 @@ const ScheduledMeetingScreen = ({route}) => {
   const snapPointsMeetingDrop = useMemo(() => ['40%'], []);
   // *Bottom Sheet (Filter)
   const bottomSheetRefSendInvitation = useRef(null);
-  const snapPointsSendInvitation = useMemo(() => ['72%'], []);
+  const snapPointsSendInvitation = useMemo(() => ['78%'], []);
   //* Back Drop
   const renderBackdropBottomSheet = useCallback(
     props => (

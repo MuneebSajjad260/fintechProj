@@ -80,7 +80,7 @@ const Meetingroom = ({route}) => {
 
   const bottomSheetRefTimePicker = useRef(null);
   const bottomSheetRefRecurringDays = useRef(null);
-  const snapPoints = useMemo(() => ['48%'], []);
+  const snapPoints = useMemo(() => ['54%'], []);
   const snapPointsRecurringDays = useMemo(() => ['55%'], []);
   const bottomSheetNoBooking = useRef(null);
   const snapPointsNoBooking = useMemo(() => ['28%'], []);

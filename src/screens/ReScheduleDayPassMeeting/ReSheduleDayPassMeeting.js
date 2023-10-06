@@ -10,7 +10,6 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import moment from 'moment';
 import {useDispatch, useSelector} from 'react-redux';
-
 import {AppTheme} from '../../shared/theme';
 import Botton from '../../shared/components/core/Botton';
 import Frame from '../../shared/components/core/Frame';
@@ -48,11 +47,17 @@ const ReScheduleDayPassMeeting = ({route}) => {
     state => state?.dayPassPrice?.loading,
   );
   const loginId = useSelector(selectLoginUserId);
-  console.log('meeting schedule---', meetingScedule, loginId, '---', date);
+  console.log('meeting schedule---', meetingScedule, loginId, '---', date,'--');
   console.log('date & time---', startTime, '----', endTime, '---', date);
 
   const formattedTime2 = moment(endTime, 'h:mm A').format('hh:mm A');
   console.log('date & time --2222---', formattedTime2);
+
+  //resubmit case data
+
+  const now = new Date();
+
+  ////
   const recurring = [
     {id: 0, recurringDay: 'Everyday', isSelected: false},
     {id: 1, recurringDay: 'Every Week', isSelected: false},
@@ -111,6 +116,8 @@ const ReScheduleDayPassMeeting = ({route}) => {
     teamMembers: teamMembers,
     // otherInvitee: otherInvitee
   };
+ 
+
   const [priceDayPass, setPriceDayPass] = useState();
   useEffect(() => {
     dispatch(
@@ -386,6 +393,7 @@ const ReScheduleDayPassMeeting = ({route}) => {
               loading={DayPassPriceLoading}
               CoworkerInvoiceNumber={CoworkerInvoiceNumber}
               status={meetingScedule?.paymentStatus}
+              reason={meetingScedule?.PaymentsObjections[0]?.reason}
             />
           </View>
         </View>
@@ -398,9 +406,31 @@ const ReScheduleDayPassMeeting = ({route}) => {
               cancelBtnAccessibilityLabel="cancel"
               loading={false}
               variant="v1"
-              continueTitle="Reschedule"
+              continueTitle={ meetingScedule?.paymentStatus == 'objected' ? 'Re-submit' : "Reschedule"}
               disabled={false}
               onContinue={() => {
+
+                if(meetingScedule?.paymentStatus == 'objected')
+                {
+                  navigation.navigate(ScreensName?.dayPassPayment,{dueDate:moment(now).format('Do MMMM, YYYY'),
+                  // price:convertTimeToDecimal(FromTime,ToTime) * payment?.Price,
+                  price: meetingScedule?.Price,
+                  id:meetingScedule?.id,
+                  invoiceNo:meetingScedule?.InvoiceNo, paymentStatus:meetingScedule?.paymentStatus,dayPass:false ,tentative:meetingScedule?.Tentative,
+                  dayPassSubmit:false,
+                  resheduleData:{
+                    BookingVisitors: meetingScedule?.BookingVisitors , CoworkerId: meetingScedule?.CoworkerId,
+                    FromTime: meetingScedule?.FromTime, ToTime:  meetingScedule?.ToTime ,
+                    ResourceId:meetingScedule?.ResourceId , isRepeatBooking:meetingScedule?.isRepeatBooking,
+                    isTeamBooking:meetingScedule?.isTeamBooking, CoworkerName:meetingScedule?.CoworkerName,ResourceName:meetingScedule?.ResourceName,
+                    Team:meetingScedule?.Team,BookedOn:meetingScedule?.BookedOn,Tentative:meetingScedule?.Tentative,Price: meetingScedule?.Price,
+                    isRescheduleRequest:meetingScedule?.isRescheduleRequest ,rescheduleId:meetingScedule?.rescheduleId
+                  }
+                });
+
+                }
+                else{
+
                 console.log("let's ReSchedule meeting");
                 setBottomSheet({
                   bsReschedule: true,
@@ -408,7 +438,9 @@ const ReScheduleDayPassMeeting = ({route}) => {
                   bsisCanceled: false,
                 });
                 bottomSheetRefReschedule.current?.expandBottomSheet();
+
               }}
+            }
               onCancel={() => {
                 console.log('im cancel btn');
                 setBottomSheet({

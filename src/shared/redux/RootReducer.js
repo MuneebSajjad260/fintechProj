@@ -79,6 +79,8 @@ import PatchNotificationSettingsSlice from './slices/PatchNotificationSettingsSl
 import GetNotificationSettingsSlice from './slices/GetNotificationSettingsSlice';
 import NexudusTimingSlice from './slices/NexudusTimingSlice';
 import TaxSlice from './slices/TaxSlice';
+import CancelDayPassOnBackSlice from './slices/CancelDayPassOnBackSlice';
+import CancelMeetingRoomOnBackSlice from './slices/CancelMeetingRoomOnBackSlice';
 
 const persistConfig = {
   key: 'root',
@@ -169,7 +171,9 @@ const rootReducer = combineReducers({
   noticationSetting: GetNotificationSettingsSlice,
   patchNotificationSetting: PatchNotificationSettingsSlice,
   nexudusTiming:NexudusTimingSlice,
-  tax:TaxSlice
+  tax:TaxSlice,
+  cancelDayPassOnBack:CancelDayPassOnBackSlice,
+  CancelMeetingRoomOnBack:CancelMeetingRoomOnBackSlice
 });
 
 export default persistReducer(persistConfig, rootReducer);

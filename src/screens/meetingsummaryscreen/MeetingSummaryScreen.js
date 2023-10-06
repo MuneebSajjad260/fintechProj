@@ -572,7 +572,7 @@ const MeetingSummaryScreen = ({route}) => {
                       FromTime: isoStartTime, ToTime: isoEndTime ,
                       ResourceId:currentMeetingRoom , isRepeatBooking:repeatBooking,
                       isTeamBooking:true, CoworkerName:loginUserName,ResourceName:currentMeetingName,
-                      Team:teamName ? teamName : '',BookedOn:now.toISOString(),Tentative:tentative,Price: dayPass ? priceDayPass : convertTimeToDecimal(FromTime,ToTime) * payment?.Price,
+                      Team:teamName ? teamName : '',BookedOn:now.toISOString(),Tentative:tentative,Price: dayPass ? priceDayPass : priceDayPass,
                       isRescheduleRequest:isRescheduleRequest ,rescheduleId:idReschedule
                     });
                   }
@@ -585,7 +585,7 @@ const MeetingSummaryScreen = ({route}) => {
                       Repeats: recurringDaysData.id === 0 ? '1' : recurringDaysData.id === 3 ? '3' : '2',
                       contractId:Number(coWorkerId),
                       CoworkerName:loginUserName,ResourceName:currentMeetingName,Team:teamName ? teamName : '',BookedOn:now.toISOString(),
-                      Tentative:tentative,Price: dayPass ? priceDayPass : convertTimeToDecimal(FromTime,ToTime) * payment?.Price,
+                      Tentative:tentative,Price: dayPass ? priceDayPass : priceDayPass,
                       isRescheduleRequest:isRescheduleRequest ,rescheduleId:idReschedule
        
   
@@ -602,7 +602,7 @@ const MeetingSummaryScreen = ({route}) => {
                       FromTime: isoStartTime, ToTime: isoEndTime ,
                       ResourceId:currentMeetingRoom , isRepeatBooking:repeatBooking,
                       isTeamBooking:true, CoworkerName:loginUserName,ResourceName:currentMeetingName,
-                      Team:teamName ? teamName : '',BookedOn:now.toISOString(),Tentative:tentative,Price: dayPass ? priceDayPass : convertTimeToDecimal(FromTime,ToTime) * payment?.Price,
+                      Team:teamName ? teamName : '',BookedOn:now.toISOString(),Tentative:tentative,Price: dayPass ? priceDayPass : priceDayPass,
                       isRescheduleRequest:isRescheduleRequest ,rescheduleId:idReschedule
                     });
                   }
@@ -615,7 +615,7 @@ const MeetingSummaryScreen = ({route}) => {
                       Repeats: recurringDaysData.id === 0 ? '1' : recurringDaysData.id === 3 ? '3' : '2',
                       contractId:Number(coWorkerId),
                       CoworkerName:loginUserName,ResourceName:currentMeetingName,Team:teamName ? teamName : '',BookedOn:now.toISOString(),
-                      Tentative:tentative,Price: dayPass ? priceDayPass : convertTimeToDecimal(FromTime,ToTime) * payment?.Price,
+                      Tentative:tentative,Price: dayPass ? priceDayPass : priceDayPass,
                       isRescheduleRequest:isRescheduleRequest ,rescheduleId:idReschedule
      
 
@@ -633,7 +633,7 @@ const MeetingSummaryScreen = ({route}) => {
                     FromTime: isoStartTime, ToTime: isoEndTime ,
                     ResourceId:currentMeetingRoom , isRepeatBooking:repeatBooking,
                     isTeamBooking:true, CoworkerName:loginUserName,ResourceName:currentMeetingName,
-                    Team:teamName ? teamName : '',BookedOn:now.toISOString(),Tentative:tentative,Price: dayPass ? priceDayPass : convertTimeToDecimal(FromTime,ToTime) * payment?.Price
+                    Team:teamName ? teamName : '',BookedOn:now.toISOString(),Tentative:tentative,Price: dayPass ? priceDayPass : priceDayPass
 
                   });
                 }
@@ -646,7 +646,7 @@ const MeetingSummaryScreen = ({route}) => {
                     Repeats: recurringDaysData.id === 0 ? '1' : recurringDaysData.id === 3 ? '3' : '2',
                     contractId:Number(coWorkerId),
                     CoworkerName:loginUserName,ResourceName:currentMeetingName,Team:teamName ? teamName : '',BookedOn:now.toISOString(),
-                    Tentative:tentative,Price: dayPass ? priceDayPass : convertTimeToDecimal(FromTime,ToTime) * payment?.Price
+                    Tentative:tentative,Price: dayPass ? priceDayPass : priceDayPass
                    
 
   

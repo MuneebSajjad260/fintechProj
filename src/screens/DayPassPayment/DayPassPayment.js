@@ -10,10 +10,10 @@ import { useNavigation,useIsFocused } from '@react-navigation/native';
 import Frame from '../../shared/components/core/Frame';
 import Txt from '../../shared/components/core/Txt';
 import { DayPassReschedule } from '../../shared/redux/action/DayPassReschedule';
-import { CancelDayPass } from '../../shared/redux/action/CancelDayPass';
+import { CancelDayPassOnBack } from '../../shared/redux/action/CancelDayPassOnBack';
 import { MeetingRoomReschedule } from '../../shared/redux/action/MeetingRoomReschedule';
 import { selectMeetingRoomid,selectDayPassId } from '../../shared/redux/slices/bookingResourceSlice';
-import { CancelMeetingRoom } from '../../shared/redux/action/CancelMeetingRoom';
+import { CancelMeetingRoomOnBack } from '../../shared/redux/action/CancelMeetingRoomOnBack';
 import { MeetingRoomComment } from '../../shared/redux/action/MeetingRoomComment';
 import { DayPassComment } from '../../shared/redux/action/DayPassComment';
 import { DayPassUpload } from '../../shared/redux/action/DayPassUpload';
@@ -60,11 +60,11 @@ const DayPassPayment = ({route}) => {
         if(dayPassSubmit === true)
         {
           console.log('CANCEL DAY PASS');
-          dispatch(CancelDayPass(id));
+          dispatch(CancelDayPassOnBack(id));
         }
         else{
           console.log('CANCEL MEETING ROOM');
-          dispatch(CancelMeetingRoom(id));
+          dispatch(CancelMeetingRoomOnBack(id));
         }
         console.log('-----beforeRemove called-------', e);
       }

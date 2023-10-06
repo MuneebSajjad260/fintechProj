@@ -367,21 +367,33 @@ const DayPassHomeScreen = ({navigation,route}) => {
     //   {'FromTime': '2023-07-06T08:00:00.000Z','ToTime': '2023-07-06T22:00:00.000Z','isDaypass': true},
     //   {'FromTime': '2023-07-09T08:00:00.000Z','ToTime': '2023-07-09T22:00:00.000Z','isDaypass': true},
     // ];
+    console.log("jsj9s3s")
     if (dayPassBooking && dayPassBooking?.data && dayPassBooking?.data.length > 0) {
       // console.log('dayPassBooking?.data?---',dayPassBooking?.data);
       const meetingRooms = dayPassBooking?.data?.filter(item => item.isMeetingRoom === true);
       const others = dayPassBooking?.data?.filter(item => item.isMeetingRoom !== true);
     
-      // console.log('Meeting Rooms:', meetingRooms);
-      // console.log('Others:', others);
+      console.log('Meeting Rooms:', meetingRooms);
+      console.log('Others:', others);
       if(meetingRooms.length>=1){
         console.log('yes meeting');
     
-        const currentTime = moment.local().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');//5 hours  adjust for the time zone difference;
-        const fromTime = moment(meetingRooms[0].FromTime).local();
-        const toTime = moment(meetingRooms[0].ToTime).local();
+        //const currentTime = moment.utc().local().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');//5 hours  adjust for the time zone difference;
+        const currentTime= new Date()
+        console.log('currentTime-',currentTime);
+        const fromTime = moment(meetingRooms[0].FromTime);
+        const toTime = moment(meetingRooms[0].ToTime);
+
+        console.log('fromTime',fromTime,'--',toTime);
+
         const rangeStartTime = fromTime.clone().subtract(30, 'minutes');
         const rangeEndTime = toTime.clone().add(30, 'minutes');
+
+        // const rangeStartTime = fromTime.clone().add(80, 'minutes');
+        // const rangeEndTime = toTime.clone().subtract(200, 'minutes');
+
+        console.log('rangeStartTime',rangeStartTime,'--',rangeEndTime);
+
         const isInRange =
       moment(currentTime).isBetween(rangeStartTime, rangeEndTime, null, '[]');
   
@@ -403,17 +415,43 @@ const DayPassHomeScreen = ({navigation,route}) => {
         console.log('yes daypass',hubTime);
 
   
-        const currentDate = moment.utc().local().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-        const currentHour = moment.utc(currentDate).hours();
+       // const currentDate = moment.utc().local().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+       const currentDate= new Date()
+        const currentHour = moment(currentDate).hours();
     
-        const fromTime = moment(others[0].FromTime);
+
+        // console.log("others---",others)
+      
+
+
+       // Convert todaydate string to a Date object
+       
+const todayDateObject = new Date(currentDate);
+
+// Filter the objects whose fromtime matches todaydate
+const filteredDates =others.filter(item => {
+  // Convert the fromtime string to a Date object
+  const fromtimeDateObject = new Date(item.FromTime);
+
+  // Compare the dates (ignoring the time)
+  return (
+    fromtimeDateObject.getFullYear() === todayDateObject.getFullYear() &&
+    fromtimeDateObject.getMonth() === todayDateObject.getMonth() &&
+    fromtimeDateObject.getDate() === todayDateObject.getDate()
+  );
+});
+        
+        console.log("filteredDates---",filteredDates);
+        const fromTime = moment(filteredDates[0].FromTime);
+
+
         const isCurrentDate = fromTime.isSame(currentDate, 'day');
         const isHourInRange = currentHour >= 8 && currentHour <= 22;
     
-        // console.log('daypass date--',currentDate);
-        // console.log('currentHour-',currentHour);
-        // console.log('fromTime-',fromTime);
-        // console.log('isCurrentDate-',isCurrentDate);
+        console.log('daypass date--',currentDate);
+        console.log('currentHour-',currentHour);
+        console.log('fromTime-',fromTime);
+        console.log('isCurrentDate-',isCurrentDate);
         console.log('isHourInRange-',isHourInRange);
 
 

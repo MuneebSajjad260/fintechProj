@@ -34,7 +34,7 @@ const ReScheduleDayPassScreen = ({ route }) => {
   const { meetingScedule ,startTime,endTime,date,durationTime, CoworkerInvoiceNumber} = route.params;
   const DayPassPriceLoading = useSelector(state=>state?.dayPassPrice?.loading);
   console.log('meeting schedule---',meetingScedule, ' invoice no ---',CoworkerInvoiceNumber);
-
+  const now = new Date();
 
   const [bottomSheet, setBottomSheet] = useState({bsReschedule:false,bsCancel:false,bsisCanceled:false});
 
@@ -283,6 +283,7 @@ const ReScheduleDayPassScreen = ({ route }) => {
           <View style={styles.paymentCard}>
             <PaymentCard price ={price?.EstimatedCost} date={date} resourceName={meetingScedule?.ResourceName} loading={DayPassPriceLoading}
               CoworkerInvoiceNumber={CoworkerInvoiceNumber} status={meetingScedule?.paymentStatus}
+              reason={meetingScedule?.PaymentsObjections[0]?.reason}
             />
           </View>
 
@@ -301,9 +302,32 @@ const ReScheduleDayPassScreen = ({ route }) => {
         
            
               onContinue={() => {
+
+                if(meetingScedule?.paymentStatus == 'objected')
+                {
+                  navigation.navigate(ScreensName?.dayPassPayment,{dueDate:moment(now).format('Do MMMM, YYYY'),
+                  // price:convertTimeToDecimal(FromTime,ToTime) * payment?.Price,
+                  price: meetingScedule?.Price,
+                  id:meetingScedule?.id,
+                  invoiceNo:meetingScedule?.InvoiceNo, paymentStatus:meetingScedule?.paymentStatus,dayPass:false ,tentative:meetingScedule?.Tentative,
+                  dayPassSubmit:false,
+                  resheduleData:{
+                    BookingVisitors: meetingScedule?.BookingVisitors , CoworkerId: meetingScedule?.CoworkerId,
+                    FromTime: meetingScedule?.FromTime, ToTime:  meetingScedule?.ToTime ,
+                    ResourceId:meetingScedule?.ResourceId , isRepeatBooking:meetingScedule?.isRepeatBooking,
+                    isTeamBooking:meetingScedule?.isTeamBooking, CoworkerName:meetingScedule?.CoworkerName,ResourceName:meetingScedule?.ResourceName,
+                    Team:meetingScedule?.Team,BookedOn:meetingScedule?.BookedOn,Tentative:meetingScedule?.Tentative,Price: meetingScedule?.Price,
+                    isRescheduleRequest:meetingScedule?.isRescheduleRequest ,rescheduleId:meetingScedule?.rescheduleId
+                  }
+                });
+
+                }
+
+                else{
                 console.log("let's ReSchedule meeting");
                 setBottomSheet({  bsReschedule: true, bsCancel: false, bsisCanceled: false });
                 bottomSheetRefReschedule.current?.expandBottomSheet();
+                }
               }}
               onCancel={() => {
                 console.log('im cancel btn');

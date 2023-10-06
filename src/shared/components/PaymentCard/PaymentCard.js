@@ -22,8 +22,8 @@ const PaymentCard = (props) => {
   const navigation = useNavigation();
   const isDarkMode = useSelector(state => state.mode.colorScheme);
  
-  const { item,disable,price,loading,resourceName,date,CoworkerInvoiceNumber,status} = props;
-  console.log('status-11-1',status, price);
+  const { item,disable,price,loading,resourceName,date,CoworkerInvoiceNumber,status,reason} = props;
+  console.log('status-11-1',status, price,reason);
   return (
     <>
       <Wrapper style={styles.card}>
@@ -140,6 +140,19 @@ const PaymentCard = (props) => {
 
 
       </Wrapper>
+
+      {status == 'objected' ?
+      <Wrapper style={[styles.card,{marginTop: normalize(20)}]}>
+         <Txt style={styles.payment}>Objection</Txt>
+        <Txt style={[styles.Subtotal,{marginTop:normalize(10)}]}>
+            {reason}
+          </Txt>
+
+    </Wrapper>
+    
+    :
+    
+    null}
     </>
   );
 };
