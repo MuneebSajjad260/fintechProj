@@ -232,7 +232,7 @@ const DayPass =({navigation,route})=> {
                 <View style={[styles.unAvailableContainer,{ 
                   borderColor : isDarkMode ? 'rgba(239, 64, 80, 1)' : null ,
                   borderWidth : isDarkMode ? 1 : 0}]}>
-                  <Txt  accessibilityLabel='unavailableStatus' style={styles.unAvailable}>Unvailable</Txt>
+                  <Txt  accessibilityLabel='unavailableStatus' style={styles.unAvailable}>Unavailable</Txt>
                 </View>
               :
               null
