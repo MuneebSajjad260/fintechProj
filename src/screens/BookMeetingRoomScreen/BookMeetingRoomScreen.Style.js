@@ -703,17 +703,17 @@ const styles = StyleSheet.create({
   },
   noResource:{
     fontFamily: AppTheme.FONTS.TYPE.SEMIBOLD,
-    color: AppTheme.COLORS.black,
+   // color: AppTheme.COLORS.black,
     paddingHorizontal: normalize(90),
     textAlign: 'center',
     fontSize: AppTheme.FONTS.SIZE.HEADINGS.H4,
   },
   noResourceDesc:{
     fontFamily: AppTheme.FONTS.TYPE.REGULAR,
-    color: AppTheme.COLORS.black,
+   // color: AppTheme.COLORS.black,
     paddingHorizontal: normalize(55),
     textAlign: 'center',
-    fontSize: normalize(12),
+    fontSize: AppTheme.FONTS.SIZE.SUBTITLES.S1,
     marginTop:normalize(12)
   },
   btnContainerHome:{

@@ -133,6 +133,10 @@ const Meetingroom = ({route}) => {
     },
   ];
 
+  const [screenLoaded, setScreenLoaded] = useState(false);
+
+
+
   const showHours = () => {
     timeLine?.map(item => {
       console.log('timeline data----', item);
@@ -264,7 +268,7 @@ const Meetingroom = ({route}) => {
   );
   const [borderBlue, setBorderBlue] = useState(false);
   const [timeSlots, setTimeSlots] = useState([]);
-  const [dayPassCheck, setDayPassCheck] = useState();
+  const [dayPassCheck, setDayPassCheck] = useState(false);
 
   const convertTimeString = timeString => {
     if (timeString) {
@@ -883,25 +887,30 @@ const Meetingroom = ({route}) => {
   console.log('timeSlots------', timeSlots);
 
   // CHECKING DAY PASS AVAILIBILITY FOR MEETING ROOM
-  // useEffect(()=>{
-  // const dayPassDate= moment(selectedDate).format('YYYY-MM-DD')
-  // const body ={id:coworkerId,date:dayPassDate}
-  // console.log("body----2233--",body)
-  // if (dayPass){
-  // dispatch(DayPassCheck(body)).unwrap().then(result=>{
-  //     console.log("result of day pas check =>>>>>>>",result)
-  //     setDayPassCheck(result?.available)
-  //     if(result?.available === false){
-  //         bottomSheetNoBooking.current?.snapToIndex(0);
-  //     }
-  // }).catch(error=>{
-  //     console.log("error of day pass check---",error)
-  // })
-  // }
-  // else{
+  useEffect(()=>{
+  const dayPassDate= moment(selectedDate).format('YYYY-MM-DD')
+  const body ={id:coworkerId,date:dayPassDate}
+  console.log("body----2233--",body)
+  if (dayPass){
+  dispatch(DayPassCheck(body)).unwrap().then(result=>{
+      console.log("result of day pas check =>>>>>>>",result)
+      setDayPassCheck(result?.available)
+      if(result?.available === false){
+        console.log("open bottomsheet --11--")
+          bottomSheetNoBooking.current?.snapToIndex(0);
+      }
+      else{
+      console.log("dont open bottom sheet-22--")
+      }
+  }).catch(error=>{
+      console.log("error of day pass check---",error)
+  })
+  }
+  else{
 
-  // }
-  // },[dayPass,selectedDate])
+  }
+  },[dayPass,selectedDate])
+  console.log("selected date---",selectedDate)
 
   //HIDING DATES BETWEEN 10 PM AND 8 AM
   useEffect(() => {
@@ -1027,6 +1036,29 @@ const Meetingroom = ({route}) => {
       bottomSheetRefRecurringDays.current?.expandBottomSheet();
     }
   }, [bottomSheet]); // dependency array
+
+  useEffect(() => {
+    if (dayPassCheck == false) {
+      console.log("open bottomsheet initially 444");
+      bottomSheetNoBooking.current?.snapToIndex(0);
+    } 
+  }, [dayPassCheck,dayPass]); // dependency array
+  
+  //Use another useEffect to handle the initial appearance of the BottomSheet
+// useEffect(() => {
+//   // Check if the screen has initially loaded and setDayPassCheck is false
+//   if (screenLoaded && dayPassCheck === false) {
+//     console.log("open bottomsheet initially");
+//     bottomSheetNoBooking.current?.snapToIndex(0);
+//   }
+// }, [screenLoaded, dayPassCheck]);
+
+// // ...
+
+// // Update the screenLoaded state when the component initially loads
+// useEffect(() => {
+//   setScreenLoaded(true);
+// }, []);
 
   return (
     <>
@@ -1366,7 +1398,7 @@ const Meetingroom = ({route}) => {
                     showTime &&
                     addTimeDuration &&
                     timebtn &&
-                    //  dayPassCheck &&
+                    dayPassCheck &&
                     selectMeetingRoom &&
                     borderBlue
                   ? false
@@ -1494,7 +1526,16 @@ const Meetingroom = ({route}) => {
           backdropComponent={renderBackdropBottomSheet}
           index={-1}
           enablePanDownToClose={true}
-          enabledInnerScrolling={true}>
+          enabledInnerScrolling={true}
+          backgroundStyle={{
+            backgroundColor: isDarkMode
+              ? AppTheme.COLORS.wrapperDarkModeBg
+              : AppTheme.COLORS.white,
+          }}
+          handleIndicatorStyle={{
+            backgroundColor: '#D9D9D966',
+          }}>
+          
           <BottomSheetView style={styles.bottomSheetTitle}>
             <Txt style={styles.noResource}>No Day Pass Available</Txt>
             <Txt style={styles.noResourceDesc}>
@@ -1502,7 +1543,7 @@ const Meetingroom = ({route}) => {
               Please bear with us.
             </Txt>
             <View style={styles.btnContainerHome}>
-              <PrimaryButton
+              {/* <PrimaryButton
                 loading={false}
                 title={'close'}
                 disabled={false}
@@ -1510,7 +1551,15 @@ const Meetingroom = ({route}) => {
                 onPress={() => {
                   bottomSheetNoBooking.current?.close();
                 }}
-              />
+              /> */}
+
+      <Botton
+        loading={false}
+        title={'Close'}
+        disabled={false}
+        accessibilityLabel="confirmTime"
+        onPress={() =>  bottomSheetNoBooking.current?.close()}
+      />
             </View>
           </BottomSheetView>
         </BottomSheet>
