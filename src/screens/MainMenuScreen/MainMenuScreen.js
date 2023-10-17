@@ -34,7 +34,7 @@ import { set } from 'react-native-reanimated';
 
 const MainMenuScreen = ({navigation,route}) => {
 
-  const loginData = useSelector(state => state.auth);
+  const loginData = useSelector(state => state?.auth);
   const loginDone = loginData?.data;
   const isFocused = useIsFocused();
   const[loading , setLoading] = useState(false)
