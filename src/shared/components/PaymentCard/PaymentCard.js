@@ -56,7 +56,7 @@ const PaymentCard = (props) => {
          
                 <Txt
                   style={styles.invoiceText}>
-              View Invoice
+              View Memo
                 </Txt>
 
               </View>
