@@ -1537,10 +1537,9 @@ const Meetingroom = ({route}) => {
           }}>
           
           <BottomSheetView style={styles.bottomSheetTitle}>
-            <Txt style={styles.noResource}>No Day Pass Available</Txt>
+            {/* <Txt style={styles.noResource}>No Day Pass Available</Txt> */}
             <Txt style={styles.noResourceDesc}>
-              Oppss. We are sorry that no day pass is available at the moment.
-              Please bear with us.
+              Sorry! You must have a day pass booking for this date before you can book a meeting room.
             </Txt>
             <View style={styles.btnContainerHome}>
               {/* <PrimaryButton
