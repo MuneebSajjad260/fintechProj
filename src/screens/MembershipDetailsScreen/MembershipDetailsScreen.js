@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import styles from './MembershipDetailsScreen.Style';
-import {View, FlatList, TouchableOpacity} from 'react-native';
+import {View, FlatList, TouchableOpacity, ScrollView} from 'react-native';
 import {ScreensName} from '../../shared/constants/ScreensStrings.js';
 import {Divider} from 'react-native-paper';
 import HelpDeskHeader from '../../shared/components/HelpDeskHeader/HelpDeskHeader';
@@ -95,6 +95,7 @@ const MembershipDetailsScreen = ({navigation}) => {
         setMemeDetailRes({statusCode});
         if (statusCode === 200) {
           setMembershipDetails(data);
+          console.log("data---",data)
         } else {
           setMembershipDetails(null);
         }
@@ -188,7 +189,8 @@ const MembershipDetailsScreen = ({navigation}) => {
   return (
     <Frame
       screenTitle={isSelected === 'Details' ? 'Membership' : 'Memos'}
-      mode={'View'}>
+      mode={'View'}
+      >
       {/* TAB Header */}
       <TabHeader
         tabOneText={'Details'}
@@ -202,7 +204,8 @@ const MembershipDetailsScreen = ({navigation}) => {
         {isSelected === 'Details' ? (
           <>
             {membershipDetails !== null ? (
-              <View style={styles.detailContainer}>
+              <ScrollView contentContainerStyle={[styles.detailContainer,{justifyContent:'space-between'}]}>
+                <View>
                 {status === 'pending' ?
                   <View style= {[styles.testingCont,{borderColor:'rgba(247, 183, 24, 0.6)',
                     backgroundColor:'rgba(247, 183, 24, 0.05)' 
@@ -369,7 +372,32 @@ const MembershipDetailsScreen = ({navigation}) => {
                     : null
                   }
                 </View>
-              </View>
+
+                </View>
+                <View>
+                {status === 'active' ?
+                     <View style= {[styles.testingCont,{borderColor:'rgba(239, 64, 80, 0.6)',
+                     backgroundColor:'rgba(239, 64, 80, 0.05)' 
+                   }]}>
+                      <View>
+                        <View style={styles.companyContainer}>
+                          <Feather
+                            name={'clock'}
+                            size={24}
+                            color={ AppTheme.COLORS.error}
+                          />
+                          <Txt style={[styles.companyTag,{}]}> {moment.utc(membershipDetails?.startDate).add(membershipDetails?.contractLength, 'months').format('MMM DD, YYYY')}</Txt>
+                        </View>
+                        <Txt style={[styles.companyName,{marginLeft:normalize(42)}]}>
+                     Membership expires on.
+                        </Txt>
+                      </View>
+               
+                    </View>
+                    : null
+                  }
+                  </View>
+              </ScrollView>
             ) : (
               <View style={styles.noTeamFoundContainer}>
                 {memeDetailRes !== null && memeDetailRes.statusCode === 400 ? (
