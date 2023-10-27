@@ -153,7 +153,7 @@ export default function DeleteAccountScreenTwo({navigation}) {
       </View>
       <Input
         accessibilityLabel="password"
-        secureTextEntry
+        //secureTextEntry
         placeholder="Enter Your Password"
         isBottomSheetInput={true}
         value={password.value}

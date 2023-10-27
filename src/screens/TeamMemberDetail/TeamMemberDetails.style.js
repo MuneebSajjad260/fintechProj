@@ -12,7 +12,8 @@ const styles = StyleSheet.create({
     padding:normalize(20)
   },
   card:{
-    borderRadius:4
+    borderRadius:4,
+    
   },
   flexDirectionRow:{
     flexDirection:'row',
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
   Heading:{
     fontFamily:AppTheme.FONTS.TYPE.REGULAR,
     fontSize:normalize(16),
-    color:AppTheme.COLORS.black,
+   // color:"red",
     marginLeft:normalize(13)
   },
   subHeading:{
@@ -34,7 +35,8 @@ const styles = StyleSheet.create({
     // marginLeft:normalize(30),
     marginTop:normalize(10),
     flexDirection:'row',
-    justifyContent:'space-between'
+    justifyContent:'space-between',
+   
   },
   subContainer2:{
     marginLeft:normalize(30),

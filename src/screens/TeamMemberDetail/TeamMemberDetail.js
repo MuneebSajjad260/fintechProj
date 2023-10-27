@@ -5,16 +5,20 @@ import CardContainer from '../../shared/components/cardWrapper/CardContainer';
 import styles from './TeamMemberDetails.style';
 import {useDispatch, useSelector} from 'react-redux';
 import normalize from 'react-native-normalize';
-
+import Frame from '../../shared/components/core/Frame';
 import moment from 'moment';
 import {selectUserData} from '../../shared/redux/slices/isadminSlice';
 import {GetMembershipDetail} from '../../shared/redux/action/GetMembershipDetail';
 import MyTeamMembers from '../../assets/images/MyTeamMembers.js';
 import {AppTheme} from '../../shared/theme';
+import Wrapper from '../../shared/components/core/Wrapper';
+import { scale } from '../../shared/utils/scale';
+import Txt from '../../shared/components/core/Txt';
 
 const TeamMemberDetail = ({route}) => {
   const userData = useSelector(selectUserData);
   const dispatch = useDispatch();
+  const isDarkMode = useSelector(state => state.mode.colorScheme);
 
   //GETTINFG DATA FROM PARAMS
   const {name, companyName, joiningDate, resourceType} = route.params;
@@ -40,89 +44,91 @@ const TeamMemberDetail = ({route}) => {
   }, [dispatch, userData?.TeamIds]);
 
   return (
-    <SafeAreaView style={styles.safeAreaContainer}>
+    <Frame
+    mode ='View'>
+    {/* <SafeAreaView style={styles.safeAreaContainer}> */}
       <View style={styles.mainContainer}>
-        <CardContainer style={styles.card}>
+        <Wrapper style={styles.card}
+        >
           <View style={styles.subContainer}>
             <View style={styles.flexDirectionRow}>
               <View>
-                <Svg width={'100%'}>
-                  <MyTeamMembers />
-                </Svg>
+                  <MyTeamMembers stroke={isDarkMode ? AppTheme.COLORS.white : null} />
               </View>
 
               <View>
-                <Text style={styles.Heading}>{name}</Text>
-                <Text style={styles.subHeading}>Name</Text>
+                <Txt style={styles.Heading}>{name}</Txt>
+                <Txt style={styles.subHeading}>Name</Txt>
               </View>
             </View>
             <View>
-              <Text style={styles.Heading}>Status:</Text>
-              <Text style={styles.active}>{membership?.data?.status}</Text>
+              <Txt style={styles.Heading}>Status:</Txt>
+              <Txt style={styles.active}>{membership?.data?.status}</Txt>
             </View>
           </View>
 
           <View style={styles.joiningDateContainer}>
-            <Text style={styles.Heading}>{formattedDate}</Text>
-            <Text style={styles.subHeading}>Joining Date</Text>
+            <Txt style={styles.Heading}>{formattedDate}</Txt>
+            <Txt style={styles.subHeading}>Joining Date</Txt>
           </View>
-        </CardContainer>
+        </Wrapper>
 
-        <CardContainer style={styles.card}>
+        <Wrapper style={[styles.card,{marginTop:scale(20)}]}>
           <View style={styles.flexDirectionRow}>
             <View>
               <Svg width={'100%'}>
-                <MyTeamMembers />
+              <MyTeamMembers stroke={isDarkMode ? AppTheme.COLORS.white : null} />
               </Svg>
             </View>
             <View>
-              <Text
+              <Txt
                 style={[
                   styles.Heading,
                   {fontFamily: AppTheme.FONTS.TYPE.REGULAR},
                 ]}>
-                {companyName}
-              </Text>
-              <Text style={styles.subHeading}>Company</Text>
+                {membership?.data?.teamName}
+              </Txt>
+              <Txt style={styles.subHeading}>Company</Txt>
             </View>
           </View>
 
           <View style={[styles.subContainer2, {marginTop: normalize(16)}]}>
             {/* LAST CHECK IN MODULE  */}
-            <Text
+            <Txt
               style={[
                 styles.Heading,
                 {fontFamily: AppTheme.FONTS.TYPE.REGULAR},
               ]}>
               {membership?.data?.lastCheckin ? formattedDate : '-'}
-            </Text>
-            <Text style={styles.subHeading}>Last Check-in</Text>
+            </Txt>
+            <Txt style={styles.subHeading}>Last Check-in</Txt>
 
             <View style={styles.marginTop}>
-              <Text
+              <Txt
                 style={[
                   styles.Heading,
                   {fontFamily: AppTheme.FONTS.TYPE.REGULAR},
                 ]}>
                 {resourceType}
-              </Text>
-              <Text style={styles.subHeading}>Resource</Text>
+              </Txt>
+              <Txt style={styles.subHeading}>Resource</Txt>
             </View>
 
             <View style={styles.marginTop}>
-              <Text
+              <Txt
                 style={[
                   styles.Heading,
                   {fontFamily: AppTheme.FONTS.TYPE.REGULAR},
                 ]}>
                 {membership?.data?.planDuration}
-              </Text>
-              <Text style={styles.subHeading}>Payment Plan</Text>
+              </Txt>
+              <Txt style={styles.subHeading}>Payment Plan</Txt>
             </View>
           </View>
-        </CardContainer>
+        </Wrapper>
       </View>
-    </SafeAreaView>
+    {/* </SafeAreaView> */}
+    </Frame>
   );
 };
 

@@ -84,12 +84,12 @@ const styles = StyleSheet.create({
     // alignItems: "center",
     justifyContent: 'center',
     paddingHorizontal: normalize(6),
-    backgroundColor: 'rgba(1, 41, 250, 0.1)',
+    backgroundColor: 'rgba(1, 41, 250, 0.8)',
     borderRadius: 2,
   },
   privateOffice: {
     fontFamily: AppTheme.FONTS.TYPE.REGULAR,
-    color: AppTheme.COLORS.purple,
+    color: AppTheme.COLORS.white,
     fontSize: AppTheme.FONTS.SIZE.SUBTITLES.TAG,
   },
   selectedTeamContainer: {

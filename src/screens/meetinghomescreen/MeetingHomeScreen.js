@@ -397,6 +397,9 @@ const MeetingWelcomeScreen = ({route}) => {
         if (statusCode === 200) {
           setMembershipDetails(data);
           console.warn("Data of Memner:--------------------------",data)
+
+          console.log("------->>>2233",moment(data?.startDate).format('MMM DD, YYYY hh mm'))
+          console.log("------->>>2244",moment.utc(data?.startDate).format('MMM DD, YYYY hh mm '))
         } else {
           setMembershipDetails(null);
         }
@@ -545,10 +548,10 @@ const MeetingWelcomeScreen = ({route}) => {
                 />
                 <Txt style={[style.companyTag, {}]}>
                   {' '}
-                  {moment
-                    .utc(membershipDetails?.startDate)
+                  {moment(membershipDetails?.startDate)
                     .format('MMM DD, YYYY')}
                 </Txt>
+               
               </View>
               <Txt style={[style.companyName, {marginLeft: normalize(42)}]}>
                 Your membership will start soon.
