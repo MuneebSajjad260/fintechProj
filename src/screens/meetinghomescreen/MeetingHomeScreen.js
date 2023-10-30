@@ -443,7 +443,7 @@ const MeetingWelcomeScreen = ({route}) => {
       setError('Error while getting team ID.');
       console.error('Error while getting team ID.');
     }
-  }, [TeamIds, Id, getMembershipDetails]);
+  }, [TeamIds, Id, getMembershipDetails ,isFocused]);
 
   //when drag is unaccesible, toaster appears
   useEffect(() => {
@@ -576,9 +576,7 @@ const MeetingWelcomeScreen = ({route}) => {
                 />
                 <Txt style={[style.companyTag, {}]}>
                   {' '}
-                  {moment
-                    .utc(membershipDetails?.startDate)
-                    .add(membershipDetails?.contractLength, 'months')
+                  {moment(membershipDetails?.startDate).add(membershipDetails?.contractLength, 'months')
                     .format('MMM DD, YYYY')}
                 </Txt>
               </View>

@@ -93,21 +93,44 @@ const HybridScreenTwo = ({ route }) => {
   );
 
 
-  const currentMonth = newDate.getMonth()+startMonth;
-  const date = [
-    { id: 1, value: `Jan ${newDate.getFullYear()}`, label: 'Jan 2023' },
-    { id: 2, value: `Feb ${newDate.getFullYear()}`, label: 'Feb 2023' },
-    { id: 3, value: `Mar ${newDate.getFullYear()}`, label: 'Mar 2023' },
-    { id: 4, value: `Apr ${newDate.getFullYear()}`, label: 'Apr 2023' },
-    { id: 5, value: `May ${newDate.getFullYear()}`, label: 'May 2023' },
-    { id: 6, value: `Jun ${newDate.getFullYear()}`, label: 'Jun 2023' },
-    { id: 7, value: `Jul ${newDate.getFullYear()}`, label: 'Jul 2023' },
-    { id: 8, value: `Aug ${newDate.getFullYear()}`, label: 'Aug 2023' },
-    { id: 9, value: `Sep ${newDate.getFullYear()}`, label: 'Sep 2023' },
-    { id: 10, value: `Oct ${newDate.getFullYear()}`, label: 'Oct 2023' },
-    { id: 11, value: `Nov ${newDate.getFullYear()}`, label: 'Nov 2023' },
-    { id: 12, value: `Dec ${newDate.getFullYear()}`, label: 'Dec 2023' },
-  ].filter(month => month.id >= currentMonth).slice(1);
+  // const currentMonth = newDate.getMonth()+startMonth;
+  // const date = [
+  //   { id: 1, value: `Jan ${newDate.getFullYear()}`, label: 'Jan 2023' },
+  //   { id: 2, value: `Feb ${newDate.getFullYear()}`, label: 'Feb 2023' },
+  //   { id: 3, value: `Mar ${newDate.getFullYear()}`, label: 'Mar 2023' },
+  //   { id: 4, value: `Apr ${newDate.getFullYear()}`, label: 'Apr 2023' },
+  //   { id: 5, value: `May ${newDate.getFullYear()}`, label: 'May 2023' },
+  //   { id: 6, value: `Jun ${newDate.getFullYear()}`, label: 'Jun 2023' },
+  //   { id: 7, value: `Jul ${newDate.getFullYear()}`, label: 'Jul 2023' },
+  //   { id: 8, value: `Aug ${newDate.getFullYear()}`, label: 'Aug 2023' },
+  //   { id: 9, value: `Sep ${newDate.getFullYear()}`, label: 'Sep 2023' },
+  //   { id: 10, value: `Oct ${newDate.getFullYear()}`, label: 'Oct 2023' },
+  //   { id: 11, value: `Nov ${newDate.getFullYear()}`, label: 'Nov 2023' },
+  //   { id: 12, value: `Dec ${newDate.getFullYear()}`, label: 'Dec 2023' },
+  // ].filter(month => month.id >= currentMonth).slice(1);
+
+  const currentMonth = newDate.getMonth() + (startMonth+1);
+  const currentYear = new Date().getFullYear();
+  const numberOfYearsToAdd = 2;
+  const numberOfMonthsToAdd = numberOfYearsToAdd * 12;
+  
+  const monthNames = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+  
+  const date = Array.from({ length: numberOfMonthsToAdd }, (_, index) => {
+    const monthIndex = (currentMonth - 1 + index) % 12; // Loop through months
+    const year = currentYear + Math.floor((currentMonth - 1 + index) / 12); // Increment year if necessary
+    const monthName = monthNames[monthIndex];
+    return {
+      id: index + 1,
+      value: `${monthName} ${year}`,
+      label: `${monthName} ${year}`,
+    };
+  });
+  
+  console.log("date1----",date,"--",currentMonth);
 
 
 

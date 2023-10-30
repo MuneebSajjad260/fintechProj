@@ -220,7 +220,7 @@ console.log("tax---",tax,'-',tax?.setting?.isTaxEnable)
 
   // posting plan request api on submit request button
   const onSubmit = data => {
-    console.warn('Outside finding Desk:----------------', data);
+    console.log('Outside finding Desk:----------------', data);
     dispatch(PlanRequest(data))
       .unwrap()
       .then(result => {
