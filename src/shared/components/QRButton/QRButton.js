@@ -77,8 +77,8 @@ const QRButton = forwardRef(
         }
         else{
           Toast.show('Drag upwards for key', {
-            duration: Toast.durations.SHORT,
-            position: Toast.positions.BOTTOM,
+            duration: 5000,
+            position: scale(-70),
             shadow: true,
             animation: true,
             hideOnPress: true,
@@ -101,8 +101,8 @@ const QRButton = forwardRef(
       }
       else{
         Toast.show('Access unavailable at this time', {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.BOTTOM,
+          duration: 5000,
+          position: scale(-70),
           shadow: true,
           animation: true,
           hideOnPress: true,

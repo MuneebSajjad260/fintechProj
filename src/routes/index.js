@@ -4,7 +4,7 @@ import * as React from 'react';
 import AppStartScreen from '../screens/appStartScreen/AppStartScreen';
 import ExploreFintechScreen from '../screens/exploreFintechScreen/ExploreFintechScreen';
 import LoginScreen from '../screens/loginScreen/LoginScreen';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, DarkTheme} from '@react-navigation/native';
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Provider} from 'react-redux';
@@ -160,13 +160,14 @@ const RootNavigation = () => {
     <Provider store={store}>
       <>
         <NavigationContainer
-          ref={ref => NavigationService.setTopLevelNavigator(ref)}>
+          ref={ref => NavigationService.setTopLevelNavigator(ref)}
+          theme={DarkTheme}>
           <Stack.Navigator
             // initialRouteName={'QRStack'}
             // initialRouteName={ScreensName.NotificationListScreen}
             screenOptions={{
               headerShown: false,
-              gestureDirection: 'vertical'
+              gestureDirection: 'vertical',
             }}>
             <Stack.Screen
               name={ScreensName.SplashScreen}
@@ -465,7 +466,10 @@ const RootNavigation = () => {
             /> */}
             <Stack.Screen name={'QRStack'} component={QRStackScreens} />
             <Stack.Screen name={ScreensName.FaqScreen} component={FaqScreen} />
-            <Stack.Screen name={ScreensName.FaqDetailScreen} component={FaqDetailScreen} />
+            <Stack.Screen
+              name={ScreensName.FaqDetailScreen}
+              component={FaqDetailScreen}
+            />
             {/* Routes Created By Haseeb Khan End */}
           </Stack.Navigator>
         </NavigationContainer>

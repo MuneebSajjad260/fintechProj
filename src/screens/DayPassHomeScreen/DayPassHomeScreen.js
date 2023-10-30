@@ -470,6 +470,9 @@ const filteredDates =others.filter(item => {
     }
   };
 
+
+  //!--------
+
   useEffect(()=>{
    
     dispatch(NexudusTiming())
@@ -498,8 +501,8 @@ const filteredDates =others.filter(item => {
       }
       else{
         Toast.show('Access unavailable at this time', {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.BOTTOM,
+          duration: 5000,
+          position: scale(-70),
           shadow: true,
           animation: true,
           hideOnPress: true,
@@ -718,6 +721,7 @@ const filteredDates =others.filter(item => {
         </View>
       
       </ScrollView>
+
       <Animated.View>
         {QRTriggerType === 'Drag' ? (
           <PanGestureHandler onGestureEvent={PanGestureEvents}>

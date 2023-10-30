@@ -457,7 +457,7 @@ const MeetingWelcomeScreen = ({route}) => {
       } else {
         Toast.show('Access unavailable at this time', {
           duration: Toast.durations.SHORT,
-          position: Toast.positions.BOTTOM,
+          position: scale(-70),
           shadow: true,
           animation: true,
           hideOnPress: true,
@@ -692,7 +692,7 @@ const MeetingWelcomeScreen = ({route}) => {
                     } else {
                       Toast.show('Inactive Membership', {
                         duration: Toast.durations.SHORT,
-                        position: Toast.positions.BOTTOM,
+                        position: scale(-70),
                         shadow: true,
                         animation: true,
                         hideOnPress: true,
@@ -735,8 +735,8 @@ const MeetingWelcomeScreen = ({route}) => {
                     );
                   } else {
                     Toast.show('Inactive Membership', {
-                      duration: Toast.durations.SHORT,
-                      position: Toast.positions.BOTTOM,
+                      duration: 5000,
+                      position: scale(-70),
                       shadow: true,
                       animation: true,
                       hideOnPress: true,

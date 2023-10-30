@@ -9,7 +9,9 @@
     "test": "jest",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "androidBundle": "npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/"
+    "androidBundle": "npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/",
+    "iosBundle":"npx react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'"
+
   },
   "dependencies": {
     "@adrianso/react-native-device-brightness": "^1.2.7",
