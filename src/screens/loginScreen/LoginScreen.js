@@ -66,6 +66,7 @@ const LoginScreen = () => {
   const loginData = useSelector(state => state.auth);
   const loginPending = loginData?.loading;
   const loginDone = loginData?.data;
+  console.log("loginDone--",loginDone)
   const networkError = loginData?.error?.message;
   const loginError = loginData?.error?.error;
   const loginErrorToken = loginData?.error?.error_description;
@@ -81,7 +82,7 @@ const LoginScreen = () => {
         .unwrap()
         .then(result => {
           // check result
-          console.log('result--',result);
+          console.log('result 9900--',result);
           let checkMember = result.find(item => {
             return item.CoworkerType === 1;
           });

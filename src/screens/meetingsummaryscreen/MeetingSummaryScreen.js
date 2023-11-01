@@ -345,6 +345,8 @@ const MeetingSummaryScreen = ({route}) => {
   };
   const [priceDayPass,setPriceDayPass] = useState();
   const [vatDaypass,setVatDaypass] = useState();
+  const [discount,setDiscount] = useState();
+  const [discountCode,setDiscountCode] = useState();
   //DAYPASS PRICING API
   useEffect(()=>{
     
@@ -359,6 +361,8 @@ const MeetingSummaryScreen = ({route}) => {
       console.log('data price--- daypass',result);
       setPriceDayPass(result?.Price?.EstimatedCost);
       setVatDaypass(result?.Price?.vat)
+      setDiscount(result?.Price?.DiscountAmount)
+      setDiscountCode(result?.Price?.DiscountCode)
     }).catch(err=>{
       console.log('error price--daypass',err);
     });
@@ -485,6 +489,8 @@ const MeetingSummaryScreen = ({route}) => {
                 }
                
               </View>
+
+              {/* VAT SECTION */}
               <View style={[styles.flexDirectionRow,
                 {
                   justifyContent: 'space-between'
@@ -516,6 +522,44 @@ const MeetingSummaryScreen = ({route}) => {
                 }
                
               </View>
+
+              {/* DISCOUNT SECTION */}
+              <View style={[styles.flexDirectionRow,
+                {
+                  justifyContent: 'space-between'
+
+                }]}>
+                <Txt style={[styles.paymentContainerHeadings,{marginTop:AppTheme.SPACINGS.MARGINS.M6,color:isDarkMode ? 'rgba(255, 255, 255, 0.5)' :  'rgba(0, 0, 0, 0.5)'}]}>{discountCode ? `Discount(${discountCode})` : `Discount`}</Txt>
+                
+                {dayPass ?
+                  <View>
+                    <ShimmerPlaceHolder
+                      visible={DayPassPriceLoading === false }
+                      shimmerStyle={[styles.shimmerPlanFee,{ marginLeft: normalize(170),width:'18%'}]}>
+                    </ShimmerPlaceHolder>
+                    <Txt accessibilityLabel='daypassSubtotal' style={[styles.paymentContainerValues,{marginTop:AppTheme.SPACINGS.MARGINS.M6}]}>{ DayPassPriceLoading === false ? 
+                   discount ?  discount : 0 
+                     
+                     : null}</Txt>
+                  </View>
+                  :
+                  <View>
+                    <ShimmerPlaceHolder
+                      visible={priceLoading === false }
+                      shimmerStyle={[styles.shimmerPlanFee,{ marginLeft: normalize(170),width:'18%'}]}>
+                    </ShimmerPlaceHolder>
+                    <Txt accessibilityLabel='meetingroomSubtotal' style={[styles.paymentContainerValues,{marginTop:AppTheme.SPACINGS.MARGINS.M6}]}>{ priceLoading === false ?  
+                  discount ?  discount  : 0
+                    : null}</Txt>
+                  </View>
+                }
+               
+              </View>
+
+
+              
+
+              {/* TOTAL PAYABLE SECTION */}
               <Divider style={[styles.innerDivider, { marginLeft: normalize(0), marginRight: normalize(0) }]} />
 
               <View style={[styles.flexDirectionRow,
@@ -534,8 +578,9 @@ const MeetingSummaryScreen = ({route}) => {
                       shimmerStyle={[styles.shimmerPlanFee,{ marginLeft: normalize(170),}]}>
                     </ShimmerPlaceHolder>
                     <Txt accessibilityLabel='daypassTotal' style={[styles.totalPayableValue,{color:isDarkMode ? AppTheme.COLORS.text : AppTheme.COLORS.purple}]}>{DayPassPriceLoading === false ?
-                      tax?.setting?.isTaxEnable  ? `SAR ${(priceDayPass + ((tax?.setting?.taxRate / 100) * priceDayPass)).toFixed(2) }`
-                      : `SAR ${priceDayPass}`
+                      ((priceDayPass + ((tax?.setting?.taxRate / 100) * priceDayPass))) < discount  ? `SAR 0.0` :
+                      tax?.setting?.isTaxEnable  ? `SAR ${((priceDayPass + ((tax?.setting?.taxRate / 100) * priceDayPass))- discount).toFixed(2) }`
+                      : `SAR ${priceDayPass - discount}`
                      : null}</Txt>
                   </View>
                   :
@@ -545,7 +590,8 @@ const MeetingSummaryScreen = ({route}) => {
                       shimmerStyle={[styles.shimmerPlanFee,{ marginLeft: normalize(170),}]}>
                     </ShimmerPlaceHolder>
                     <Txt accessibilityLabel='meetingRoomTotal' style={[styles.totalPayableValue,{color:isDarkMode ? AppTheme.COLORS.text : AppTheme.COLORS.purple}]}>{priceLoading === false ?
-                     tax?.setting?.isTaxEnable  ? `SAR ${((priceDayPass) + ((tax?.setting?.taxRate / 100) * priceDayPass)).toFixed(2) }` : `SAR ${priceDayPass}` : null}</Txt>
+                     ((priceDayPass + ((tax?.setting?.taxRate / 100) * priceDayPass))) < discount  ? `SAR 0.0` :
+                     tax?.setting?.isTaxEnable  ? `SAR ${(((priceDayPass) + ((tax?.setting?.taxRate / 100) * priceDayPass)) - discount).toFixed(2) }` : `SAR ${priceDayPass - discount}` : null}</Txt>
                   </View>
                 }
               </View>

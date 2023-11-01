@@ -498,10 +498,11 @@ const MyTeam = ({navigation}) => {
                       </View>
                     </View>
 
-                    {allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk ? (
+                    {allMembersSelected?.isMultiple === false ? 
+                    allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk ? (
                       <View style={[styles.dedicatedDeskContainer]}>
                         <Txt style={styles.dedicatedDesk}>
-                          {Strings.dedicatedDesk}
+                          {item?.deskName}
                         </Txt>
                       </View>
                     ) : (
@@ -510,7 +511,17 @@ const MyTeam = ({navigation}) => {
                           {Strings.privateOffice}
                         </Txt>
                       </View>
-                    )}
+                    )
+                  :
+                  <View style={[styles.privateOfficeContainer]}>
+                  <Txt style={styles.privateOffice}>
+                    {Strings.privateOffice}
+                  </Txt>
+                </View>
+                
+                  }
+
+
                   </View>
                 </Wrapper>
               ))}
@@ -570,7 +581,7 @@ const MyTeam = ({navigation}) => {
                       allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk ? (
                         <View style={[styles.dedicatedDeskContainer]}>
                           <Txt style={styles.dedicatedDesk}>
-                            {Strings.dedicatedDesk}
+                            {item?.deskName}
                           </Txt>
                         </View>
                       ) : (
@@ -592,7 +603,7 @@ const MyTeam = ({navigation}) => {
                       ) : (
                         <View style={[styles.dedicatedDeskContainer]}>
                           <Txt style={styles.dedicatedDesk}>
-                            {Strings.dedicatedDesk}
+                            {item?.deskName}
                           </Txt>
                         </View>
                       )}
@@ -651,7 +662,7 @@ const MyTeam = ({navigation}) => {
                                   {alignSelf: 'flex-end'},
                                 ]}>
                                 <Txt style={styles.dedicatedDesk}>
-                                  {Strings.dedicatedDesk}
+                                  {item?.deskName}
                                 </Txt>
                               </View>
                             ) : (
@@ -733,7 +744,7 @@ const MyTeam = ({navigation}) => {
                                   {alignSelf: 'flex-end'},
                                 ]}>
                                 <Txt style={styles.dedicatedDesk}>
-                                  {Strings.dedicatedDesk}
+                                  {item?.deskName}
                                 </Txt>
                               </View>
                             </View>
@@ -843,10 +854,11 @@ const MyTeam = ({navigation}) => {
                     </View>
                   </View>
 
-                  {allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk ? (
+                  {allMembersSelected?.isMultiple === false ? 
+                  allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk ? (
                     <View style={[styles.dedicatedDeskContainer]}>
                       <Txt style={styles.dedicatedDesk}>
-                        {Strings.dedicatedDesk}
+                      {item?.deskName}
                       </Txt>
                     </View>
                   ) : (
@@ -855,7 +867,16 @@ const MyTeam = ({navigation}) => {
                         {Strings.privateOffice}
                       </Txt>
                     </View>
-                  )}
+                  )
+                :
+                <View style={[styles.privateOfficeContainer]}>
+                      <Txt style={styles.privateOffice}>
+                        {Strings.privateOffice}
+                      </Txt>
+                    </View>
+                }
+
+                  
                 </View>
               </Wrapper>
             ))}
@@ -909,7 +930,7 @@ const MyTeam = ({navigation}) => {
                     allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk ? (
                       <View style={[styles.dedicatedDeskContainer]}>
                         <Txt style={styles.dedicatedDesk}>
-                          {Strings.dedicatedDesk}
+                          {item?.deskName}
                         </Txt>
                       </View>
                     ) : (
@@ -930,7 +951,7 @@ const MyTeam = ({navigation}) => {
                     ) : (
                       <View style={[styles.dedicatedDeskContainer]}>
                         <Txt style={styles.dedicatedDesk}>
-                          {Strings.dedicatedDesk}
+                          {item?.deskName}
                         </Txt>
                       </View>
                     )}
@@ -1035,7 +1056,7 @@ const MyTeam = ({navigation}) => {
                                   {alignSelf: 'flex-end'},
                                 ]}>
                                 <Txt style={styles.dedicatedDesk}>
-                                  {Strings.dedicatedDesk}
+                                {item?.deskName}
                                 </Txt>
                               </View>
                             ) : (
@@ -1194,7 +1215,7 @@ const MyTeam = ({navigation}) => {
                                   {alignSelf: 'flex-end'},
                                 ]}>
                                 <Txt style={styles.dedicatedDesk}>
-                                  {Strings.dedicatedDesk}
+                                  {item?.deskName}
                                 </Txt>
                               </View>
                               {editMembersToggle ? (
@@ -1504,7 +1525,7 @@ const MyTeam = ({navigation}) => {
                       {alignSelf: 'flex-end'},
                     ]}>
                     <Txt style={styles.dedicatedDesk}>
-                      {Strings.dedicatedDesk}
+                      {item?.deskName}
                     </Txt>
                   </View>
                 ) : null}

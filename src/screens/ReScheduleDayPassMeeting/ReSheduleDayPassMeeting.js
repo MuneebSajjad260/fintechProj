@@ -46,6 +46,10 @@ const ReScheduleDayPassMeeting = ({route}) => {
   const DayPassPriceLoading = useSelector(
     state => state?.dayPassPrice?.loading,
   );
+
+  const tax = useSelector(state=> state?.tax?.data)
+  console.log("tax---",tax,'-',tax?.setting?.isTaxEnable)
+
   const loginId = useSelector(selectLoginUserId);
   console.log('meeting schedule---', meetingScedule, loginId, '---', date,'--');
   console.log('date & time---', startTime, '----', endTime, '---', date);
@@ -133,12 +137,13 @@ const ReScheduleDayPassMeeting = ({route}) => {
       .unwrap()
       .then(result => {
         console.log('data price--- daypass', result);
-        setPriceDayPass(result?.Price?.EstimatedCost);
+        setPriceDayPass(result?.Price);
       })
       .catch(err => {
         console.log('error price--daypass', err);
       });
   }, [dispatch]);
+
 
   //getting duration
   const convertDurationToHours = durationString => {
@@ -394,6 +399,7 @@ const ReScheduleDayPassMeeting = ({route}) => {
               CoworkerInvoiceNumber={CoworkerInvoiceNumber}
               status={meetingScedule?.paymentStatus}
               reason={meetingScedule?.PaymentsObjections[0]?.reason}
+              tax={tax}
             />
           </View>
         </View>

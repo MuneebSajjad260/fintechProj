@@ -1398,7 +1398,7 @@ const Meetingroom = ({route}) => {
                     showTime &&
                     addTimeDuration &&
                     timebtn &&
-                    dayPassCheck &&
+                   // dayPassCheck &&
                     selectMeetingRoom &&
                     borderBlue
                   ? false

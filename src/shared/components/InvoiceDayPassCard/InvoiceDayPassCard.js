@@ -25,6 +25,8 @@ const InvoiceDayPassCard = (props) => {
   const { item,disable,price,loading,resourceName,date,userName,email , downloadInvoice} = props;
   const totalSubTotal = price.reduce((total, item) => total + item.SubTotal, 0);
   const totalvat = price.reduce((total, item) => total + item.TaxAmount, 0);
+
+  console.log("price---",price)
   return (
     <>
       <Wrapper style={styles.card}>
@@ -69,7 +71,7 @@ const InvoiceDayPassCard = (props) => {
       
     
         <Divider style={styles.divider}/>
-        {price?.map(item=>(
+        {/* {price?.map(item=>( */}
           <View key ={item?.Id}>
     
 
@@ -89,19 +91,16 @@ const InvoiceDayPassCard = (props) => {
               <Txt style={styles.dayPassPrice}>
           Day Pass
               </Txt>
-              {/* <ShimmerPlaceHolder
-            visible={loading === false}
-            shimmerStyle={[styles.shimmerAvail,{marginLeft:normalize(203)}]}>
-
-          </ShimmerPlaceHolder> */}
+            
               <Txt style={styles.dayPassPriceValue}>
-                {`SAR ${item?.SubTotal.toFixed(2)} `}
+                {`SAR ${price[0]?.SubTotal.toFixed(2)} `}
               </Txt>
             </View>
 
            
             <Divider style={styles.divider}/>
 
+{/* SUB TOTAL SECTION */}
             <View style={[
               styles.subTotalContainer]}
             >
@@ -109,34 +108,43 @@ const InvoiceDayPassCard = (props) => {
               <Txt style={styles.subTotal}>
          Subtotal
               </Txt>
-              {/* <ShimmerPlaceHolder
-            visible={loading === false}
-            shimmerStyle={[styles.shimmerAvail,{marginLeft:normalize(203)}]}>
-
-          </ShimmerPlaceHolder> */}
+             
               <Txt style={styles.subTotalPrice}>
                 {`SAR ${totalSubTotal.toFixed(2)} `}
               </Txt>
             </View>
+
+{/* VAT SECTION */}
 
             <View style={[
               styles.subTotalContainer]}
             >
             
               <Txt style={styles.vat}>
-                {`VAT (${item?.TaxRate}%)`}
+                {`VAT (${price[0]?.TaxRate}%)`}
               </Txt>
-              {/* <ShimmerPlaceHolder
-            visible={loading === false}
-            shimmerStyle={[styles.shimmerAvail,{marginLeft:normalize(203)}]}>
-
-          </ShimmerPlaceHolder> */}
+            
               <Txt style={styles.vatPrice}>
                 {totalvat.toFixed(2)}
               </Txt>
             </View>
 
+{/* DISCOUNT SECTION */}
 
+<View style={[
+              styles.subTotalContainer]}
+            >
+            
+              <Txt style={styles.vat}>
+              { price[0]?.DiscountCode ? `Discount(${price[0]?.DiscountCode})` : `Discount`}
+              </Txt>
+            
+              <Txt style={styles.vatPrice}>
+                {price[0]?.DiscountAmount ? price[0]?.DiscountAmount : 0 }
+              </Txt>
+            </View>
+
+{/* AMOUNT PAID SECTION */}
             <View style={
               styles.amountPaidCont}
             >
@@ -145,21 +153,17 @@ const InvoiceDayPassCard = (props) => {
           Amount paid
               </Txt>
 
-              {/* <ShimmerPlaceHolder
-            visible={loading === false}
-            shimmerStyle={[styles.shimmerAvail,{marginLeft:normalize(173)}]}>
-
-          </ShimmerPlaceHolder> */}
+             
 
               <Txt style={styles.amountPaidprice}>
-                { `SAR ${totalSubTotal + totalvat}` }
+                {((totalSubTotal + ((totalvat / 100) * totalSubTotal))) < price[0]?.DiscountAmount  ? `SAR 0.0` : `SAR ${totalSubTotal + totalvat - price[0]?.DiscountAmount}` }
               </Txt>
             </View>
 
 
 
           </View>
-        ))}
+        {/* ))} */}
        
 
       </Wrapper>

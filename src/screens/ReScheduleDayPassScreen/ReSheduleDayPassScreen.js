@@ -27,6 +27,9 @@ const ReScheduleDayPassScreen = ({ route }) => {
   const dispatch =useDispatch();
   const navigation = useNavigation();
 
+  const tax = useSelector(state=> state?.tax?.data)
+  console.log("tax---",tax,'-',tax?.setting?.isTaxEnable)
+
   const coworkerName=useSelector(selectLoginUserName);
   const [price, setPrice] = useState();
   const [checkDate,setCheckDate]=useState(false);
@@ -281,7 +284,7 @@ const ReScheduleDayPassScreen = ({ route }) => {
             ))
           }
           <View style={styles.paymentCard}>
-            <PaymentCard price ={price?.EstimatedCost} date={date} resourceName={meetingScedule?.ResourceName} loading={DayPassPriceLoading}
+            <PaymentCard price ={price} date={date} tax={tax} resourceName={meetingScedule?.ResourceName} loading={DayPassPriceLoading}
               CoworkerInvoiceNumber={CoworkerInvoiceNumber} status={meetingScedule?.paymentStatus}
               reason={meetingScedule?.PaymentsObjections[0]?.reason}
             />

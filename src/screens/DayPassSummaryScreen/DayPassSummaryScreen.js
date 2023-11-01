@@ -346,6 +346,7 @@ const DayPassSummaryScreen =({navigation,route})=>  {
               <Txt accessibilityLabel='subtotal' style={styles.payemntValueTxt}>{!dayPassPricePending  ? dayPassPrice?.EstimatedCost : null}</Txt>
             </View>
 
+{/* VAT SECTION */}
             <View style={styles.allignInRow}>
               <Txt style={[styles.paymentHeadings,{marginTop:AppTheme.SPACINGS.MARGINS.M6,color:isDarkMode ? AppTheme.COLORS.lightDarkModeTxt : AppTheme.COLORS.lightLightModeTxr}]}>VAT {tax?.setting?.taxRate}%</Txt>
 
@@ -359,6 +360,23 @@ const DayPassSummaryScreen =({navigation,route})=>  {
               : null}</Txt>
             </View>
 
+{/* DISCOUNT SECTION */}
+            <View style={styles.allignInRow}>
+              <Txt style={[styles.paymentHeadings,{marginTop:AppTheme.SPACINGS.MARGINS.M6,color:isDarkMode ? AppTheme.COLORS.lightDarkModeTxt : AppTheme.COLORS.lightLightModeTxr}]}>
+              {dayPassPrice?.DiscountCode ? `Discount(${dayPassPrice?.DiscountCode})` : `Discount`}
+                </Txt>
+
+              <ShimmerPlaceHolder
+                visible={dayPassPricePending === false }
+                shimmerStyle={[styles.shimmerAvail,{marginLeft:normalize(202)}]}>
+              </ShimmerPlaceHolder>
+
+              <Txt accessibilityLabel='subtotal' style={[styles.payemntValueTxt,{marginTop:AppTheme.SPACINGS.MARGINS.M6}]}>{!dayPassPricePending  ?
+               dayPassPrice?.DiscountAmount ? dayPassPrice?.DiscountAmount : 0
+              : null}</Txt>
+            </View>
+
+{/* TOTAL PAYABLE SECTION */}
             <Divider style={styles.divider} />
             <View style={styles.allignInRow}>
               <Txt style={styles.totalPayableTxt}>Total payable</Txt>
@@ -369,8 +387,9 @@ const DayPassSummaryScreen =({navigation,route})=>  {
               </ShimmerPlaceHolder>
 
               <Txt accessibilityLabel='totalPayable' style={styles.totalPayableAmount}>{!dayPassPricePending  ? 
-                 tax?.setting?.isTaxEnable  ? `SAR ${(dayPassPrice?.EstimatedCost + ((tax?.setting?.taxRate / 100) * dayPassPrice?.EstimatedCost)).toFixed(2) }`
-                 : `SAR ${dayPassPrice?.EstimatedCost}`
+              ((dayPassPrice?.EstimatedCost + ((tax?.setting?.taxRate / 100) * dayPassPrice?.EstimatedCost))) < dayPassPrice?.DiscountAmount  ? `SAR 0.0` :
+                 tax?.setting?.isTaxEnable  ? `SAR ${((dayPassPrice?.EstimatedCost + ((tax?.setting?.taxRate / 100) * dayPassPrice?.EstimatedCost)) - dayPassPrice?.DiscountAmount).toFixed(2) }`
+                 : `SAR ${dayPassPrice?.EstimatedCost - dayPassPrice?.DiscountAmount}`
 
                : null}</Txt>
             </View>

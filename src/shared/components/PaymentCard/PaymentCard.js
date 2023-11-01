@@ -22,7 +22,7 @@ const PaymentCard = (props) => {
   const navigation = useNavigation();
   const isDarkMode = useSelector(state => state.mode.colorScheme);
  
-  const { item,disable,price,loading,resourceName,date,CoworkerInvoiceNumber,status,reason} = props;
+  const { item,disable,price,loading,resourceName,date,CoworkerInvoiceNumber,status,reason, tax} = props;
   console.log('status-11-1',status, price,reason);
   return (
     <>
@@ -83,7 +83,7 @@ const PaymentCard = (props) => {
 
           </ShimmerPlaceHolder>
           <Txt style={styles.resourcePrice}>
-            { loading === false ? `SAR ${price}` : null}
+            { loading === false ? `SAR ${price?.EstimatedCost}` : null}
           </Txt>
         </View>
     
@@ -102,23 +102,51 @@ const PaymentCard = (props) => {
 
           </ShimmerPlaceHolder>
           <Txt style={styles.SubtotalPrice}>
-            { loading === false ? price : null}
+            { loading === false ? price?.EstimatedCost : null}
           </Txt>
         </View>
 
+{/* VAT SECTION */}
         <View style={
           styles.vatContainer}
         >
             
           <Txt style={styles.vat}>
-          VAT (15%)
+          VAT {tax?.setting?.taxRate}%
           </Txt>
 
+          <ShimmerPlaceHolder
+            visible={loading === false}
+            shimmerStyle={[styles.shimmerAvail,{marginLeft:normalize(210)}]}>
+
+          </ShimmerPlaceHolder>
+
           <Txt style={styles.vatPrice}>
-            0
+          {!loading ? tax?.setting?.isTaxEnable   ? ((tax?.setting?.taxRate / 100) * price?.EstimatedCost).toFixed(2) : 0 : null}
           </Txt>
         </View>
 
+        {/* DISCOUNT SECTION */}
+        <View style={
+          styles.vatContainer}
+        >
+            
+          <Txt style={styles.vat}>
+          {price?.DiscountCode ? `Discount(${price?.DiscountCode})` : `Discount`}
+          </Txt>
+
+          <ShimmerPlaceHolder
+            visible={loading === false}
+            shimmerStyle={[styles.shimmerAvail,{marginLeft:normalize(208)}]}>
+
+          </ShimmerPlaceHolder>
+
+          <Txt style={styles.vatPrice}>
+         {!loading ? price?.DiscountAmount ? price?.DiscountAmount : 0 : null}
+          </Txt>
+        </View>
+
+{/* AMOUNT PAID SECTION */}
         <View style={
           styles.amountPaidCont}
         >
@@ -134,7 +162,8 @@ const PaymentCard = (props) => {
           </ShimmerPlaceHolder>
 
           <Txt style={styles.amountPaidprice}>
-            { loading === false ? `SAR ${price}` : null}
+            { loading === false ? ((price?.EstimatedCost + ((tax?.setting?.taxRate / 100) * price?.EstimatedCost))) < price?.DiscountAmount  ? `SAR 0.0` : tax?.setting?.isTaxEnable  ? `SAR ${((price?.EstimatedCost + ((tax?.setting?.taxRate / 100) * price?.EstimatedCost)) - price?.DiscountAmount).toFixed(2) }`
+                 : `SAR ${price?.EstimatedCost - price?.DiscountAmount}` : null}
           </Txt>
         </View>
 
