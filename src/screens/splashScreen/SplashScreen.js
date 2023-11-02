@@ -40,7 +40,7 @@ const SplashScreen = ({navigation}) => {
   // console.log('username splash screen ---', userName);
   const loginData = useSelector(state => state.auth?.data);
   const token = loginData?.access_token;
-  console.log('token--', token);
+  // console.log('token--', token);
 
   const translation = useRef(new Animated.Value(0)).current;
 

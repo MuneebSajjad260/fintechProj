@@ -50,7 +50,7 @@ export default Strings = {
   StartDate: 'Start Month',
   selectMonth: 'Select month',
   NoOfMonths: 'Number of Months',
-  TeamMembers: 'Team members',
+  TeamMembers: 'Select Team Members',
   selectPrivateOffice: 'SELECT PRIVATE OFFICE',
   duration: 'Duration',
   expectedDates: 'Expected Dates',

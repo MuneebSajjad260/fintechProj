@@ -1,20 +1,24 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { GetDayPassBookings } from '../action/GetDayPassBookings';
+import {createSlice} from '@reduxjs/toolkit';
+import {GetDayPassBookings} from '../action/GetDayPassBookings';
 
 const initialState = {
   loading: false,
   data: null,
-  error: null
+  error: null,
+  isActiveDayPass: false,
 };
 
 const GetDayPassBookingsSlice = createSlice({
   name: 'getDayPassBookings',
   initialState,
-  reducers: {},
-  extraReducers: (builder) => {
+  reducers: {
+    setIsActiveDayPass: (state, action) => {
+      state.isActiveDayPass = action.payload;
+    },
+  },
+  extraReducers: builder => {
     builder
-      .addCase(GetDayPassBookings.pending, (state) => {
-
+      .addCase(GetDayPassBookings.pending, state => {
         state.loading = true;
         state.error = null;
       })
@@ -28,7 +32,9 @@ const GetDayPassBookingsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       });
-  }
+  },
 });
+
+export const {setIsActiveDayPass} = GetDayPassBookingsSlice.actions;
 
 export default GetDayPassBookingsSlice.reducer;

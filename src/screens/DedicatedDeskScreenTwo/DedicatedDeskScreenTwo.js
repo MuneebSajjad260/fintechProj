@@ -34,7 +34,7 @@ const DedicatedDeskScreenTwo = ({ route }) => {
 
   const loginData = useSelector((state) => state.auth?.data);
   const token = loginData?.access_token;
-  console.log('token---------',token);
+  // console.log('token---------',token);
   const teamMembers = useSelector(state => state?.getTeam);
   const teamMembersPending = teamMembers?.loading;
   const teammembersdata = teamMembers?.data;

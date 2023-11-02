@@ -77,7 +77,7 @@ const MeetingSummaryScreen = ({route}) => {
   console.log('selectedMembers----',selectedMembers);
   const loginData = useSelector((state) => state.auth?.data);
   const token = loginData?.access_token;
-  console.log('token-----', token);
+  // console.log('token-----', token);
 
   const now = new Date();
   console.log('now----',now.toISOString());
@@ -296,7 +296,8 @@ const MeetingSummaryScreen = ({route}) => {
   },[dispatch,currentMeetingRoom]);
 
   useEffect(()=>{
-    dispatch(GetProfile(token)).unwrap().then(result=>{
+    dispatch(GetProfile(token)).unwrap()
+    .then(result=>{
       const sortProfile= result.filter(item=> item?.CoworkerType === 1);
       console.log('test api -',sortProfile);
       console.log('getProfileResult Id----', result);
@@ -305,7 +306,10 @@ const MeetingSummaryScreen = ({route}) => {
       const firstTimestamp = timestampsArray[0];
       console.log('firstTimestamp----',firstTimestamp);
       setCoWorkerId(sortProfile ? firstTimestamp : 0 );
-    });
+    })
+    .catch((err)=>{
+      console.log("GetProfile :",err)
+    })
   },[dispatch,token]);
 
   useEffect(()=>{

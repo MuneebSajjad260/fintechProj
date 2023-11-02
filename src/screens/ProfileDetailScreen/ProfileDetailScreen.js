@@ -24,7 +24,7 @@ const ProfileDetailScreen = () => {
 
   const loginData = useSelector(state => state.auth?.data);
   const token = loginData?.access_token;
-  console.log('token-----', token);
+  // console.log('token-----', token);
 
   const getProfile = useSelector(state => state?.getProfile?.data);
 

@@ -94,7 +94,6 @@ const ReScheduleDayPassScreen = ({ route }) => {
   const compareDates = ()=> {
     const specifiedDate = moment(date, 'DD, MMM YYYY');
     const currentDate = moment();
-    console.log('currentDate---', currentDate);
     if (currentDate.isSame(specifiedDate)) {
       setCheckDate(false);
     } else if (currentDate.isAfter(specifiedDate)) {
@@ -121,7 +120,10 @@ const ReScheduleDayPassScreen = ({ route }) => {
       .unwrap()
       .then(result=>{
         setPrice(result?.Price);
-      });
+      })
+      .catch(err=>{
+        console.log("err Price:",err)
+      })
   },[dispatch]);
 
   //CANCEL dayPass

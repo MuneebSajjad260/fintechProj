@@ -5,7 +5,7 @@ import instance from '../../utils/interceptor';
 
 export const DayPassPrice = createAsyncThunk('dayPassPrice/DayPassPrice', async (data, thunkAPI) => {
   try {
-    // console.log('hellouu=>>>>', data);
+    console.log('hellouu=>>>>', data);
     const response = await instance.post(`${API_ENDPOINTS.fintech_backend_url}/daypasses-price`, data, {
       headers: {
         // 'Content-Type': 'application/x-www-form-urlencoded'

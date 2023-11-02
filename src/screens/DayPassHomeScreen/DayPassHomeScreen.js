@@ -59,6 +59,8 @@ import Animated, {
   useDerivedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { setIsActiveDayPass } from '../../shared/redux/slices/GetDayPassBookingsSlice';
+import { compareDates } from '../../shared/utils/DateUtils';
 
 const DayPassHomeScreen = ({navigation,route}) => {
   const dispatch = useDispatch();
@@ -122,10 +124,8 @@ const DayPassHomeScreen = ({navigation,route}) => {
     dispatch(CheckVisitor(userData?.Id))
       .unwrap()
       .then(result => {
-        console.log('result checking visitor--', result);
-        // TODO Revert me
-        // setNotVisitor(result?.userExits);
-        //! Test
+        // console.log('result checking visitor--', result);
+        // ? if user==false it will be a visitor 
         setNotVisitor(result?.userExits);
       })
       .catch(err => {
@@ -159,8 +159,16 @@ const DayPassHomeScreen = ({navigation,route}) => {
     dispatch(GetDayPassBookings(coworkerId))
       .unwrap()
       .then(result => {
-        console.log('result of day pass booking---', result);
+
         setDayPassBooking(result);
+
+        // ? for Access pin code in profile menu
+        if (!!(result?.data?.length > 0)) {
+          const isTodayDayPassAvailable = result?.data?.some((dayPassBookingItem) => {
+            return compareDates(dayPassBookingItem?.FromTime);
+          });
+          dispatch(setIsActiveDayPass(isTodayDayPassAvailable))
+         }
       })
       .catch(error => {
         console.log('error of day pass booking---', error);
@@ -279,8 +287,17 @@ const DayPassHomeScreen = ({navigation,route}) => {
     dispatch(GetDayPassBookings(coworkerId))
       .unwrap()
       .then(result => {
-        // console.log('result of day pass booking---', result);
+        // console.log('result of day pass booking---', result?.data);
         setDayPassBooking(result);
+
+         // ? for Access pin code in profile menu
+         if (!!(result?.data?.length > 0)) {
+          const isTodayDayPassAvailable = result?.data?.some((dayPassBookingItem) => {
+            return compareDates(dayPassBookingItem?.FromTime);
+          });
+          dispatch(setIsActiveDayPass(isTodayDayPassAvailable))
+         }
+          
       })
       .catch(error => {
         console.log('error of day pass booking---', error);
