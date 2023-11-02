@@ -16,7 +16,7 @@ const WebView = ({route, navigation}) => {
     const {url} = event;
     // console.log('Url:--------', url);
     // Check if the specific URL is opened
-    if (url === 'https://hub.fintechsaudi.com/#/wellcome') {
+    if (url === `${API_ENDPOINTS.stage_Web_Views}/#/wellcome`) {
       // console.log('hiii');
       // handleCloseWebView();
       setShowWebsite(false);

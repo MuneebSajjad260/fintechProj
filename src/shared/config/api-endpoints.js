@@ -8,5 +8,5 @@ export const API_ENDPOINTS = {
   ///////INTEGRATION OR STAGING////////
   nexudus_url:'https://fintechstaging.spaces.nexudus.com',
   fintech_backend_url: 'https://hubportalapi.fintechsaudi.devbeans.io/',
-  stage_Web_Views:'https://int-fintech-web.devbeans.io',
+  stage_Web_Views:'https://hub.fintechsaudi.devbeans.io',
 };
