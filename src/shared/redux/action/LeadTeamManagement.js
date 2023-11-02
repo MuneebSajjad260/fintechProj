@@ -15,7 +15,7 @@ export const LeadTeamManagement= createAsyncThunk('leadTeamManagement/LeadTeamMa
 
     return response.data;
   } catch (error) {
-    console.log('error', error);
+  
     return thunkAPI.rejectWithValue(error.response.data);
 
   }

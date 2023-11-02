@@ -529,7 +529,7 @@ const MeetingSummaryScreen = ({route}) => {
                   justifyContent: 'space-between'
 
                 }]}>
-                <Txt style={[styles.paymentContainerHeadings,{marginTop:AppTheme.SPACINGS.MARGINS.M6,color:isDarkMode ? 'rgba(255, 255, 255, 0.5)' :  'rgba(0, 0, 0, 0.5)'}]}>{discountCode ? `Discount(${discountCode})` : `Discount`}</Txt>
+                <Txt style={[styles.paymentContainerHeadings,{marginTop:AppTheme.SPACINGS.MARGINS.M6,color:isDarkMode ? 'rgba(255, 255, 255, 0.5)' :  'rgba(0, 0, 0, 0.5)'}]}>{discountCode ? `Discount(${discountCode})` : `Discount(-)`}</Txt>
                 
                 {dayPass ?
                   <View>
@@ -538,7 +538,7 @@ const MeetingSummaryScreen = ({route}) => {
                       shimmerStyle={[styles.shimmerPlanFee,{ marginLeft: normalize(170),width:'18%'}]}>
                     </ShimmerPlaceHolder>
                     <Txt accessibilityLabel='daypassSubtotal' style={[styles.paymentContainerValues,{marginTop:AppTheme.SPACINGS.MARGINS.M6}]}>{ DayPassPriceLoading === false ? 
-                   discount ?  discount : 0 
+                  discount ?  discount : '-' 
                      
                      : null}</Txt>
                   </View>
@@ -549,7 +549,7 @@ const MeetingSummaryScreen = ({route}) => {
                       shimmerStyle={[styles.shimmerPlanFee,{ marginLeft: normalize(170),width:'18%'}]}>
                     </ShimmerPlaceHolder>
                     <Txt accessibilityLabel='meetingroomSubtotal' style={[styles.paymentContainerValues,{marginTop:AppTheme.SPACINGS.MARGINS.M6}]}>{ priceLoading === false ?  
-                  discount ?  discount  : 0
+                  discount ?  discount  : '-'
                     : null}</Txt>
                   </View>
                 }

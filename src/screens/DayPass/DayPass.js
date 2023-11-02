@@ -104,6 +104,7 @@ const DayPass =({navigation,route})=> {
   const onSubmit =(data)=>{
     console.log('price data ----',data);
     dispatch(DayPassPrice(data)).unwrap ().then (result=>{
+      console.log("reuslt day price--90909---",result)
       if(isRescheduleRequest === true ){
         navigation.navigate(ScreensName.dayPassSummary,{
           selectedDate:selectedDate,

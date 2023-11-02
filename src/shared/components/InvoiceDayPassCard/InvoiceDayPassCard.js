@@ -136,11 +136,11 @@ const InvoiceDayPassCard = (props) => {
             >
             
               <Txt style={styles.vat}>
-              { price[0]?.DiscountCode ? `Discount(${price[0]?.DiscountCode})` : `Discount`}
+              {price[0]?.DiscountCode ? `Discount(${price[0]?.DiscountCode})` : `Discount(-)`}
               </Txt>
             
               <Txt style={styles.vatPrice}>
-                {price[0]?.DiscountAmount ? price[0]?.DiscountAmount : 0 }
+                {price[0]?.DiscountAmount ? price[0]?.DiscountAmount : '-' }
               </Txt>
             </View>
 

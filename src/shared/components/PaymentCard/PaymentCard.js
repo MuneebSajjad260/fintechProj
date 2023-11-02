@@ -132,7 +132,7 @@ const PaymentCard = (props) => {
         >
             
           <Txt style={styles.vat}>
-          {price?.DiscountCode ? `Discount(${price?.DiscountCode})` : `Discount`}
+          {price?.DiscountCode ? `Discount(${price?.DiscountCode})` : `Discount(-)`}
           </Txt>
 
           <ShimmerPlaceHolder
@@ -142,7 +142,7 @@ const PaymentCard = (props) => {
           </ShimmerPlaceHolder>
 
           <Txt style={styles.vatPrice}>
-         {!loading ? price?.DiscountAmount ? price?.DiscountAmount : 0 : null}
+         {!loading ? price?.DiscountAmount ? price?.DiscountAmount : '-' : null}
           </Txt>
         </View>
 

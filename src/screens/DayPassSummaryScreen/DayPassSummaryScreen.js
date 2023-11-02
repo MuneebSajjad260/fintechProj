@@ -363,7 +363,7 @@ const DayPassSummaryScreen =({navigation,route})=>  {
 {/* DISCOUNT SECTION */}
             <View style={styles.allignInRow}>
               <Txt style={[styles.paymentHeadings,{marginTop:AppTheme.SPACINGS.MARGINS.M6,color:isDarkMode ? AppTheme.COLORS.lightDarkModeTxt : AppTheme.COLORS.lightLightModeTxr}]}>
-              {dayPassPrice?.DiscountCode ? `Discount(${dayPassPrice?.DiscountCode})` : `Discount`}
+              {dayPassPrice?.DiscountCode ? `Discount(${dayPassPrice?.DiscountCode})` : `Discount(-)`}
                 </Txt>
 
               <ShimmerPlaceHolder
@@ -372,7 +372,7 @@ const DayPassSummaryScreen =({navigation,route})=>  {
               </ShimmerPlaceHolder>
 
               <Txt accessibilityLabel='subtotal' style={[styles.payemntValueTxt,{marginTop:AppTheme.SPACINGS.MARGINS.M6}]}>{!dayPassPricePending  ?
-               dayPassPrice?.DiscountAmount ? dayPassPrice?.DiscountAmount : 0
+               dayPassPrice?.DiscountAmount ? dayPassPrice?.DiscountAmount : '-'
               : null}</Txt>
             </View>
 

@@ -342,7 +342,7 @@ const MyTeam = ({navigation}) => {
       dispatch(LeadTeamManagement(userData?.TeamIds))
         .unwrap()
         .then(result => {
-          console.log('result for LeadTeamManagement---', result);
+          console.log('result for LeadTeamManagement---', JSON.stringify(result,null,2));
           setAllMembersSelected(result);
           setPrivateOfficeMembers(result?.privateMembers);
           setDeskMembers(result?.dedicatedMembers);
@@ -1525,7 +1525,7 @@ const MyTeam = ({navigation}) => {
                       {alignSelf: 'flex-end'},
                     ]}>
                     <Txt style={styles.dedicatedDesk}>
-                      {item?.deskName}
+                      {Strings.dedicatedDesk}
                     </Txt>
                   </View>
                 ) : null}
