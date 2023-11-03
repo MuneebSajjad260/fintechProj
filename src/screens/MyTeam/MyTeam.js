@@ -986,6 +986,25 @@ const MyTeam = ({navigation}) => {
 
             {/* PAYING MEMBER UI AND FUNCTIONALITY */}
             {payingMember?.map(item => (
+
+<TouchableOpacity
+accessibilityLabel="detailMember"
+onPress={() => {
+  if (!editMembersToggle) {
+    navigation.navigate(ScreensName.teamMemberDetail, {
+      name: item?.fullName,
+      companyName: userData?.CompanyName,
+      joiningDate: allMembersSelected?.startDate,
+      resourceType:
+      allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
+        ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
+        : 'Private Office',
+    });
+  } else {
+  /* empty */
+  }
+}}>
+
               <Wrapper key={item?.Id} style={styles.card}>
                 <View style={styles.allignInRow}>
                   <View style={[styles.flexDirectionRow, {alignItems: 'center'}]}>
@@ -1057,6 +1076,8 @@ const MyTeam = ({navigation}) => {
                     )}
                 </View>
               </Wrapper>
+                
+           </TouchableOpacity>
             ))}
 
             <Divider style={styles.divider} />
