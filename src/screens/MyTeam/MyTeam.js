@@ -68,7 +68,6 @@ const MyTeam = ({navigation}) => {
   );
   const otpGeneratePending = useSelector(state => state?.otpGenerate?.loading);
   const userData = useSelector(selectUserData);
-  console.log('admin---',userData?.IsTeamAdministrator,'team Id---',userData?.TeamIds,'--',userData?.CompanyName);
   const ChangeRolePending = useSelector(state => state?.changeRole?.loading);
   const RemoveMemberPending = useSelector(
     state => state?.removeMember?.loading,
@@ -700,7 +699,7 @@ const MyTeam = ({navigation}) => {
                             />
 
                             <Txt style={styles.teamMember}>
-                              {item.fullName}
+                              {item?.fullName} {userData?.Id===item?.Id?'(You)':null}
                             </Txt>
                           </View>
 
@@ -1240,7 +1239,7 @@ const MyTeam = ({navigation}) => {
                               />
 
                               <Txt style={styles.teamMember}>
-                                {item.fullName}
+                                {item.fullName} {userData?.Id===item?.Id?'(You)':null}
                               </Txt>
                             </View>
 

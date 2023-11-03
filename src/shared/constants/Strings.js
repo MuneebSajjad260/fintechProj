@@ -29,7 +29,7 @@ export default Strings = {
   minimumComitmentMonthly:
     'The minimum commitment for this plan is of 3 months.',
   finalPriceCalculated:
-    'The final price will be calculated at the end, depending upon the number of members and the resource(s) selected.',
+    'The final price will depend upon number of members and type of resource(s) selected. However, currently Fintech Hub is empowering Team with a 100% discount on all services.',
   chargeForEntireOffice:
     'For offices, your team will be charged for the entire office.',
   cancellationRequestedMonthly:
