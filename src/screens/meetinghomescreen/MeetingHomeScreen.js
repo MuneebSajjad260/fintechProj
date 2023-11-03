@@ -295,7 +295,14 @@ const MeetingWelcomeScreen = ({route}) => {
     setIsRefreshing(true);
 
     GetSelectTeamMemberCredit(Id);
-
+    if (TeamIds) {
+      getMembershipDetails(Number(TeamIds));
+    } else {
+      setMembershipDetails(null);
+      setError('Error while getting team ID.');
+      console.error('Error while getting team ID.');
+    }
+    
     dispatch(GetCustomerMeetingRooms(coworkerId))
       .unwrap()
       .then(result => {

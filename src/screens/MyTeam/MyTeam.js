@@ -426,7 +426,7 @@ const MyTeam = ({navigation}) => {
     }
   };
   // WHEN TEAM MEMBER LOGIN
-  if (userData?.IsTeamAdministrator === false) {
+  if (userData?.IsTeamAdministrator == false) {
     return (
       <>
         <Frame style={styles.safeAreaContainer}>
@@ -453,6 +453,23 @@ const MyTeam = ({navigation}) => {
                 visible={LeadTeamManagementPending === false}
                 shimmerStyle={styles.shimmerView}></ShimmerPlaceHolder>
               {teamLead?.map(item => (
+                     <TouchableOpacity
+                     accessibilityLabel="detailMember"
+                     onPress={() => {
+                       if (!editMembersToggle) {
+                         navigation.navigate(ScreensName.teamMemberDetail, {
+                           name: item?.fullName,
+                           companyName: userData?.CompanyName,
+                           joiningDate: allMembersSelected?.startDate,
+                           resourceType:
+                           allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
+                             ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
+                             : 'Private Office',
+                         });
+                       } else {
+                       /* empty */
+                       }
+                     }}>
                 <Wrapper key={item?.Id} style={styles.card}>
                   <View style={styles.allignInRow}>
                     <View
@@ -502,7 +519,7 @@ const MyTeam = ({navigation}) => {
                     allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk ? (
                       <View style={[styles.dedicatedDeskContainer]}>
                         <Txt style={styles.dedicatedDesk}>
-                          {item?.deskName}
+                          {item?.deskName ? item?.deskName : 'Dedicated Desk'}
                         </Txt>
                       </View>
                     ) : (
@@ -524,6 +541,7 @@ const MyTeam = ({navigation}) => {
 
                   </View>
                 </Wrapper>
+                </TouchableOpacity>
               ))}
               <ShimmerPlaceHolder
                 visible={LeadTeamManagementPending === false}
@@ -531,6 +549,23 @@ const MyTeam = ({navigation}) => {
 
               {/* PAYING MEMBER UI AND FUNCTIONALITY */}
               {payingMember?.map(item => (
+                   <TouchableOpacity
+                   accessibilityLabel="detailMember"
+                   onPress={() => {
+                     if (!editMembersToggle) {
+                       navigation.navigate(ScreensName.teamMemberDetail, {
+                         name: item?.fullName,
+                         companyName: userData?.CompanyName,
+                         joiningDate: allMembersSelected?.startDate,
+                         resourceType:
+                         allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
+                           ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
+                           : 'Private Office',
+                       });
+                     } else {
+                     /* empty */
+                     }
+                   }}>
                 <Wrapper key={item?.Id} style={styles.card}>
                   <View style={styles.allignInRow}>
                     <View
@@ -581,7 +616,7 @@ const MyTeam = ({navigation}) => {
                       allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk ? (
                         <View style={[styles.dedicatedDeskContainer]}>
                           <Txt style={styles.dedicatedDesk}>
-                            {item?.deskName}
+                          {item?.deskName ? item?.deskName : 'Dedicated Desk'}
                           </Txt>
                         </View>
                       ) : (
@@ -603,12 +638,13 @@ const MyTeam = ({navigation}) => {
                       ) : (
                         <View style={[styles.dedicatedDeskContainer]}>
                           <Txt style={styles.dedicatedDesk}>
-                            {item?.deskName}
+                          {item?.deskName ? item?.deskName : 'Dedicated Desk'}
                           </Txt>
                         </View>
                       )}
                   </View>
                 </Wrapper>
+                </TouchableOpacity>
               ))}
 
               <Divider style={styles.divider} />
@@ -617,7 +653,9 @@ const MyTeam = ({navigation}) => {
                 <View style={styles.imgTxtContainer}>
                   <View>
                     <Svg width={'100%'}>
-                      <MyTeamMembers />
+                    <MyTeamMembers
+                    stroke={isDarkMode ? AppTheme.COLORS.white : null}
+                  />
                     </Svg>
                   </View>
                   <Txt style={styles.teamManagment}>Member(s)</Txt>
@@ -629,13 +667,25 @@ const MyTeam = ({navigation}) => {
               {allMembersSelected?.isMultiple === false ? (
                 allMembersSelected?.allActiveMembers?.map(item =>
                   !item?.isAdministrator && !item?.isPayingMember ? (
+                    <TouchableOpacity
+                    accessibilityLabel="detailMember"
+                    onPress={() => {
+                      if (!editMembersToggle) {
+                        navigation.navigate(ScreensName.teamMemberDetail, {
+                          name: item?.fullName,
+                          companyName: userData?.CompanyName,
+                          joiningDate: allMembersSelected?.startDate,
+                          resourceType:
+                          allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
+                            ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
+                            : 'Private Office',
+                        });
+                      } else {
+                      /* empty */
+                      }
+                    }}>
                     <Wrapper key={item?.Id} style={styles.card}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          navigation.navigate(ScreensName.teamMemberDetail, {
-                            name: item?.fullName,
-                          });
-                        }}>
+                     
                         <View style={styles.selectedTeamContainer}>
                           <View style={styles.flexDirectionRow}>
                             <Feather
@@ -662,7 +712,7 @@ const MyTeam = ({navigation}) => {
                                   {alignSelf: 'flex-end'},
                                 ]}>
                                 <Txt style={styles.dedicatedDesk}>
-                                  {item?.deskName}
+                                {item?.deskName ? item?.deskName : 'Dedicated Desk'}
                                 </Txt>
                               </View>
                             ) : (
@@ -673,8 +723,10 @@ const MyTeam = ({navigation}) => {
                               </View>
                             )}
                         </View>
-                      </TouchableOpacity>
+                   
                     </Wrapper>
+                    </TouchableOpacity>
+                     
                   ) : null,
                 )
               ) : (
@@ -682,14 +734,27 @@ const MyTeam = ({navigation}) => {
                   <View>
                     {allMembersSelected?.privateMembers?.map(item =>
                       !item?.isAdministrator && !item?.isPayingMember ? (
+
+                        <TouchableOpacity
+                        accessibilityLabel="detailMember"
+                        onPress={() => {
+                          if (!editMembersToggle) {
+                            navigation.navigate(ScreensName.teamMemberDetail, {
+                              name: item?.fullName,
+                              companyName: userData?.CompanyName,
+                              joiningDate: allMembersSelected?.startDate,
+                              resourceType:
+                              allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
+                                ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
+                                : 'Private Office',
+                            });
+                          } else {
+                          /* empty */
+                          }
+                        }}>
+
                         <Wrapper key={item?.Id} style={styles.card}>
-                          <TouchableOpacity
-                            onPress={() => {
-                              navigation.navigate(
-                                ScreensName.teamMemberDetail,
-                                {name: item?.fullName},
-                              );
-                            }}>
+                         
                             <View style={styles.selectedTeamContainer}>
                               <View style={styles.flexDirectionRow}>
                                 <Feather
@@ -709,22 +774,37 @@ const MyTeam = ({navigation}) => {
                                 </Txt>
                               </View>
                             </View>
-                          </TouchableOpacity>
+                         
                         </Wrapper>
+                        </TouchableOpacity>
                       ) : null,
                     )}
                   </View>
                   <View>
                     {allMembersSelected?.dedicatedMembers?.map(item =>
                       !item?.isAdministrator && !item?.isPayingMember ? (
+
+                        <TouchableOpacity
+                        accessibilityLabel="detailMember"
+                        onPress={() => {
+                          if (!editMembersToggle) {
+                            navigation.navigate(ScreensName.teamMemberDetail, {
+                              name: item?.fullName,
+                              companyName: userData?.CompanyName,
+                              joiningDate: allMembersSelected?.startDate,
+                              resourceType:
+                              allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
+                                ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
+                                : 'Private Office',
+                            });
+                          } else {
+                          /* empty */
+                          }
+                        }}>
+
+                        
                         <Wrapper key={item?.Id} style={styles.card}>
-                          <TouchableOpacity
-                            onPress={() => {
-                              navigation.navigate(
-                                ScreensName.teamMemberDetail,
-                                {name: item?.fullName},
-                              );
-                            }}>
+                        
                             <View style={styles.selectedTeamContainer}>
                               <View style={styles.flexDirectionRow}>
                                 <Feather
@@ -744,12 +824,15 @@ const MyTeam = ({navigation}) => {
                                   {alignSelf: 'flex-end'},
                                 ]}>
                                 <Txt style={styles.dedicatedDesk}>
-                                  {item?.deskName}
+                                {item?.deskName ? item?.deskName : 'Dedicated Desk'}
                                 </Txt>
                               </View>
                             </View>
-                          </TouchableOpacity>
+                        
                         </Wrapper>
+                        </TouchableOpacity>
+                       
+
                       ) : null,
                     )}
                   </View>
@@ -813,6 +896,23 @@ const MyTeam = ({navigation}) => {
             {/* ADMINISTRATOR UI AND FUNCTIONALITY */}
 
             {teamLead?.map(item => (
+              <TouchableOpacity
+              accessibilityLabel="detailMember"
+              onPress={() => {
+                if (!editMembersToggle) {
+                  navigation.navigate(ScreensName.teamMemberDetail, {
+                    name: item?.fullName,
+                    companyName: userData?.CompanyName,
+                    joiningDate: allMembersSelected?.startDate,
+                    resourceType:
+                    allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
+                      ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
+                      : 'Private Office',
+                  });
+                } else {
+                /* empty */
+                }
+              }}>
               <Wrapper key={item?.Id} style={styles.card}>
                 <View style={styles.allignInRow}>
                   <View style={[styles.flexDirectionRow, {alignItems: 'center'}]}>
@@ -858,7 +958,7 @@ const MyTeam = ({navigation}) => {
                   allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk ? (
                     <View style={[styles.dedicatedDeskContainer]}>
                       <Txt style={styles.dedicatedDesk}>
-                      {item?.deskName}
+                      {item?.deskName ? item?.deskName : 'Dedicated Desk'}
                       </Txt>
                     </View>
                   ) : (
@@ -879,6 +979,7 @@ const MyTeam = ({navigation}) => {
                   
                 </View>
               </Wrapper>
+            </TouchableOpacity>
             ))}
             <ShimmerPlaceHolder
               visible={LeadTeamManagementPending === false}
@@ -930,7 +1031,7 @@ const MyTeam = ({navigation}) => {
                     allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk ? (
                       <View style={[styles.dedicatedDeskContainer]}>
                         <Txt style={styles.dedicatedDesk}>
-                          {item?.deskName}
+                        {item?.deskName ? item?.deskName : 'Dedicated Desk'}
                         </Txt>
                       </View>
                     ) : (
@@ -951,7 +1052,7 @@ const MyTeam = ({navigation}) => {
                     ) : (
                       <View style={[styles.dedicatedDeskContainer]}>
                         <Txt style={styles.dedicatedDesk}>
-                          {item?.deskName}
+                        {item?.deskName ? item?.deskName : 'Dedicated Desk'}
                         </Txt>
                       </View>
                     )}
@@ -1026,7 +1127,7 @@ const MyTeam = ({navigation}) => {
                               joiningDate: allMembersSelected?.startDate,
                               resourceType:
                               allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
-                                ? 'Dedicated Desk'
+                                ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
                                 : 'Private Office',
                             });
                           } else {
@@ -1056,7 +1157,7 @@ const MyTeam = ({navigation}) => {
                                   {alignSelf: 'flex-end'},
                                 ]}>
                                 <Txt style={styles.dedicatedDesk}>
-                                {item?.deskName}
+                                {item?.deskName ? item?.deskName : 'Dedicated Desk'}
                                 </Txt>
                               </View>
                             ) : (
@@ -1189,7 +1290,7 @@ const MyTeam = ({navigation}) => {
                                 name: item?.fullName,
                                 companyName: userData?.CompanyName,
                                 joiningDate: allMembersSelected?.startDate,
-                                resourceType: 'Dedicated Desk',
+                                resourceType: item?.deskName ? item?.deskName : 'Dedicated Desk',
                               });
                             } else {
                             /* empty */
@@ -1215,7 +1316,7 @@ const MyTeam = ({navigation}) => {
                                   {alignSelf: 'flex-end'},
                                 ]}>
                                 <Txt style={styles.dedicatedDesk}>
-                                  {item?.deskName}
+                                {item?.deskName ? item?.deskName : 'Dedicated Desk'}
                                 </Txt>
                               </View>
                               {editMembersToggle ? (
@@ -1286,7 +1387,7 @@ const MyTeam = ({navigation}) => {
                                 : allMembersSelected?.ResourceTypeId,
                               nexudusTeamId: userData?.TeamIds,
                               capacity: allMembersSelected?.deskCapacity,
-                              companyName: userData?.CompanyName,
+                              companyName: userData?.TeamNames,
                               activeMembers:
                               allMembersSelected?.isMultiple === true
                                 ? {
@@ -1420,7 +1521,7 @@ const MyTeam = ({navigation}) => {
                         : allMembersSelected?.ResourceTypeId,
                       nexudusTeamId: userData?.TeamIds,
                       capacity: allMembersSelected?.deskCapacity,
-                      companyName: userData?.CompanyName,
+                      companyName: userData?.TeamNames,
                       activeMembers:
                       allMembersSelected?.isMultiple === true
                         ? {

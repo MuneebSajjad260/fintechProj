@@ -42,7 +42,7 @@ const AddMembers = ({route, navigation}) => {
 
   // const isMultiple = true;
   const {data} = route.params;
-  // // console.log('params data ---', data);
+ console.log('params data ---', data);
   // // console.log('9494---',data?.activeMembers?.deskMembers.length);
   const isMultiple = data?.isMultiple;
   const [userName, setUserName] = useState({

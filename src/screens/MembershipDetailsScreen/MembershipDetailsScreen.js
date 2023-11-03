@@ -361,7 +361,7 @@ const MembershipDetailsScreen = ({navigation}) => {
                             size={24}
                             color={ AppTheme.COLORS.purple}
                           />
-                          <Txt style={[styles.companyTag,{}]}> {moment.utc(membershipDetails?.nextInovice).format('MMM DD, YYYY')}</Txt>
+                          <Txt style={[styles.companyTag,{}]}> {moment(membershipDetails?.nextInovice).format('MMM DD, YYYY')}</Txt>
                         </View>
                         <Txt style={[styles.companyName,{marginLeft:normalize(42)}]}>
                       Next memo date
@@ -386,7 +386,7 @@ const MembershipDetailsScreen = ({navigation}) => {
                             size={24}
                             color={ AppTheme.COLORS.error}
                           />
-                          <Txt style={[styles.companyTag,{}]}> {moment.utc(membershipDetails?.startDate).add(membershipDetails?.contractLength, 'months').format('MMM DD, YYYY')}</Txt>
+                          <Txt style={[styles.companyTag,{}]}> {moment(membershipDetails?.startDate).add(membershipDetails?.contractLength, 'months').format('MMM DD, YYYY')}</Txt>
                         </View>
                         <Txt style={[styles.companyName,{marginLeft:normalize(42)}]}>
                      Membership expires on.
