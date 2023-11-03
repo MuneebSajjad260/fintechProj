@@ -699,7 +699,7 @@ const MyTeam = ({navigation}) => {
                             />
 
                             <Txt style={styles.teamMember}>
-                              {item?.fullName} {userData?.Id===item?.Id?'(You)':null}
+                              {item?.fullName} {userData?.Id===item?.Id?Strings.you:null}
                             </Txt>
                           </View>
 
@@ -925,7 +925,7 @@ const MyTeam = ({navigation}) => {
                       }
                     />
                     <View>
-                      <Txt style={styles.teamName}>{item.fullName}</Txt>
+                      <Txt style={styles.teamName}>{item?.fullName} {userData?.Id===item?.Id?Strings.you:null}</Txt>
                       <View
                         style={[
                           styles.flexDirectionRow,
@@ -1025,7 +1025,7 @@ onPress={() => {
                       }
                     />
                     <View>
-                      <Txt style={styles.teamName}>{item.fullName}</Txt>
+                      <Txt style={styles.teamName}>{item?.fullName} {item?.Id===userData?.Id?Strings.you:null}</Txt>
                       <View
                         style={[
                           styles.flexDirectionRow,
@@ -1260,7 +1260,7 @@ onPress={() => {
                               />
 
                               <Txt style={styles.teamMember}>
-                                {item.fullName} {userData?.Id===item?.Id?'(You)':null}
+                                {item.fullName} {userData?.Id===item?.Id?Strings.you:null}
                               </Txt>
                             </View>
 
@@ -1785,7 +1785,7 @@ onPress={() => {
                         styles.memberContainer,
                         {borderWidth: changePM == item?.Id ? 1 : 0},
                       ]}>
-                      <Txt style={styles.nameText}>{item?.fullName}</Txt>
+                      <Txt style={styles.nameText}>{item?.fullName} {userData?.Id===item?.Id?Strings.you:null}</Txt>
                       {changePM == item?.Id && (
                         <View style={styles.checkedContainer}>
                           <MaterialCommunityIcons
@@ -1866,7 +1866,7 @@ onPress={() => {
                         styles.memberContainer,
                         {borderWidth: changeAdmin == item?.Id ? 1 : 0},
                       ]}>
-                      <Txt style={styles.nameText}>{item?.fullName}</Txt>
+                      <Txt style={styles.nameText}>{item?.fullName} {userData?.Id===item?.Id?Strings.you:null}</Txt>
                       {changeAdmin == item?.Id && (
                         <View style={styles.checkedContainer}>
                           <MaterialCommunityIcons

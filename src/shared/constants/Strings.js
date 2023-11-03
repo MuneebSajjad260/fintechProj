@@ -105,6 +105,7 @@ export default Strings = {
   wantCancelMeeting: 'Do you want to cancel this meeting?',
   meetingCancelled: 'Meeting Cancelled',
   meetingHasCancelled: 'Your meeting has been canceled successfully.',
+  you:'(You)',
 
   //* Test By Haseeb start
   // TODO Shift him in separate file
@@ -113,4 +114,5 @@ export default Strings = {
   DESIGN_WIDTH: 375,
   DESIGN_HEIGHT: 812,
   //* Test By Haseeb end
+
 };
