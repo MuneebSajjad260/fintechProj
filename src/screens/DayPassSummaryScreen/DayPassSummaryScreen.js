@@ -33,10 +33,13 @@ const DayPassSummaryScreen =({navigation,route})=>  {
   const isDarkMode = useSelector(state => state.mode.colorScheme);
   const dayPassPrice=useSelector((state) => state?.dayPassPrice?.data?.Price);
   const dayPassPricePending=useSelector((state) => state?.dayPassPrice?.loading);
-  console.log('dayPassPrice----',dayPassPrice);
+  console.log('dayPassPrice----',JSON.stringify(dayPassPrice,null,2));
 
   const tax = useSelector(state=> state?.tax?.data)
   console.log("tax---",tax,'-',tax?.setting?.isTaxEnable)
+
+  const totalPrice = dayPassPrice?.EstimatedCost + dayPassPrice?.DiscountAmount
+  console.log("totalPrice---",totalPrice)
 
   const  dayPassPaymentDetailLoading= useSelector((state) => state.dayPassPaymentDetail?.loading);
   const  DayPassRescheduleLoading= useSelector((state) => state.dayPassReschedule?.loading);
@@ -324,6 +327,7 @@ const DayPassSummaryScreen =({navigation,route})=>  {
 
           <View style={[styles.paymentDetailContainer,{backgroundColor : isDarkMode ? AppTheme.COLORS.wrapperDarkModeBg : 'rgba(0, 0, 0, 0.04)'}]}>
 
+{/* DAYpASS SECTION */}
             <View style={styles.allignInRow}>
               <Txt style={[styles.paymentHeadings,{color:isDarkMode ? AppTheme.COLORS.lightDarkModeTxt : AppTheme.COLORS.lightLightModeTxr}]}>Day pass</Txt>
 
@@ -332,9 +336,11 @@ const DayPassSummaryScreen =({navigation,route})=>  {
                 shimmerStyle={styles.shimmerAvail}>
               </ShimmerPlaceHolder>
             
-              <Txt  accessibilityLabel='estimatedCostDaypass' style={styles.payemntValueTxt}>{ !dayPassPricePending  ? dayPassPrice?.EstimatedCost : null}</Txt>
+              <Txt  accessibilityLabel='estimatedCostDaypass' style={styles.payemntValueTxt}>{ !dayPassPricePending  ? totalPrice : null}</Txt>
             </View>
             <Divider style={styles.divider} />
+
+            {/* SUB TOTAL SECTION */}
             <View style={styles.allignInRow}>
               <Txt style={[styles.paymentHeadings,{color:isDarkMode ? AppTheme.COLORS.lightDarkModeTxt : AppTheme.COLORS.lightLightModeTxr}]}>Subtotal</Txt>
 
@@ -343,7 +349,7 @@ const DayPassSummaryScreen =({navigation,route})=>  {
                 shimmerStyle={[styles.shimmerAvail,{marginLeft:normalize(202)}]}>
               </ShimmerPlaceHolder>
 
-              <Txt accessibilityLabel='subtotal' style={styles.payemntValueTxt}>{!dayPassPricePending  ? dayPassPrice?.EstimatedCost : null}</Txt>
+              <Txt accessibilityLabel='subtotal' style={styles.payemntValueTxt}>{!dayPassPricePending  ? totalPrice : null}</Txt>
             </View>
 
 {/* VAT SECTION */}
@@ -356,7 +362,7 @@ const DayPassSummaryScreen =({navigation,route})=>  {
               </ShimmerPlaceHolder>
 
               <Txt accessibilityLabel='subtotal' style={[styles.payemntValueTxt,{marginTop:AppTheme.SPACINGS.MARGINS.M6}]}>{!dayPassPricePending  ?
-                tax?.setting?.isTaxEnable   ? ((tax?.setting?.taxRate / 100) * dayPassPrice?.EstimatedCost).toFixed(2) : 0
+                tax?.setting?.isTaxEnable   ? ((tax?.setting?.taxRate / 100) * totalPrice).toFixed(2) : 0
               : null}</Txt>
             </View>
 
@@ -387,9 +393,9 @@ const DayPassSummaryScreen =({navigation,route})=>  {
               </ShimmerPlaceHolder>
 
               <Txt accessibilityLabel='totalPayable' style={styles.totalPayableAmount}>{!dayPassPricePending  ? 
-              ((dayPassPrice?.EstimatedCost + ((tax?.setting?.taxRate / 100) * dayPassPrice?.EstimatedCost))) < dayPassPrice?.DiscountAmount  ? `SAR 0.0` :
-                 tax?.setting?.isTaxEnable  ? `SAR ${((dayPassPrice?.EstimatedCost + ((tax?.setting?.taxRate / 100) * dayPassPrice?.EstimatedCost)) - dayPassPrice?.DiscountAmount).toFixed(2) }`
-                 : `SAR ${dayPassPrice?.EstimatedCost - dayPassPrice?.DiscountAmount}`
+              ((totalPrice + ((tax?.setting?.taxRate / 100) * totalPrice))) < dayPassPrice?.DiscountAmount  ? `SAR 0.0` :
+                 tax?.setting?.isTaxEnable  ? `SAR ${((totalPrice + ((tax?.setting?.taxRate / 100) * totalPrice)) - dayPassPrice?.DiscountAmount).toFixed(2) }`
+                 : `SAR ${(totalPrice - dayPassPrice?.DiscountAmount).toFixed(2)}`
 
                : null}</Txt>
             </View>

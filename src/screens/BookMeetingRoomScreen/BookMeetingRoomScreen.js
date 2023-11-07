@@ -889,8 +889,10 @@ const Meetingroom = ({route}) => {
   // CHECKING DAY PASS AVAILIBILITY FOR MEETING ROOM
   useEffect(()=>{
   const dayPassDate= moment(selectedDate).format('YYYY-MM-DD')
-  const body ={id:coworkerId,date:dayPassDate}
-  console.log("body----2233--",body)
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  console.log("timeZone---",timeZone)
+  const body ={id:coworkerId,date:dayPassDate, timeZone:timeZone}
+  console.log("body----2233--",body,'--',selectedDate)
   if (dayPass){
   dispatch(DayPassCheck(body)).unwrap().then(result=>{
       console.log("result of day pas check =>>>>>>>",result)
@@ -1398,7 +1400,7 @@ const Meetingroom = ({route}) => {
                     showTime &&
                     addTimeDuration &&
                     timebtn &&
-                   // dayPassCheck &&
+                   dayPassCheck &&
                     selectMeetingRoom &&
                     borderBlue
                   ? false

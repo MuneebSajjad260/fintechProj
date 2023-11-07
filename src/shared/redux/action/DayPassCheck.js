@@ -6,7 +6,7 @@ import instance from '../../utils/interceptor';
 export const DayPassCheck = createAsyncThunk('dayPassCheck/DayPassCheck', async (data, thunkAPI) => {
   try {
     // // console.log('hellouu=>>>>', data);
-    const response = await instance.get(`${API_ENDPOINTS.fintech_backend_url}/daypasses-request/${data.id}/${data.date}`,{
+    const response = await instance.get(`${API_ENDPOINTS.fintech_backend_url}/daypasses-request/${data.id}/${data.date}?timezone=${data.timeZone}`,{
       headers: {
         // 'Content-Type': 'application/json',
         // 'Authorization': `Bearer ${data}`
