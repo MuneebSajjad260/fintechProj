@@ -293,7 +293,9 @@ const ReScheduleDayPassScreen = ({ route }) => {
           </View>
 
         </View>
-        { checkDate && (meetingScedule?.status !='cancelled' &&  meetingScedule?.status !='deny' )  ?
+        { 
+        //checkDate
+        meetingScedule?.isCancellable   && meetingScedule?.status !='cancelled' &&  meetingScedule?.status !='deny'   ?
           <View style={styles.btnContainer}>
 
 

@@ -93,7 +93,7 @@ const InvoiceDayPassCard = (props) => {
               </Txt>
             
               <Txt style={styles.dayPassPriceValue}>
-                {`SAR ${price[0]?.SubTotal.toFixed(2)} `}
+                {`SAR ${(price[0]?.SubTotal + price[0]?.DiscountAmount ).toFixed(2)} `}
               </Txt>
             </View>
 
@@ -110,7 +110,7 @@ const InvoiceDayPassCard = (props) => {
               </Txt>
              
               <Txt style={styles.subTotalPrice}>
-                {`SAR ${totalSubTotal.toFixed(2)} `}
+              {`SAR ${(price[0]?.SubTotal + price[0]?.DiscountAmount ).toFixed(2)} `}
               </Txt>
             </View>
 
@@ -156,7 +156,9 @@ const InvoiceDayPassCard = (props) => {
              
 
               <Txt style={styles.amountPaidprice}>
-                {((totalSubTotal + ((totalvat / 100) * totalSubTotal))) < price[0]?.DiscountAmount  ? `SAR 0.0` : `SAR ${totalSubTotal + totalvat - price[0]?.DiscountAmount}` }
+                {(((price[0]?.SubTotal + price[0]?.DiscountAmount) + ((totalvat / 100) * (price[0]?.SubTotal + price[0]?.DiscountAmount)))) < price[0]?.DiscountAmount  ?
+                 `SAR 0.0` : 
+                 `SAR ${(price[0]?.SubTotal + price[0]?.DiscountAmount) + totalvat - price[0]?.DiscountAmount}` }
               </Txt>
             </View>
 

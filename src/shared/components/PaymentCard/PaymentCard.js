@@ -30,7 +30,7 @@ const PaymentCard = (props) => {
         <View style={[styles.flexDirection,{justifyContent:'space-between'}]}>
           <View style={styles.flexDirection}>
             <Txt style={styles.payment}>Payment</Txt>
-            { price != 0 ?
+            { (price?.EstimatedCost + price?.DiscountAmount) != 0 ?
             <View style={[status === 'pending' ? styles.pendingContainer : status === 'approved' ? styles.paidContainer : status === 'objected' ? styles.objectedContainer : styles.refundedContainer]}>
               <Txt
                 style={[status === 'pending' ? styles.pending : status === 'approved' ? styles.paid  : status === 'objected' ? styles.objected  : styles.refunded ]}>
@@ -83,7 +83,7 @@ const PaymentCard = (props) => {
 
           </ShimmerPlaceHolder>
           <Txt style={styles.resourcePrice}>
-            { loading === false ? `SAR ${price?.EstimatedCost}` : null}
+            { loading === false ? `SAR ${price?.EstimatedCost + price?.DiscountAmount}` : null}
           </Txt>
         </View>
     
@@ -102,7 +102,7 @@ const PaymentCard = (props) => {
 
           </ShimmerPlaceHolder>
           <Txt style={styles.SubtotalPrice}>
-            { loading === false ? price?.EstimatedCost : null}
+            { loading === false ? (price?.EstimatedCost + price?.DiscountAmount) : null}
           </Txt>
         </View>
 
@@ -122,7 +122,7 @@ const PaymentCard = (props) => {
           </ShimmerPlaceHolder>
 
           <Txt style={styles.vatPrice}>
-          {!loading ? tax?.setting?.isTaxEnable   ? ((tax?.setting?.taxRate / 100) * price?.EstimatedCost).toFixed(2) : 0 : null}
+          {!loading ? tax?.setting?.isTaxEnable   ? ((tax?.setting?.taxRate / 100) * (price?.EstimatedCost + price?.DiscountAmount)).toFixed(2) : 0 : null}
           </Txt>
         </View>
 
@@ -152,7 +152,7 @@ const PaymentCard = (props) => {
         >
             
           <Txt style={styles.amountPaid}>
-          Amount paid
+          Total amount
           </Txt>
 
           <ShimmerPlaceHolder
@@ -162,8 +162,11 @@ const PaymentCard = (props) => {
           </ShimmerPlaceHolder>
 
           <Txt style={styles.amountPaidprice}>
-            { loading === false ? ((price?.EstimatedCost + ((tax?.setting?.taxRate / 100) * price?.EstimatedCost))) < price?.DiscountAmount  ? `SAR 0.0` : tax?.setting?.isTaxEnable  ? `SAR ${((price?.EstimatedCost + ((tax?.setting?.taxRate / 100) * price?.EstimatedCost)) - price?.DiscountAmount).toFixed(2) }`
-                 : `SAR ${price?.EstimatedCost - price?.DiscountAmount}` : null}
+            { loading === false ? (((price?.EstimatedCost + price?.DiscountAmount) + ((tax?.setting?.taxRate / 100) * (price?.EstimatedCost + price?.DiscountAmount)))) < price?.DiscountAmount  ?
+             `SAR 0.0` :
+              tax?.setting?.isTaxEnable  ? 
+              `SAR ${(((price?.EstimatedCost + price?.DiscountAmount) + ((tax?.setting?.taxRate / 100) * (price?.EstimatedCost + price?.DiscountAmount))) - price?.DiscountAmount).toFixed(2) }`
+                 : `SAR ${(price?.EstimatedCost + price?.DiscountAmount) - price?.DiscountAmount}` : null}
           </Txt>
         </View>
 

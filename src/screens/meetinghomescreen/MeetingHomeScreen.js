@@ -80,7 +80,7 @@ const MeetingWelcomeScreen = ({route}) => {
   const [membershipDetails, setMembershipDetails] = useState(null);
   const [memeDetailRes, setMemeDetailRes] = useState(null);
   const [meetingInvitee, setMeetingInvitee] = useState(false);
-  // console.log('coworkerId----', coworkerId);
+  console.log('coworkerId----', coworkerId);
   const booking = useSelector(selectConfirmBooking);
   const meetingRoomLoading = useSelector(
     state => state?.getMeetingRoom?.loading,

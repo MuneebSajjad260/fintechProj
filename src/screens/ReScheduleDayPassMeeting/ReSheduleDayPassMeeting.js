@@ -405,7 +405,7 @@ const ReScheduleDayPassMeeting = ({route}) => {
         </View>
         {meetingScedule?.status != 'cancelled' &&
         meetingScedule?.status != 'deny' &&
-        !meetingScedule?.isCancellable ? (
+        meetingScedule?.isCancellable ? (
           <View style={styles.btnContainer}>
             <Botton
               continueBtnAccessibilityLabel="reschedule"
