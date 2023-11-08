@@ -23,7 +23,6 @@ const PaymentCard = (props) => {
   const isDarkMode = useSelector(state => state.mode.colorScheme);
  
   const { item,disable,price,loading,resourceName,date,CoworkerInvoiceNumber,status,reason, tax} = props;
-  console.log('status-11-1',status, price,reason);
   return (
     <>
       <Wrapper style={styles.card}>

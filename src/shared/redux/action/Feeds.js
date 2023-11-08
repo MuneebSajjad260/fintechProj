@@ -11,7 +11,7 @@ export const Feeds= createAsyncThunk('feeds/Feeds', async (data, thunkAPI) => {
         // 'Content-Type': 'application/x-www-form-urlencoded'
       }
     });
-    // console.log('--333--', response.data);
+    console.log('--333--', response.data);
 
     return response.data;
   } catch (error) {

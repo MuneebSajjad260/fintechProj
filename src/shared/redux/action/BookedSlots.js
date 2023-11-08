@@ -12,7 +12,7 @@ export const BookedSlots = createAsyncThunk('bookedSlots/BookedSlots', async (da
         // 'Authorization': `Bearer ${data}`
       }
     });
-    // console.log('--333--', response.data);
+    console.log('--333--', JSON.stringify(response.data,null,2));
 
     return response.data;
   } catch (error) {

@@ -152,20 +152,33 @@ const DayPass =({navigation,route})=> {
 
   //check booked slots//////
 
-  useEffect(()=>{
-    dispatch(BookedSlots()).unwrap().then(result=>{
-      console.log('check booked slots result-',result?.data);
+  useEffect(() => {
+    dispatch(BookedSlots())
+      .unwrap()
+      .then(result => {
+        const utcDates = result?.data.map(slot =>
+          new Date(slot.date).toISOString(),
+        );
 
-      const utcDates = result?.data.map(slot => new Date(slot.date).toISOString());
-      console.log('utcDates-',utcDates);
-      setCheckSlots(utcDates);
-     
-     
-    }).catch(error=>{
-      console.log('check booked slots error-',error);
-    });
 
-  },[dispatch]);
+        // ? doing reschedule
+        if (!!isRescheduleRequest) {
+          
+          const alreadyBookedDate = moment(
+            dateReschedule,
+            'DD, MMM YYYY',
+          ).toISOString();
+
+          setCheckSlots([...(utcDates || []), alreadyBookedDate]);
+
+        } else {
+          setCheckSlots(utcDates || []);
+        }
+      })
+      .catch(error => {
+        console.log('check booked slots error-', error);
+      });
+  }, [dispatch]);
 
   /////////
  

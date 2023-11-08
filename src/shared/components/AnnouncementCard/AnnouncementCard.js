@@ -138,7 +138,7 @@ export default function AnnouncementCard({item, style, isDataLoaded}) {
                 {/* </Svg> */}
               </View>
               {/* Date */}
-              <Txt style={styles.time}>{formatDate(date.split('T')[0])}</Txt>
+              <Txt style={styles.time}>{formatDate(date?.split('T')[0])}</Txt>
             </View>
             {/* Dot */}
             <View style={styles.dot}>

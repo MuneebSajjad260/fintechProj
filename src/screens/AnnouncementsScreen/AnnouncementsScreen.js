@@ -282,7 +282,7 @@ export default function AnnouncementsScreen({route}) {
                       </View>
                       {/* Date */}
                       <Text numberOfLines={1} style={styles.date}>
-                        {formatDate(PublishDate.split('T')[0])}
+                        {formatDate(PublishDate?.split('T')[0])}
                       </Text>
                     </Animated.View>
                   </>
