@@ -41,8 +41,9 @@ export default function DeleteAccountScreenTwo({navigation}) {
   const [error, setError] = useState(null);
   const bottomSheetRef = useRef(null);
   const dispatch = useDispatch();
-  const {Email, TeamIds} = useSelector(selectUserData);
-  // console.warn('Checking Status:----------->', TeamIds);
+  const {Email, TeamIds,Id} = useSelector(selectUserData);
+
+   console.log('Checking Status:----------->', TeamIds,'-',Id);
 
   const isDarkMode = useSelector(state => state.mode.colorScheme);
   // ?API Logic

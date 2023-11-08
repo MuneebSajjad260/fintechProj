@@ -22,7 +22,7 @@ const TeamMemberDetail = ({route}) => {
 
   //GETTINFG DATA FROM PARAMS
   const {name, companyName, joiningDate, resourceType} = route.params;
-  console.log('33--', userData?.TeamIds, '--', joiningDate);
+  console.log('33--', userData?.TeamIds, '--', joiningDate,'---',resourceType);
 
   //CONVERTING DATE FORMAT
   const formattedDate = moment.utc(joiningDate).format('DD MMM YYYY');

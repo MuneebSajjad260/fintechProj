@@ -130,6 +130,7 @@ const MyTeam = ({navigation}) => {
   const [removeMembers, setRemoveMembers] = useState([]);
   const [inactiveMembers, setInactiveMembers] = useState([]);
   const [selectedMember, setSelectedMember] = useState();
+  const[ office , setOffice] =useState()
 
   // FILTERING ADMINISTRATOR FROM ALL MEMBERS ARRAY
   const selectTeamLead = () => {
@@ -347,6 +348,7 @@ const MyTeam = ({navigation}) => {
           setDeskMembers(result?.dedicatedMembers);
           setRemoveMembers(result?.allActiveMembers);
           setInactiveMembers(result?.inactive);
+          setOffice(result?.deskName)
         })
         .catch(err => {
           console.log('error for LeadTeamManagement---', err);
@@ -357,6 +359,7 @@ const MyTeam = ({navigation}) => {
         .then(result => {
           console.log('result for team member---', result);
           setAllMembersSelected(result);
+          setOffice(result?.deskName)
         })
         .catch(err => {
           console.log('error for team member---', err);
@@ -460,10 +463,10 @@ const MyTeam = ({navigation}) => {
                            name: item?.fullName,
                            companyName: userData?.CompanyName,
                            joiningDate: allMembersSelected?.startDate,
-                           resourceType:
+                           resourceType: allMembersSelected?.isMultiple === false ?
                            allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
                              ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
-                             : 'Private Office',
+                             : office ? office : Strings.privateOffice : office ? office : Strings.privateOffice,
                          });
                        } else {
                        /* empty */
@@ -524,14 +527,14 @@ const MyTeam = ({navigation}) => {
                     ) : (
                       <View style={[styles.privateOfficeContainer]}>
                         <Txt style={styles.privateOffice}>
-                          {Strings.privateOffice}
+                          {office ? office : Strings.privateOffice}
                         </Txt>
                       </View>
                     )
                   :
                   <View style={[styles.privateOfficeContainer]}>
                   <Txt style={styles.privateOffice}>
-                    {Strings.privateOffice}
+                    {office ? office : Strings.privateOffice}
                   </Txt>
                 </View>
                 
@@ -556,10 +559,10 @@ const MyTeam = ({navigation}) => {
                          name: item?.fullName,
                          companyName: userData?.CompanyName,
                          joiningDate: allMembersSelected?.startDate,
-                         resourceType:
+                         resourceType: allMembersSelected?.isMultiple === false ?
                          allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
                            ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
-                           : 'Private Office',
+                           : office ? office : Strings.privateOffice : office ? office : Strings.privateOffice,
                        });
                      } else {
                      /* empty */
@@ -621,7 +624,7 @@ const MyTeam = ({navigation}) => {
                       ) : (
                         <View style={[styles.privateOfficeContainer]}>
                           <Txt style={styles.privateOffice}>
-                            {Strings.privateOffice}
+                            {office ? office : Strings.privateOffice}
                           </Txt>
                         </View>
                       )
@@ -631,7 +634,7 @@ const MyTeam = ({navigation}) => {
                     ) ? (
                         <View style={[styles.privateOfficeContainer]}>
                           <Txt style={styles.privateOffice}>
-                            {Strings.privateOffice}
+                            {office ? office : Strings.privateOffice}
                           </Txt>
                         </View>
                       ) : (
@@ -677,7 +680,7 @@ const MyTeam = ({navigation}) => {
                           resourceType:
                           allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
                             ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
-                            : 'Private Office',
+                            : office ? office : Strings.privateOffice,
                         });
                       } else {
                       /* empty */
@@ -717,7 +720,7 @@ const MyTeam = ({navigation}) => {
                             ) : (
                               <View style={[styles.privateOfficeContainer]}>
                                 <Txt style={styles.privateOffice}>
-                                  {Strings.privateOffice}
+                                  {office ? office : Strings.privateOffice}
                                 </Txt>
                               </View>
                             )}
@@ -745,7 +748,7 @@ const MyTeam = ({navigation}) => {
                               resourceType:
                               allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
                                 ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
-                                : 'Private Office',
+                                : office ? office : Strings.privateOffice,
                             });
                           } else {
                           /* empty */
@@ -769,7 +772,7 @@ const MyTeam = ({navigation}) => {
 
                               <View style={[styles.privateOfficeContainer]}>
                                 <Txt style={styles.privateOffice}>
-                                  {Strings.privateOffice}
+                                  {office ? office : Strings.privateOffice}
                                 </Txt>
                               </View>
                             </View>
@@ -794,7 +797,7 @@ const MyTeam = ({navigation}) => {
                               resourceType:
                               allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
                                 ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
-                                : 'Private Office',
+                                : office ? office : Strings.privateOffice,
                             });
                           } else {
                           /* empty */
@@ -903,10 +906,10 @@ const MyTeam = ({navigation}) => {
                     name: item?.fullName,
                     companyName: userData?.CompanyName,
                     joiningDate: allMembersSelected?.startDate,
-                    resourceType:
+                    resourceType: allMembersSelected?.isMultiple === false ? 
                     allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
                       ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
-                      : 'Private Office',
+                      : office ? office : 'Private Office' :  office ? office : 'Private Office' ,
                   });
                 } else {
                 /* empty */
@@ -963,14 +966,14 @@ const MyTeam = ({navigation}) => {
                   ) : (
                     <View style={[styles.privateOfficeContainer]}>
                       <Txt style={styles.privateOffice}>
-                        {Strings.privateOffice}
+                        { office ? office : Strings.privateOffice}
                       </Txt>
                     </View>
                   )
                 :
                 <View style={[styles.privateOfficeContainer]}>
                       <Txt style={styles.privateOffice}>
-                        {Strings.privateOffice}
+                      { office ? office : Strings.privateOffice}
                       </Txt>
                     </View>
                 }
@@ -995,10 +998,10 @@ onPress={() => {
       name: item?.fullName,
       companyName: userData?.CompanyName,
       joiningDate: allMembersSelected?.startDate,
-      resourceType:
+      resourceType: allMembersSelected?.isMultiple === false ?
       allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
         ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
-        : 'Private Office',
+        : office ? office : Strings.privateOffice : office ? office : Strings.privateOffice,
     });
   } else {
   /* empty */
@@ -1055,7 +1058,7 @@ onPress={() => {
                     ) : (
                       <View style={[styles.privateOfficeContainer]}>
                         <Txt style={styles.privateOffice}>
-                          {Strings.privateOffice}
+                        { office ? office : Strings.privateOffice}
                         </Txt>
                       </View>
                     )
@@ -1064,7 +1067,7 @@ onPress={() => {
                   ) ? (
                       <View style={[styles.privateOfficeContainer]}>
                         <Txt style={styles.privateOffice}>
-                          {Strings.privateOffice}
+                        { office ? office : Strings.privateOffice}
                         </Txt>
                       </View>
                     ) : (
@@ -1148,7 +1151,7 @@ onPress={() => {
                               resourceType:
                               allMembersSelected?.ResourceTypeId === ResourceId.dedicatedDesk
                                 ?  item?.deskName ? item?.deskName : 'Dedicated Desk'
-                                : 'Private Office',
+                                : office ? office : Strings.privateOffice,
                             });
                           } else {
                           /* empty */
@@ -1183,7 +1186,7 @@ onPress={() => {
                             ) : (
                               <View style={[styles.privateOfficeContainer]}>
                                 <Txt style={styles.privateOffice}>
-                                  {Strings.privateOffice}
+                                  {office ? office : Strings.privateOffice}
                                 </Txt>
                               </View>
                             )}
@@ -1245,7 +1248,7 @@ onPress={() => {
                                 name: item?.fullName,
                                 companyName: userData?.CompanyName,
                                 joiningDate: allMembersSelected?.startDate,
-                                resourceType: 'Private Office',
+                                resourceType: office ? office : Strings.privateOffice,
                               });
                             } else {
                             /* empty */
@@ -1267,7 +1270,7 @@ onPress={() => {
                             <View style={styles.closeContainer}>
                               <View style={[styles.privateOfficeContainer]}>
                                 <Txt style={styles.privateOffice}>
-                                  {Strings.privateOffice}
+                                  {office ? office : Strings.privateOffice}
                                 </Txt>
                               </View>
 
