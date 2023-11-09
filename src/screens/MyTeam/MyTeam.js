@@ -22,6 +22,7 @@ import {Divider} from 'react-native-paper';
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetScrollView,
+  BottomSheetTextInput,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -1918,6 +1919,8 @@ onPress={() => {
           index={-1}
           enablePanDownToClose={true}
           enabledInnerScrolling={true}
+          keyboardBehavior="interactive"
+          keyboardBlurBehavior="restore"
           backgroundStyle={{
             backgroundColor: isDarkMode
               ? AppTheme.COLORS.wrapperDarkModeBg
@@ -1950,6 +1953,7 @@ onPress={() => {
               </Txt>
 
               <TextInput
+              bottomSheet={true}
                 accessibilityLabel="code"
                 // label="Name"
                 value={code?.value}

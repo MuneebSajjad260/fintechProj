@@ -189,8 +189,7 @@ const MembershipDetailsScreen = ({navigation}) => {
   return (
     <Frame
       screenTitle={isSelected === 'Details' ? 'Membership' : 'Memos'}
-      mode={'View'}
-      >
+      mode={'View'}>
       {/* TAB Header */}
       <TabHeader
         tabOneText={'Details'}
@@ -199,141 +198,237 @@ const MembershipDetailsScreen = ({navigation}) => {
         setIsSelected={setIsSelected}
         status={status}
       />
-      
+
       <View style={styles.innerContainer}>
         {isSelected === 'Details' ? (
           <>
             {membershipDetails !== null ? (
-              <ScrollView contentContainerStyle={[styles.detailContainer,{justifyContent:'space-between'}]}>
+              <ScrollView
+                contentContainerStyle={[
+                  styles.detailContainer,
+                  {justifyContent: 'space-between'},
+                ]}>
                 <View>
-                {status === 'pending' ?
-                  <View style= {[styles.testingCont,{borderColor:'rgba(247, 183, 24, 0.6)',
-                    backgroundColor:'rgba(247, 183, 24, 0.05)' 
-                  }]}>
-                    <View>
-                      <View style={styles.companyContainer}>
-                        <Feather
-                          name={'clock'}
-                          size={24}
-                          color={ AppTheme.COLORS.pending}
-                        />
-                        <Txt style={[styles.companyTag,{}]}> {moment.utc(membershipDetails?.startDate).format('MMM DD, YYYY')}</Txt>
-                      </View>
-                      <Txt style={[styles.companyName,{marginLeft:normalize(42)}]}>
-                        Your membership will start soon.
-                      </Txt>
-                    </View>
-               
-                  </View>
-                  :
-                  status === 'expire' ?
-
-                    <View style= {[styles.testingCont,{borderColor:'rgba(239, 64, 80, 0.6)',
-                      backgroundColor:'rgba(239, 64, 80, 0.05)' 
-                    }]}>
+                  {status === 'pending' ? (
+                    <View
+                      style={[
+                        styles.testingCont,
+                        {
+                          borderColor: 'rgba(247, 183, 24, 0.6)',
+                          backgroundColor: 'rgba(247, 183, 24, 0.05)',
+                        },
+                      ]}>
                       <View>
                         <View style={styles.companyContainer}>
                           <Feather
                             name={'clock'}
                             size={24}
-                            color={ AppTheme.COLORS.error}
+                            color={AppTheme.COLORS.pending}
                           />
-                          <Txt style={[styles.companyTag,{}]}> {moment.utc(membershipDetails?.startDate).add(membershipDetails?.contractLength, 'months').format('MMM DD, YYYY')}</Txt>
+                          <Txt style={[styles.companyTag, {}]}>
+                            {' '}
+                            {moment
+                              .utc(membershipDetails?.startDate)
+                              .format('MMM DD, YYYY')}
+                          </Txt>
                         </View>
-                        <Txt style={[styles.companyName,{marginLeft:normalize(42)}]}>
-                        Your membership is expired.
+                        <Txt
+                          style={[
+                            styles.companyName,
+                            {marginLeft: normalize(42)},
+                          ]}>
+                          Your membership will start soon.
                         </Txt>
                       </View>
-             
                     </View>
-
-                    :
-
-                    null
-                }
-
-                <View style= {[styles.testingCont,{borderColor:isDarkMode ? status == 'active' ? 'rgba(56, 213, 159, 0.6)' : 
-                  status == 'pending' ? 'rgba(247, 183, 24, 0.6)' : 'rgba(255, 255, 255, 0.1)'
-                  : status == 'active' ? 'rgba(56, 213, 159, 0.6)' : 
-                    status == 'pending' ? 'rgba(247, 183, 24, 0.6)' : 'rgba(0, 0, 0, 0.1)',
-
-                backgroundColor:isDarkMode ? status == 'active' ? 'rgba(56, 213, 159, 0.03)' : 
-                  status == 'pending' ? 'rgba(247, 183, 24, 0.05)' : '#1D1D1D'
-                  : status == 'active' ? null : 
-                    status == 'pending' ? null : null
-
-                }]}>
-                  <View>
-                    <View style={styles.companyContainer}>
-                      <MaterialIcons
-                        name={'corporate-fare'}
-                        size={24}
-                        color={isDarkMode ? '#747474' : AppTheme.COLORS.purple}
-                      />
-                      <Txt style={[styles.companyTag,{}]}>{membershipDetails?.teamName}</Txt>
+                  ) : status === 'expire' ? (
+                    <View
+                      style={[
+                        styles.testingCont,
+                        {
+                          borderColor: 'rgba(239, 64, 80, 0.6)',
+                          backgroundColor: 'rgba(239, 64, 80, 0.05)',
+                        },
+                      ]}>
+                      <View>
+                        <View style={styles.companyContainer}>
+                          <Feather
+                            name={'clock'}
+                            size={24}
+                            color={AppTheme.COLORS.error}
+                          />
+                          <Txt style={[styles.companyTag, {}]}>
+                            {' '}
+                            {moment
+                              .utc(membershipDetails?.startDate)
+                              .add(membershipDetails?.contractLength, 'months')
+                              .format('MMM DD, YYYY')}
+                          </Txt>
+                        </View>
+                        <Txt
+                          style={[
+                            styles.companyName,
+                            {marginLeft: normalize(42)},
+                          ]}>
+                          Your membership is expired.
+                        </Txt>
+                      </View>
                     </View>
-                    <Txt style={[styles.companyName,{marginLeft:normalize(39)}]}>
-                  Company Name
-                    </Txt>
-                  </View>
-               
-                  <View style={styles.statusTitleContainer}>
-                    
-                    <Txt style={[styles.status,{ color: status =='active' ? AppTheme.COLORS.primaryGreenBg :
-                      AppTheme.COLORS.pending
-                    }]}>{status == 'active' ? 'Active' : status == 'pending' ? 'Pending' : null}</Txt>
-                  </View>
-                
-                </View>
+                  ) : null}
 
-               
-                <View style={styles.planContainer}>
-                  <View style={[styles.resourceCont,{ borderColor:isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-                    backgroundColor: isDarkMode ? '#1D1D1D' : null
-                  }]}>
-                    <View style={styles.planTagContainer}>
+                  <View
+                    style={[
+                      styles.testingCont,
+                      {
+                        borderColor: isDarkMode
+                          ? status == 'active'
+                            ? 'rgba(56, 213, 159, 0.6)'
+                            : status == 'pending'
+                            ? 'rgba(247, 183, 24, 0.6)'
+                            : 'rgba(255, 255, 255, 0.1)'
+                          : status == 'active'
+                          ? 'rgba(56, 213, 159, 0.6)'
+                          : status == 'pending'
+                          ? 'rgba(247, 183, 24, 0.6)'
+                          : 'rgba(0, 0, 0, 0.1)',
+
+                        backgroundColor: isDarkMode
+                          ? status == 'active'
+                            ? 'rgba(56, 213, 159, 0.03)'
+                            : status == 'pending'
+                            ? 'rgba(247, 183, 24, 0.05)'
+                            : '#1D1D1D'
+                          : status == 'active'
+                          ? null
+                          : status == 'pending'
+                          ? null
+                          : null,
+                      },
+                    ]}>
+                    <View style={{flex:0.8}}>
                       <View style={styles.companyContainer}>
                         <MaterialIcons
                           name={'corporate-fare'}
                           size={24}
-                          color={isDarkMode ? '#747474' : AppTheme.COLORS.purple}
+                          color={
+                            isDarkMode ? '#747474' : AppTheme.COLORS.purple
+                          }
                         />
-                        <Txt style={styles.companyTag}>{membershipDetails?.PlanType}</Txt>
-                      </View>
-                      <TouchableOpacity
-                        accessibilityLabel="editBtn"
-                        onPress={() => {
-                          navigation.navigate(ScreensName.ChangePlan);
-                        }}>
-                        <MaterialIcons
-                          name={'edit'}
-                          size={24}
-                          color={isDarkMode ? '#747474' : AppTheme.COLORS.purple}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                   
-                    <Txt style={[styles.companyName,{marginLeft:normalize(39)}]}>Resource</Txt>
-                  
-                    <Divider style={[styles.divider,{ backgroundColor:isDarkMode ? '#FFFFFF' : 'rgba(0, 0, 0, 0.3)',}]} />
-                    <View>
-                      <View style={styles.companyContainer}>
-                        <Feather
-                          name={'user'}
-                          size={24}
-                          color={isDarkMode ? '#747474' : AppTheme.COLORS.purple}
-                        />
-                    
-                        <Txt style={styles.companyTag}>
-                          {membershipDetails?.teamMembers}
+                        <Txt style={[styles.companyTag, {}]}>
+                          {membershipDetails?.teamName}
                         </Txt>
                       </View>
-                      <Txt style={[styles.companyName,{marginLeft:normalize(39)}]}>
-                      Members
+                      <Txt
+                        style={[
+                          styles.companyName,
+                          {marginLeft: normalize(39)},
+                        ]}>
+                        Company Name
                       </Txt>
                     </View>
+
+                    <View style={[styles.statusTitleContainer,{flex:0.2}]}>
+                      <Txt
+                        style={[
+                          styles.status,
+                          {
+                            color:
+                              status == 'active'
+                                ? AppTheme.COLORS.primaryGreenBg
+                                : AppTheme.COLORS.pending,
+                          },
+                        ]}>
+                        {status == 'active'
+                          ? 'Active'
+                          : status == 'pending'
+                          ? 'Pending'
+                          : null}
+                      </Txt>
+                    </View>
+
                   </View>
-                  {/* <View style={[styles.companyNameContainer, {marginTop: 24}]}>
+
+                  <View style={styles.planContainer}>
+                    <View
+                      style={[
+                        styles.resourceCont,
+                        {
+                          borderColor: isDarkMode
+                            ? 'rgba(255, 255, 255, 0.1)'
+                            : 'rgba(0, 0, 0, 0.1)',
+                          backgroundColor: isDarkMode ? '#1D1D1D' : null,
+                        },
+                      ]}>
+                      <View style={styles.planTagContainer}>
+                        <View style={styles.companyContainer}>
+                          <MaterialIcons
+                            name={'corporate-fare'}
+                            size={24}
+                            color={
+                              isDarkMode ? '#747474' : AppTheme.COLORS.purple
+                            }
+                          />
+                          <Txt style={styles.companyTag}>
+                            {membershipDetails?.PlanType}
+                          </Txt>
+                        </View>
+                        <TouchableOpacity
+                          accessibilityLabel="editBtn"
+                          onPress={() => {
+                            navigation.navigate(ScreensName.ChangePlan);
+                          }}>
+                          <MaterialIcons
+                            name={'edit'}
+                            size={24}
+                            color={
+                              isDarkMode ? '#747474' : AppTheme.COLORS.purple
+                            }
+                          />
+                        </TouchableOpacity>
+                      </View>
+
+                      <Txt
+                        style={[
+                          styles.companyName,
+                          {marginLeft: normalize(39)},
+                        ]}>
+                        Resource
+                      </Txt>
+
+                      <Divider
+                        style={[
+                          styles.divider,
+                          {
+                            backgroundColor: isDarkMode
+                              ? '#FFFFFF'
+                              : 'rgba(0, 0, 0, 0.3)',
+                          },
+                        ]}
+                      />
+                      <View>
+                        <View style={styles.companyContainer}>
+                          <Feather
+                            name={'user'}
+                            size={24}
+                            color={
+                              isDarkMode ? '#747474' : AppTheme.COLORS.purple
+                            }
+                          />
+
+                          <Txt style={styles.companyTag}>
+                            {membershipDetails?.teamMembers}
+                          </Txt>
+                        </View>
+                        <Txt
+                          style={[
+                            styles.companyName,
+                            {marginLeft: normalize(39)},
+                          ]}>
+                          Members
+                        </Txt>
+                      </View>
+                    </View>
+                    {/* <View style={[styles.companyNameContainer, {marginTop: 24}]}>
                     <Txt style={styles.companyDetailsHeadingTag}>
                       Next invoice date:
                     </Txt>
@@ -350,53 +445,77 @@ const MembershipDetailsScreen = ({navigation}) => {
                         <Txt />
                       )}
                   </View> */}
-                  {status === 'active' ?
-                    <View style= {[styles.testingCont,{borderColor:'rgba(1, 41, 250, 0.5)',
-                      backgroundColor:'rgba(1, 41, 250, 0.05)', marginTop:AppTheme.SPACINGS.MARGINS.M1,
-                    }]}>
-                      <View>
-                        <View style={styles.companyContainer}>
-                          <Feather
-                            name={'clock'}
-                            size={24}
-                            color={ AppTheme.COLORS.purple}
-                          />
-                          <Txt style={[styles.companyTag,{}]}> {moment(membershipDetails?.nextInovice).format('MMM DD, YYYY')}</Txt>
+                    {status === 'active' ? (
+                      <View
+                        style={[
+                          styles.testingCont,
+                          {
+                            borderColor: 'rgba(1, 41, 250, 0.5)',
+                            backgroundColor: 'rgba(1, 41, 250, 0.05)',
+                            marginTop: AppTheme.SPACINGS.MARGINS.M1,
+                          },
+                        ]}>
+                        <View>
+                          <View style={styles.companyContainer}>
+                            <Feather
+                              name={'clock'}
+                              size={24}
+                              color={AppTheme.COLORS.purple}
+                            />
+                            <Txt style={[styles.companyTag, {}]}>
+                              {' '}
+                              {moment(membershipDetails?.nextInovice).format(
+                                'MMM DD, YYYY',
+                              )}
+                            </Txt>
+                          </View>
+                          <Txt
+                            style={[
+                              styles.companyName,
+                              {marginLeft: normalize(42)},
+                            ]}>
+                            Next memo date
+                          </Txt>
                         </View>
-                        <Txt style={[styles.companyName,{marginLeft:normalize(42)}]}>
-                      Next memo date
-                        </Txt>
                       </View>
-               
-                    </View>
-                    : null
-                  }
-                </View>
-
+                    ) : null}
+                  </View>
                 </View>
                 <View>
-                {status === 'active' ?
-                     <View style= {[styles.testingCont,{borderColor:'rgba(239, 64, 80, 0.6)',
-                     backgroundColor:'rgba(239, 64, 80, 0.05)' 
-                   }]}>
+                  {status === 'active' ? (
+                    <View
+                      style={[
+                        styles.testingCont,
+                        {
+                          borderColor: 'rgba(239, 64, 80, 0.6)',
+                          backgroundColor: 'rgba(239, 64, 80, 0.05)',
+                        },
+                      ]}>
                       <View>
                         <View style={styles.companyContainer}>
                           <Feather
                             name={'clock'}
                             size={24}
-                            color={ AppTheme.COLORS.error}
+                            color={AppTheme.COLORS.error}
                           />
-                          <Txt style={[styles.companyTag,{}]}> {moment(membershipDetails?.startDate).add(membershipDetails?.contractLength, 'months').format('MMM DD, YYYY')}</Txt>
+                          <Txt style={[styles.companyTag, {}]}>
+                            {' '}
+                            {moment(membershipDetails?.startDate)
+                              .add(membershipDetails?.contractLength, 'months')
+                              .format('MMM DD, YYYY')}
+                          </Txt>
                         </View>
-                        <Txt style={[styles.companyName,{marginLeft:normalize(42)}]}>
-                     Membership expires on.
+                        <Txt
+                          style={[
+                            styles.companyName,
+                            {marginLeft: normalize(42)},
+                          ]}>
+                          Membership expires on.
                         </Txt>
                       </View>
-               
                     </View>
-                    : null
-                  }
-                  </View>
+                  ) : null}
+                </View>
               </ScrollView>
             ) : (
               <View style={styles.noTeamFoundContainer}>
@@ -404,36 +523,25 @@ const MembershipDetailsScreen = ({navigation}) => {
                   <Txt style={styles.noTeamFound}>Team not found!</Txt>
                 ) : (
                   <View style={styles.detailContainer}>
-                   
                     <View style={styles.companyNameContainer}>
-                      
                       {/* Skeleton */}
                       <SkeletonLoader
                         visible={false}
                         shimmerStyle={styles.defShimmer}
                       />
                     </View>
-                    
-                        
 
                     {/* Skeleton */}
                     <SkeletonLoader
                       visible={false}
                       shimmerStyle={styles.defShimmer}
                     />
-                    
-                      
-                   
-                      
 
                     {/* Skeleton */}
                     <SkeletonLoader
                       visible={false}
                       shimmerStyle={[styles.defShimmer]}
                     />
-                      
-                   
-                   
                   </View>
                 )}
               </View>
@@ -458,28 +566,28 @@ const MembershipDetailsScreen = ({navigation}) => {
                 {/* {test ? ( */}
                 {invoiceDetailRes !== null &&
                 invoiceDetailRes.statusCode === 400 ? (
-                    <Txt style={styles.noTeamFound}>No memo found!</Txt>
-                  ) : (
-                    <>
-                      {[...Array(3)].map(index => {
-                        return (
-                          <View key={uuid.v4()} style={styles.invoiceContainer}>
-                            <InvoiceCard
-                              invoiceTitle={''}
-                              accessibilityLabel="invoice"
-                              amount={''}
-                              resource={''}
-                              date={''}
-                              status={false}
-                              Currency={''}
-                              isDataLoaded={true}
-                              onPress={() => {}}
-                            />
-                          </View>
-                        );
-                      })}
-                    </>
-                  )}
+                  <Txt style={styles.noTeamFound}>No memo found!</Txt>
+                ) : (
+                  <>
+                    {[...Array(3)].map(index => {
+                      return (
+                        <View key={uuid.v4()} style={styles.invoiceContainer}>
+                          <InvoiceCard
+                            invoiceTitle={''}
+                            accessibilityLabel="invoice"
+                            amount={''}
+                            resource={''}
+                            date={''}
+                            status={false}
+                            Currency={''}
+                            isDataLoaded={true}
+                            onPress={() => {}}
+                          />
+                        </View>
+                      );
+                    })}
+                  </>
+                )}
               </View>
             )}
           </>
