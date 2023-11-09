@@ -317,7 +317,8 @@ const ReScheduleMeeting = ({route}) => {
             disable={
               meetingScedule?.status != 'cancelled' &&
               meetingScedule?.status != 'deny' &&
-              meetingScedule?.isCancellable
+              meetingScedule?.isCancellable &&
+              meetingScedule?.isOwner
                 ? false
                 : true
             }
@@ -355,7 +356,8 @@ const ReScheduleMeeting = ({route}) => {
         </View>
         {meetingScedule?.status != 'cancelled' &&
         meetingScedule?.status != 'deny' &&
-        meetingScedule?.isCancellable ? (
+        meetingScedule?.isCancellable &&
+        meetingScedule?.isOwner ? (
           <Botton
             continueBtnAccessibilityLabel="reschedule"
             cancelBtnAccessibilityLabel="cancel"

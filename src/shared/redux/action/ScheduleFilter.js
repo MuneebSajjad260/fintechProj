@@ -6,6 +6,7 @@ import instance from '../../utils/interceptor';
 export const ScheduleFilter = createAsyncThunk('scheduleFilter/ScheduleFilter', async (data, thunkAPI) => {
   try {
    
+    console.log("23232---",`${API_ENDPOINTS.fintech_backend_url}/coworker-team-bookings-upcoming/${data}`)
     const response = await instance.get(`${API_ENDPOINTS.fintech_backend_url}/coworker-team-bookings-upcoming/${data}`,
       {
         headers: {

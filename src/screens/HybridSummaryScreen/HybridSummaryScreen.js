@@ -937,14 +937,29 @@ console.log("tax---",tax,'-',tax?.setting?.isTaxEnable)
                     resourceId: resId,
                     privateResourceTypeId: resourceData?.Id,
                     dedicatedResourceTypeId: resourceData?.deskIdHybrid,
-                    MemberTarrifId:
+
+                    DedicatedMemberTarrifId:
                       planId === 'Monthly'
-                        ? memberTerrif?.TeamMemberMonthlyPlan?.id
-                        : memberTerrif?.TeamMemberYearlyPlan?.id,
-                    LeadTarrifId:
+                        ? memberTerrifDD?.TeamMemberMonthlyPlan?.id
+                        : memberTerrifDD?.TeamMemberYearlyPlan?.id,
+
+                        DedicatedLeadTarrifId:
                       planId === 'Monthly'
-                        ? memberTerrif?.TeamLeadMonthlyPlan?.id
-                        : memberTerrif?.TeamLeadYearlyPlan?.id,
+                        ? memberTerrifDD?.TeamLeadMonthlyPlan?.id
+                        : memberTerrifDD?.TeamLeadYearlyPlan?.id,
+
+
+                        MemberTarrifId:
+                        planId === 'Monthly'
+                          ? memberTerrif?.TeamMemberMonthlyPlan?.id
+                          : memberTerrif?.TeamMemberYearlyPlan?.id,
+                      LeadTarrifId:
+                        planId === 'Monthly'
+                          ? memberTerrif?.TeamLeadMonthlyPlan?.id
+                          : memberTerrif?.TeamLeadYearlyPlan?.id,
+
+
+
                     MemberCancellationLimitDays:
                       singlePlanMember?.CancellationLimitDays === null
                         ? 0
